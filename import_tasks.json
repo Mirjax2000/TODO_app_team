@@ -1,14 +1,17 @@
 [
     {
-        "title": "Úkol 1",
-        "description": "Popis úkolu 1."
+        "ID": "1",
+        "description": "Popis úkolu 1.",
+        "status": "False"
     },
     {
-        "title": "Úkol 2",
-        "description": "Popis úkolu 2."
+        "ID": "2",
+        "description": "Popis úkolu 2.",
+        "status": "False"
     },
     {
-        "title": "Úkol 3",
-        "description": "Popis úkolu 3."
+        "ID": "3",
+        "description": "Popis úkolu 3.",
+        "status": "False"
     }
 ]
