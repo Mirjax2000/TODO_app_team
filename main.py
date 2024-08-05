@@ -41,6 +41,7 @@ class Header(ctk.CTkFrame):
         self.input_task.get()
         self.input_task.focus()
         self.input_task.bind("<FocusIn>", self.clear_text)
+        self.input_task.bind("<Return>", self.add_task)
         self.input_task.grid(row=0, column=0, sticky="ew", padx=(0, 10))
 
         self.input_btn = ctk.CTkButton(
@@ -51,8 +52,9 @@ class Header(ctk.CTkFrame):
         self.columnconfigure(0, weight=1, uniform="a")
         self.columnconfigure(1, weight=0, uniform="a")
 
-    def add_task(self):
+    def add_task(self, event=None):
         user_input = self.input_task.get()
+        print(f"Added task: {user_input}")
 
     @staticmethod
     def clear_text(event):
