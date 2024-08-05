@@ -9,6 +9,3 @@ packaging==24.1
 pathspec==0.12.1
 platformdirs==4.2.2
 typing_extensions==4.12.2
-json
-os
-csv
