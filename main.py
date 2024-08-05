@@ -52,7 +52,7 @@ class Header(ctk.CTkFrame):
         self.columnconfigure(1, weight=0, uniform="a")
 
     def add_task(self):
-        pass
+        user_input = self.input_task.get()
 
     @staticmethod
     def clear_text(event):
