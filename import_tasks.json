@@ -1,0 +1,14 @@
+[
+    {
+        "task": "Úkol 1",
+        "task_description": "Popis úkolu 1."
+    },
+    {
+        "task": "Úkol 2",
+        "task_description": "Popis úkolu 2."
+    },
+    {
+        "task": "Úkol 3",
+        "task_description": "Popis úkolu 3."
+    }
+]
