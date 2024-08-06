@@ -29,7 +29,7 @@ class App(ctk.CTk):  # Main app
 
     def center_window(self):
         self.update_idletasks()
-        width = 800
+        width = 1000
         height = 600
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
@@ -158,11 +158,10 @@ class TaskManager:
         self.tasks.append(new_task)
         self.new_label()
 
-    def new_label(self):
-        item = self.tasks[-1] if self.tasks else None
+    def create_label(self, item):
         description = getattr(item, "description", "nemame")
         status = getattr(item, "status", "nemame")
-        text = f"task: {description:<40} status: {status} "
+        text = f"task: {description:<85} status: {status} "
         self.parent.display.label = ctk.CTkLabel(
             self.parent.display.display_frame,
             anchor="w",
@@ -171,20 +170,15 @@ class TaskManager:
             fg_color="#3e3e3e",
         )
         self.parent.display.label.pack(expand=True, fill="x", pady=2)
+        return self.parent.display.label
+
+    def new_label(self):
+        item = self.tasks[-1] if self.tasks else None
+        self.create_label(item)
 
     def new_multi_labels(self):
         for item in self.tasks:
-            description = getattr(item, "description", "nemame")
-            status = getattr(item, "status", "nemame")
-            text = f"task: {description:<40} status: {status} "
-            self.parent.display.label = ctk.CTkLabel(
-                self.parent.display.display_frame,
-                anchor="w",
-                font=app.font_normal,
-                text=text,
-                fg_color="#3e3e3e",
-            )
-            self.parent.display.label.pack(expand=True, fill="x", pady=2)
+            self.create_label(item)
 
 
 class Task:
