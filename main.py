@@ -33,6 +33,7 @@ class App(ctk.CTk):  # Main app
         self.geometry(f"{width}x{height}+{x}+{y}")
 
 
+
 class Header(ctk.CTkFrame):
     def __init__(self, parent):
         self.parent = parent
