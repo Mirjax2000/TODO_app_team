@@ -6,6 +6,7 @@ import csv
 from icecream import ic
 
 
+
 class App(ctk.CTk):  # Main app
     # constants
     font_big = ("Arial", 30, "normal")
