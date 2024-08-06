@@ -36,7 +36,7 @@ class Header(ctk.CTkFrame):
     def __init__(self, parent):
         self.parent = parent
         super().__init__(parent)
-        self.pack(side="top", fill="x", pady=20, padx=20)
+        self.pack(side="top", fill="x")
 
         # widgets input, button
         self.input_task = ctk.CTkEntry(
@@ -46,7 +46,7 @@ class Header(ctk.CTkFrame):
         self.input_task.focus()
         self.input_task.bind("<FocusIn>", self.clear_text)
         self.input_task.bind("<Return>", self.add_task)
-        self.input_task.grid(row=0, column=0, sticky="ew", padx=(0, 10))
+        self.input_task.grid(row=0, column=0, sticky="ew", padx=(0, 0))
 
         self.input_btn = ctk.CTkButton(
             self, text="Add Task", font=parent.font_normal, command=self.add_task
@@ -70,7 +70,12 @@ class Display(ctk.CTkFrame):
         self.parent = parent
         self.btns_text = ["Remove task", "Edit task", "Save list", "Load list", "Exit"]
         super().__init__(parent)
-        self.pack(side="top", fill="x", pady=20, padx=20)
+        self.pack(side="top", fill="both", expand=True)
+
+        self.display_frame = ctk.CTkScrollableFrame(self)
+        self.display_frame.grid(
+            row=0, rowspan=len(self.btns_text), column=0, sticky="nsew"
+        )
 
         for item in self.btns_text:
             row_set = self.btns_text.index(item)
@@ -80,7 +85,12 @@ class Display(ctk.CTkFrame):
                 text=item,
                 command=getattr(self, item.lower().replace(" ", "_")),
             )
-            self.btn.grid(row=row_set, column=1)
+            self.btn.grid(row=row_set, column=1, sticky="e")
+
+        self.columnconfigure(0, weight=1, uniform="a")
+        self.columnconfigure(1, weight=0, uniform="a")
+        row_config = tuple(range(len(self.btns_text)))
+        self.rowconfigure(row_config, weight=1, uniform="a")
 
     def remove_task(self):
         pass
@@ -94,6 +104,7 @@ class Display(ctk.CTkFrame):
     def load_list(self):
         pass
 
+    @staticmethod
     def exit(self):
         app.destroy()
 
@@ -102,10 +113,9 @@ class Footer(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-        self.pack(side="top", fill="x", pady=20, padx=20)
+        self.pack(side="bottom", fill="x", pady=20, padx=20)
 
 
 if __name__ == "__main__":
     app = App()
     app.mainloop()
-
