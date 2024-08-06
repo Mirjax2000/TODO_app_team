@@ -6,7 +6,6 @@ import csv
 from icecream import ic
 
 
-
 class App(ctk.CTk):  # Main app
     # constants
     font_big = ("Arial", 30, "normal")
@@ -27,7 +26,6 @@ class App(ctk.CTk):  # Main app
         self.header = Header(self)
         self.display = Display(self)
         self.footer = Footer(self)
-
 
     def center_window(self):
         self.update_idletasks()
