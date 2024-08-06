@@ -103,7 +103,7 @@ class Display(ctk.CTkFrame):
         self.test_label = ctk.CTkLabel(
             self.display_frame,
             anchor="w",
-            text="Test Label",
+            text="",
             fg_color="#3e3e3e",
         )
         self.test_label.pack(
@@ -163,7 +163,6 @@ class TaskManager:
     def __init__(self, parent):
         self.parent = parent
         self.tasks = []
-        ic(self.tasks)
 
     def load_tasks_from_json(self):
         file_path = os.path.join(os.path.dirname(__file__), "import_tasks.json")
@@ -175,6 +174,7 @@ class TaskManager:
         user_input = self.parent.header.input_task.get()
         new_task = Task(user_input, status)
         self.tasks.append(new_task)
+        self.parent.display.test_label.configure(text=user_input)
 
     def get_task_list(self):
         return [(task.description, task.status) for task in self.tasks]
