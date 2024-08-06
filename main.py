@@ -58,7 +58,7 @@ class Header(ctk.CTkFrame):
             self,
             text="Add Task",
             font=parent.font_normal,
-            command=self.parent.task.load_tasks_from_json,
+            command=self.parent.task.add_task,
         )
         self.input_btn.grid(row=0, column=1, sticky="e")
 
@@ -110,7 +110,7 @@ class Display(ctk.CTkFrame):
         pass
 
     def load_list(self):
-        pass
+        self.parent.task.load_tasks_from_json()
 
     @staticmethod
     def exit():
@@ -156,22 +156,23 @@ class TaskManager:
         user_input = self.parent.header.input_task.get()
         new_task = Task(user_input, status)
         self.tasks.append(new_task)
+        self.new_label()
 
     def new_label(self):
-        for item in self.tasks:
-            description = getattr(item, "description", "nemame")
-            status = getattr(item, "status", "nemame")
-            text = f"task: {description:<50} status: {status} "
-            self.parent.display.label = ctk.CTkLabel(
-                self.parent.display.display_frame,
-                anchor="w",
-                text=text,
-                fg_color="#3e3e3e",
-            )
-            self.parent.display.label.pack(
-                expand=True,
-                fill="x",
-            )
+        item = self.tasks[-1] if self.tasks else None
+        description = getattr(item, "description", "nemame")
+        status = getattr(item, "status", "nemame")
+        text = f"task: {description:<50} status: {status} "
+        self.parent.display.label = ctk.CTkLabel(
+            self.parent.display.display_frame,
+            anchor="w",
+            text=text,
+            fg_color="#3e3e3e",
+        )
+        self.parent.display.label.pack(
+            expand=True,
+            fill="x",
+        )
 
 
 class Task:
