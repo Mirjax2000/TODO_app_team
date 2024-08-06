@@ -4,6 +4,7 @@ import json
 import os
 import csv
 
+
 class Task:
     def __init__(self, ID, description, status):
         self.ID = ID
@@ -11,17 +12,22 @@ class Task:
         self.status = status
 
     def __str__(self):
-        return f"Task(ID={self.ID}, description={self.description}, status={self.status})"
+        return (
+            f"Task(ID={self.ID}, description={self.description}, status={self.status})"
+        )
+
 
 class TaskManager:
     def __init__(self):
         self.tasks = []
 
     def load_tasks_from_json(self):
-        file_path = os.path.join(os.path.dirname(__file__), 'import_tasks.json')
-        with open(file_path, 'r', encoding='utf-8') as file:
+        file_path = os.path.join(os.path.dirname(__file__), "import_tasks.json")
+        with open(file_path, "r", encoding="utf-8") as file:
             data = json.load(file)
-            self.tasks = [Task(item['ID'], item['description'], item['status']) for item in data]
+            self.tasks = [
+                Task(item["ID"], item["description"], item["status"]) for item in data
+            ]
 
     def add_task(self, ID, description, status):
         new_task = Task(ID, description, status)
@@ -29,7 +35,6 @@ class TaskManager:
 
     def get_task_list(self):
         return [(task.ID, task.description, task.status) for task in self.tasks]
-
 
 
 class App(ctk.CTk):  # Main app
@@ -61,7 +66,6 @@ class App(ctk.CTk):  # Main app
         x = screen_width // 2 - width // 2
         y = screen_height // 2 - height // 2
         self.geometry(f"{width}x{height}+{x}+{y}")
-
 
 
 class Header(ctk.CTkFrame):
