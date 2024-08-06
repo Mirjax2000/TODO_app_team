@@ -58,7 +58,7 @@ class Header(ctk.CTkFrame):
             self,
             text="Add Task",
             font=parent.font_normal,
-            command=self.parent.task.add_task,
+            command=self.parent.task.load_tasks_from_json,
         )
         self.input_btn.grid(row=0, column=1, sticky="e")
 
@@ -99,17 +99,6 @@ class Display(ctk.CTkFrame):
         self.columnconfigure(1, weight=0, uniform="a")
         row_config = tuple(range(len(self.btns_text)))
         self.rowconfigure(row_config, weight=1, uniform="a")
-
-        self.test_label = ctk.CTkLabel(
-            self.display_frame,
-            anchor="w",
-            text="",
-            fg_color="#3e3e3e",
-        )
-        self.test_label.pack(
-            expand=True,
-            fill="x",
-        )
 
     def remove_task(self):
         pass
@@ -161,22 +150,28 @@ class TaskManager:
         with open(file_path, "r", encoding="utf-8") as file:
             data = json.load(file)
             self.tasks = [Task(item["description"], item["status"]) for item in data]
+        self.new_label()
 
-    def add_task(self, status=False, event=None):
+    def add_task(self, status="nesplneno"):
         user_input = self.parent.header.input_task.get()
         new_task = Task(user_input, status)
         self.tasks.append(new_task)
-        self.vypis()
 
-    def vypis(self):
+    def new_label(self):
         for item in self.tasks:
-            ic(item)
             description = getattr(item, "description", "nemame")
             status = getattr(item, "status", "nemame")
-            self.parent.display.test_label.configure(text=f"{description}: {status}")
-
-    def get_task_list(self):
-        return [(task.description, task.status) for task in self.tasks]
+            text = f"task: {description:<50} status: {status} "
+            self.parent.display.label = ctk.CTkLabel(
+                self.parent.display.display_frame,
+                anchor="w",
+                text=text,
+                fg_color="#3e3e3e",
+            )
+            self.parent.display.label.pack(
+                expand=True,
+                fill="x",
+            )
 
 
 class Task:
