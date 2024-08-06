@@ -150,7 +150,7 @@ class TaskManager:
         with open(file_path, "r", encoding="utf-8") as file:
             data = json.load(file)
             self.tasks = [Task(item["description"], item["status"]) for item in data]
-        self.new_label()
+        self.new_multi_labels()
 
     def add_task(self, status="nesplneno"):
         user_input = self.parent.header.input_task.get()
@@ -162,17 +162,29 @@ class TaskManager:
         item = self.tasks[-1] if self.tasks else None
         description = getattr(item, "description", "nemame")
         status = getattr(item, "status", "nemame")
-        text = f"task: {description:<50} status: {status} "
+        text = f"task: {description:<40} status: {status} "
         self.parent.display.label = ctk.CTkLabel(
             self.parent.display.display_frame,
             anchor="w",
+            font=app.font_normal,
             text=text,
             fg_color="#3e3e3e",
         )
-        self.parent.display.label.pack(
-            expand=True,
-            fill="x",
-        )
+        self.parent.display.label.pack(expand=True, fill="x", pady=2)
+
+    def new_multi_labels(self):
+        for item in self.tasks:
+            description = getattr(item, "description", "nemame")
+            status = getattr(item, "status", "nemame")
+            text = f"task: {description:<40} status: {status} "
+            self.parent.display.label = ctk.CTkLabel(
+                self.parent.display.display_frame,
+                anchor="w",
+                font=app.font_normal,
+                text=text,
+                fg_color="#3e3e3e",
+            )
+            self.parent.display.label.pack(expand=True, fill="x", pady=2)
 
 
 class Task:
