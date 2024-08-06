@@ -1,14 +1,14 @@
 [
     {
         "description": "Popis úkolu 1.",
-        "status": "False"
+        "status": "nesplneno"
     },
     {
         "description": "Popis úkolu 2.",
-        "status": "False"
+        "status": "nesplneno"
     },
     {
         "description": "Popis úkolu 3.",
-        "status": "False"
+        "status": "nesplneno"
     }
 ]

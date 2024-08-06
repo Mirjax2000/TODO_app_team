@@ -6,7 +6,6 @@ import csv
 from icecream import ic
 
 
-
 class App(ctk.CTk):  # Main app
     # constants
     font_big = ("Arial", 30, "normal")
@@ -27,7 +26,6 @@ class App(ctk.CTk):  # Main app
         self.header = Header(self)
         self.display = Display(self)
         self.footer = Footer(self)
-
 
     def center_window(self):
         self.update_idletasks()
@@ -102,17 +100,6 @@ class Display(ctk.CTkFrame):
         row_config = tuple(range(len(self.btns_text)))
         self.rowconfigure(row_config, weight=1, uniform="a")
 
-        self.test_label = ctk.CTkLabel(
-            self.display_frame,
-            anchor="w",
-            text="Test Label",
-            fg_color="#3e3e3e",
-        )
-        self.test_label.pack(
-            expand=True,
-            fill="x",
-        )
-
     def remove_task(self):
         pass
 
@@ -123,7 +110,7 @@ class Display(ctk.CTkFrame):
         pass
 
     def load_list(self):
-        pass
+        self.parent.task.load_tasks_from_json()
 
     @staticmethod
     def exit():
@@ -152,34 +139,58 @@ class Footer(ctk.CTkFrame):
         self.columnconfigure(1, weight=1, uniform="a")
 
 
-class Task:
-    def __init__(self, description, status):
-        self.description = description
-        self.status = status
-
-    def __str__(self):
-        return f"description={self.description}, status={self.status})"
-
-
 class TaskManager:
     def __init__(self, parent):
         self.parent = parent
         self.tasks = []
-        ic(self.tasks)
 
     def load_tasks_from_json(self):
+        self.tasks.clear()
         file_path = os.path.join(os.path.dirname(__file__), "import_tasks.json")
         with open(file_path, "r", encoding="utf-8") as file:
             data = json.load(file)
             self.tasks = [Task(item["description"], item["status"]) for item in data]
+        self.new_multi_labels()
 
-    def add_task(self, status=False, event=None):
+    def add_task(self, status="nesplneno"):
         user_input = self.parent.header.input_task.get()
         new_task = Task(user_input, status)
         self.tasks.append(new_task)
+        self.new_label()
 
-    def get_task_list(self):
-        return [(task.description, task.status) for task in self.tasks]
+    def new_label(self):
+        item = self.tasks[-1] if self.tasks else None
+        description = getattr(item, "description", "nemame")
+        status = getattr(item, "status", "nemame")
+        text = f"task: {description:<40} status: {status} "
+        self.parent.display.label = ctk.CTkLabel(
+            self.parent.display.display_frame,
+            anchor="w",
+            font=app.font_normal,
+            text=text,
+            fg_color="#3e3e3e",
+        )
+        self.parent.display.label.pack(expand=True, fill="x", pady=2)
+
+    def new_multi_labels(self):
+        for item in self.tasks:
+            description = getattr(item, "description", "nemame")
+            status = getattr(item, "status", "nemame")
+            text = f"task: {description:<40} status: {status} "
+            self.parent.display.label = ctk.CTkLabel(
+                self.parent.display.display_frame,
+                anchor="w",
+                font=app.font_normal,
+                text=text,
+                fg_color="#3e3e3e",
+            )
+            self.parent.display.label.pack(expand=True, fill="x", pady=2)
+
+
+class Task:
+    def __init__(self, description, status):
+        self.description = description
+        self.status = status
 
 
 if __name__ == "__main__":
