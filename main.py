@@ -128,7 +128,22 @@ class Footer(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-        self.pack(side="bottom", fill="x", pady=2)
+        self.pack(side="bottom", fill="x", pady=20, padx=20)
+
+        self.footer_label = ctk.CTkLabel(
+            self,
+            font=parent.font_normal,
+            text="List name: ",
+        )
+        self.footer_label.grid(row=0, column=0, sticky="e")
+
+        self.footer_label_name = ctk.CTkLabel(
+            self, font=parent.font_normal, text="my-name"
+        )
+        self.footer_label_name.grid(row=0, column=1, sticky="w")
+
+        self.columnconfigure(0, weight=0, uniform="a")
+        self.columnconfigure(1, weight=1, uniform="a")
 
 
 if __name__ == "__main__":
