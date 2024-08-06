@@ -1,0 +1,14 @@
+[
+    {
+        "description": "Popis úkolu 1.",
+        "status": "False"
+    },
+    {
+        "description": "Popis úkolu 2.",
+        "status": "False"
+    },
+    {
+        "description": "Popis úkolu 3.",
+        "status": "False"
+    }
+]
