@@ -2,9 +2,9 @@ import tkinter as tk
 import customtkinter as ctk
 
 
-class App(ctk.CTk):
+class App(ctk.CTk):  # Main app
     # constants
-    font_big = ("Arial", 30, "bold")
+    font_big = ("Arial", 30, "normal")
     font_normal = ("Arial", 20, "normal")
     font_small = ("Arial", 16, "normal")
 
@@ -16,7 +16,10 @@ class App(ctk.CTk):
         self.center_window()
         self.resizable(False, False)
 
+        # Frames
         self.header = Header(self)
+        self.display = Display(self)
+        self.footer = Footer(self)
 
     def center_window(self):
         self.update_idletasks()
@@ -31,10 +34,11 @@ class App(ctk.CTk):
 
 class Header(ctk.CTkFrame):
     def __init__(self, parent):
-        parent = parent
+        self.parent = parent
         super().__init__(parent)
         self.pack(side="top", fill="x", pady=20, padx=20)
 
+        # widgets input, button
         self.input_task = ctk.CTkEntry(
             self, placeholder_text="Enter task", font=parent.font_normal
         )
@@ -59,6 +63,46 @@ class Header(ctk.CTkFrame):
     @staticmethod
     def clear_text(event):
         event.widget.delete(0, ctk.END)
+
+
+class Display(ctk.CTkFrame):
+    def __init__(self, parent):
+        self.parent = parent
+        self.btns_text = ["Remove task", "Edit task", "Save list", "Load list", "Exit"]
+        super().__init__(parent)
+        self.pack(side="top", fill="x", pady=20, padx=20)
+
+        for item in self.btns_text:
+            row_set = self.btns_text.index(item)
+            self.btn = ctk.CTkButton(
+                self,
+                font=parent.font_normal,
+                text=item,
+                command=getattr(self, item.lower().replace(" ", "_")),
+            )
+            self.btn.grid(row=row_set, column=1)
+
+    def remove_task(self):
+        pass
+
+    def edit_task(self):
+        pass
+
+    def save_list(self):
+        pass
+
+    def load_list(self):
+        pass
+
+    def exit(self):
+        app.destroy()
+
+
+class Footer(ctk.CTkFrame):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.parent = parent
+        self.pack(side="top", fill="x", pady=20, padx=20)
 
 
 if __name__ == "__main__":
