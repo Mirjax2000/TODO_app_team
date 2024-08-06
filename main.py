@@ -27,6 +27,7 @@ class App(ctk.CTk):  # Main app
         self.display = Display(self)
         self.footer = Footer(self)
 
+
     def center_window(self):
         self.update_idletasks()
         width = 800
