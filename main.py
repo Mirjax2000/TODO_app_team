@@ -150,21 +150,13 @@ class Footer(ctk.CTkFrame):
         self.columnconfigure(1, weight=1, uniform="a")
 
 
-class Task:
-    def __init__(self, description, status):
-        self.description = description
-        self.status = status
-
-    def __str__(self):
-        return f"description={self.description}, status={self.status})"
-
-
 class TaskManager:
     def __init__(self, parent):
         self.parent = parent
         self.tasks = []
 
     def load_tasks_from_json(self):
+        self.tasks.clear()
         file_path = os.path.join(os.path.dirname(__file__), "import_tasks.json")
         with open(file_path, "r", encoding="utf-8") as file:
             data = json.load(file)
@@ -174,10 +166,23 @@ class TaskManager:
         user_input = self.parent.header.input_task.get()
         new_task = Task(user_input, status)
         self.tasks.append(new_task)
-        self.parent.display.test_label.configure(text=user_input)
+        self.vypis()
+
+    def vypis(self):
+        for item in self.tasks:
+            ic(item)
+            description = getattr(item, "description", "nemame")
+            status = getattr(item, "status", "nemame")
+            self.parent.display.test_label.configure(text=f"{description}: {status}")
 
     def get_task_list(self):
         return [(task.description, task.status) for task in self.tasks]
+
+
+class Task:
+    def __init__(self, description, status):
+        self.description = description
+        self.status = status
 
 
 if __name__ == "__main__":
