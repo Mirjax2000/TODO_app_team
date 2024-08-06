@@ -3,6 +3,7 @@ import customtkinter as ctk
 import json
 import os
 import csv
+from icecream import ic
 
 
 class App(ctk.CTk):  # Main app
@@ -21,10 +22,10 @@ class App(ctk.CTk):  # Main app
         self.configure(fg_color="#2b2b2b")
 
         # Frames
+        self.task = TaskManager(self)
         self.header = Header(self)
         self.display = Display(self)
         self.footer = Footer(self)
-        self.task = TaskManager(self)
 
     def center_window(self):
         self.update_idletasks()
@@ -50,11 +51,14 @@ class Header(ctk.CTkFrame):
         self.input_task.get()
         self.input_task.focus()
         self.input_task.bind("<FocusIn>", self.clear_text)
-        self.input_task.bind("<Return>", self.add_task)
+        self.input_task.bind("<Return>", self.parent.task.add_task)
         self.input_task.grid(row=0, column=0, padx=(0, 40), sticky="ew")
 
         self.input_btn = ctk.CTkButton(
-            self, text="Add Task", font=parent.font_normal, command=self.add_task
+            self,
+            text="Add Task",
+            font=parent.font_normal,
+            command=self.parent.task.add_task,
         )
         self.input_btn.grid(row=0, column=1, sticky="e")
 
@@ -168,9 +172,8 @@ class TaskManager:
             self.tasks = [Task(item["description"], item["status"]) for item in data]
 
     def add_task(self, status=False, event=None):
-        user_input = self.input_task.get()
+        user_input = self.parent.header.input_task.get()
         new_task = Task(user_input, status)
-
         self.tasks.append(new_task)
 
     def get_task_list(self):
