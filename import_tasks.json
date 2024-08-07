@@ -1,17 +1,14 @@
 [
     {
-        "ID": "1",
         "description": "Popis úkolu 1.",
-        "status": "False"
+        "status": "nesplneno"
     },
     {
-        "ID": "2",
         "description": "Popis úkolu 2.",
-        "status": "False"
+        "status": "nesplneno"
     },
     {
-        "ID": "3",
         "description": "Popis úkolu 3.",
-        "status": "False"
+        "status": "nesplneno"
     }
 ]
