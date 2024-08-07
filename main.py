@@ -107,7 +107,7 @@ class Display(ctk.CTkFrame):
         pass
 
     def save_list(self):
-        pass
+        self.parent.task.save_tasks_to_csv()
 
     def load_list(self):
         self.parent.task.load_tasks_from_json()
@@ -158,6 +158,16 @@ class TaskManager:
         self.tasks.append(new_task)
         self.new_label()
 
+    def save_tasks_to_csv(self):
+        file_path = os.path.join(
+            os.path.dirname(__file__), "save_list", f"{list_name}.csv"
+        )
+        with open(file_path, "w", newline="", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            writer.writerow(["description", "status"])
+            for task in self.tasks:
+                writer.writerow([task.description, task.status])
+
     def new_label(self):
         item = self.tasks[-1] if self.tasks else None
         description = getattr(item, "description", "nemame")
@@ -191,7 +201,6 @@ class Task:
     def __init__(self, description, status):
         self.description = description
         self.status = status
-
 
 
 if __name__ == "__main__":
