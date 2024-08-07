@@ -152,7 +152,7 @@ class TaskManager:
             self.tasks = [Task(item["description"], item["status"]) for item in data]
         self.new_multi_labels()
 
-    def add_task(self, status="nesplneno"):
+    def add_task(self, event=None, status="nesplneno"):
         user_input = self.parent.header.input_task.get()
         new_task = Task(user_input, status)
         self.tasks.append(new_task)
@@ -161,12 +161,13 @@ class TaskManager:
     def create_label(self, item):
         description = getattr(item, "description", "nemame")
         status = getattr(item, "status", "nemame")
-        text = f"task: {description:<85} status: {status} "
+        text = f"task: {description} status: {status}"
         self.parent.display.label = ctk.CTkLabel(
             self.parent.display.display_frame,
             anchor="w",
             font=app.font_normal,
             text=text,
+            corner_radius=10,
             fg_color="#3e3e3e",
         )
         self.parent.display.label.pack(expand=True, fill="x", pady=2)
