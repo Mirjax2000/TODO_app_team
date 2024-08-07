@@ -29,7 +29,7 @@ class App(ctk.CTk):  # Main app
 
     def center_window(self):
         self.update_idletasks()
-        width = 800
+        width = 1000
         height = 600
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
@@ -52,7 +52,7 @@ class Header(ctk.CTkFrame):
         self.input_task.focus()
         self.input_task.bind("<FocusIn>", self.clear_text)
         self.input_task.bind("<Return>", self.parent.task.add_task)
-        self.input_task.grid(row=0, column=0, padx=(0, 40), sticky="ew")
+        self.input_task.grid(row=0, column=0, padx=(0, 20), sticky="ew")
 
         self.input_btn = ctk.CTkButton(
             self,
@@ -61,7 +61,7 @@ class Header(ctk.CTkFrame):
             command=self.parent.task.add_task,
         )
         self.input_btn.grid(row=0, column=1, sticky="e")
-
+        # formatovani gridu pro header
         self.columnconfigure(0, weight=1, uniform="a")
         self.columnconfigure(1, weight=0, uniform="a")
 
@@ -71,6 +71,7 @@ class Header(ctk.CTkFrame):
 
 
 class Display(ctk.CTkFrame):
+
     def __init__(self, parent):
         self.parent = parent
         self.btns_text = ["Remove task", "Edit task", "Save list", "Load list", "Exit"]
@@ -79,12 +80,16 @@ class Display(ctk.CTkFrame):
 
         self.display_frame = ctk.CTkScrollableFrame(self)
         self.display_frame.grid(
-            row=0,
-            rowspan=len(self.btns_text),
-            column=0,
-            sticky="nsew",
+            row=0, rowspan=len(self.btns_text), column=0, sticky="nsew", padx=(0, 40)
         )
+        # zacatek vypisu labelu
+        # formatovani gridu pro display_frame label
+        self.display_frame.columnconfigure(0, weight=1, uniform="a")
+        self.display_frame.columnconfigure(1, weight=0, uniform="b")
+        self.display_frame.columnconfigure(2, weight=0, uniform="b")
+        self.display_frame.rowconfigure(0, weight=1, uniform="a")
 
+        # side buttons
         for item in self.btns_text:
             self.btn = ctk.CTkButton(
                 self,
@@ -95,7 +100,8 @@ class Display(ctk.CTkFrame):
             row_config = self.btns_text.index(item)
             self.btn.grid(row=row_config, column=1, sticky="e")
 
-        self.columnconfigure(0, weight=1, uniform="a")
+        # formatovani gridu pro vsechny tlacitka
+        self.columnconfigure(0, weight=1, uniform="b")
         self.columnconfigure(1, weight=0, uniform="a")
         row_config = tuple(range(len(self.btns_text)))
         self.rowconfigure(row_config, weight=1, uniform="a")
@@ -136,8 +142,10 @@ class Footer(ctk.CTkFrame):
             font=parent.font_normal,
             placeholder_text="jmeno listu",
         )
+        self.footer_entry.get()
         self.footer_entry.grid(row=0, column=1, sticky="w")
-        #
+
+        # formatovani gridu pro footer
         self.columnconfigure(0, weight=0, uniform="a")
         self.columnconfigure(1, weight=0, uniform="b")
 
@@ -146,6 +154,22 @@ class TaskManager:
     def __init__(self, parent):
         self.parent = parent
         self.tasks = []
+        self.row_count = 0
+
+    def save_tasks_to_csv(self):
+        list_name = ""
+        if self.parent.footer.footer_entry.get() == "":
+            list_name = "list"
+        else:
+            list_name = self.parent.footer.footer_entry.get().replace(" ", "_")
+        file_path = os.path.join(
+            os.path.dirname(__file__), "load_list", f"{list_name}.csv"
+        )
+        with open(file_path, "w", newline="", encoding="utf-8") as file:
+            writer = csv.writer(file, delimiter=";")
+            writer.writerow(["description", "status"])
+            for task in self.tasks:
+                writer.writerow([task.description, task.status])
 
     def load_tasks_from_csv(self):
         self.tasks.clear()
@@ -159,56 +183,62 @@ class TaskManager:
                 if len(row) >= 2:
                     description, status = row
                     self.tasks.append(Task(description, status))
-        self.new_multi_labels()
+        self.new_multi_labels(self.tasks)
 
-    def add_task(self, status="nesplneno"):
+    def create_task_frame(self, item):
+        description = getattr(item, "description", "Error")
+        status = getattr(item, "status", "Error")
+
+        DISPLAY_PATH = self.parent.display.display_frame  # cesta k display framu
+        # label description
+        DISPLAY_PATH.label_description = ctk.CTkLabel(
+            DISPLAY_PATH,
+            text=description,
+            font=self.parent.font_normal,
+        )
+        DISPLAY_PATH.label_description.grid(row=self.row_count, column=0, sticky="w")
+        # label status
+        DISPLAY_PATH.label_status = ctk.CTkLabel(
+            DISPLAY_PATH,
+            text=status,
+            font=self.parent.font_normal,
+            text_color="#ff7f00",
+        )
+        DISPLAY_PATH.label_status.grid(row=self.row_count, column=1, sticky="ew")
+        # checkbox
+        DISPLAY_PATH.var = ctk.IntVar()
+        DISPLAY_PATH.checkbox_status = ctk.CTkCheckBox(
+            DISPLAY_PATH,
+            variable=DISPLAY_PATH.var,
+            onvalue=1,
+            offvalue=0,
+            font=self.parent.font_normal,
+            text="",
+            width=0,
+        )
+        DISPLAY_PATH.checkbox_status.grid(
+            row=self.row_count, column=2, sticky="e", padx=10
+        )
+
+    def add_task(self, event=None, status="nesplneno"):
         user_input = self.parent.header.input_task.get()
-        new_task = Task(user_input, status)
-        self.tasks.append(new_task)
-        self.new_label()
-
-    def save_tasks_to_csv(self):
-        list_name = ""
-        if self.parent.footer.footer_entry.get() == "":
-            list_name = "list"
-        else:
-            list_name = self.parent.footer.footer_entry.get().replace(" ", "_")
-        file_path = os.path.join(
-            os.path.dirname(__file__), "save_list", f"{list_name}.csv"
-        )
-        with open(file_path, "w", newline="", encoding="utf-8") as file:
-            writer = csv.writer(file, delimiter=";")
-            writer.writerow(["description", "status"])
-            for task in self.tasks:
-                writer.writerow([task.description, task.status])
-
-    def new_label(self):
-        item = self.tasks[-1] if self.tasks else None
-        description = getattr(item, "description", "nemame")
-        status = getattr(item, "status", "nemame")
-        text = f"task: {description:<40} status: {status} "
-        self.parent.display.label = ctk.CTkLabel(
-            self.parent.display.display_frame,
-            anchor="w",
-            font=app.font_normal,
-            text=text,
-            fg_color="#3e3e3e",
-        )
-        self.parent.display.label.pack(expand=True, fill="x", pady=2)
-
-    def new_multi_labels(self):
-        for item in self.tasks:
-            description = getattr(item, "description", "nemame")
-            status = getattr(item, "status", "nemame")
-            text = f"task: {description:<40} status: {status} "
-            self.parent.display.label = ctk.CTkLabel(
-                self.parent.display.display_frame,
-                anchor="w",
-                font=app.font_normal,
-                text=text,
-                fg_color="#3e3e3e",
+        if not user_input:
+            self.parent.header.input_task.configure(
+                placeholder_text="Please enter a task",
+                placeholder_text_color="#ff7f00",
             )
-            self.parent.display.label.pack(expand=True, fill="x", pady=2)
+        else:
+            self.row_count += 1
+            new_task = Task(user_input, status)
+            self.tasks.append(new_task)
+            item = self.tasks[-1] if self.tasks else None
+
+            self.create_task_frame(item)
+
+    def new_multi_labels(self, list):
+        for item in list:
+            self.row_count += 1
+            self.create_task_frame(item)
 
 
 class Task:
