@@ -52,7 +52,7 @@ class Header(ctk.CTkFrame):
         self.input_task.focus()
         self.input_task.bind("<FocusIn>", self.clear_text)
         self.input_task.bind("<Return>", self.parent.task.add_task)
-        self.input_task.grid(row=0, column=0, padx=(0, 40), sticky="ew")
+        self.input_task.grid(row=0, column=0, padx=(0, 20), sticky="ew")
 
         self.input_btn = ctk.CTkButton(
             self,
@@ -79,10 +79,7 @@ class Display(ctk.CTkFrame):
 
         self.display_frame = ctk.CTkScrollableFrame(self)
         self.display_frame.grid(
-            row=0,
-            rowspan=len(self.btns_text),
-            column=0,
-            sticky="nsew",
+            row=0, rowspan=len(self.btns_text), column=0, sticky="nsew", padx=(0, 40)
         )
 
         for item in self.btns_text:
@@ -95,7 +92,7 @@ class Display(ctk.CTkFrame):
             row_config = self.btns_text.index(item)
             self.btn.grid(row=row_config, column=1, sticky="e")
 
-        self.columnconfigure(0, weight=1, uniform="a")
+        self.columnconfigure(0, weight=1, uniform="b")
         self.columnconfigure(1, weight=0, uniform="a")
         row_config = tuple(range(len(self.btns_text)))
         self.rowconfigure(row_config, weight=1, uniform="a")
