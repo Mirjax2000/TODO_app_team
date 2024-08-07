@@ -166,7 +166,7 @@ class TaskManager:
         if self.parent.footer.footer_entry.get() == "":
             list_name = "list"
         else:
-            list_name = self.parent.footer.footer_entry.get()
+            list_name = self.parent.footer.footer_entry.get().replace(" ", "_")
         file_path = os.path.join(
             os.path.dirname(__file__), "save_list", f"{list_name}.csv"
         )
