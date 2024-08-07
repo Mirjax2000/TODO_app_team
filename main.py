@@ -125,15 +125,18 @@ class Footer(ctk.CTkFrame):
             font=parent.font_normal,
             text="List name: ",
         )
-        self.footer_label.grid(row=0, column=0, sticky="e")
 
-        self.footer_label_name = ctk.CTkLabel(
-            self, font=parent.font_normal, text="my-name"
+        self.footer_label.grid(row=0, column=0, sticky="w")
+
+        self.footer_entry = ctk.CTkEntry(
+            self,
+            font=parent.font_normal,
+            placeholder_text="jmeno listu",
         )
-        self.footer_label_name.grid(row=0, column=1, sticky="w")
-
+        self.footer_entry.grid(row=0, column=1, sticky="w")
+        #
         self.columnconfigure(0, weight=0, uniform="a")
-        self.columnconfigure(1, weight=1, uniform="a")
+        self.columnconfigure(1, weight=0, uniform="b")
 
 
 class TaskManager:
