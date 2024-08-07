@@ -128,15 +128,18 @@ class Footer(ctk.CTkFrame):
             font=parent.font_normal,
             text="List name: ",
         )
-        self.footer_label.grid(row=0, column=0, sticky="e")
 
-        self.footer_label_name = ctk.CTkLabel(
-            self, font=parent.font_normal, text="my-name"
+        self.footer_label.grid(row=0, column=0, sticky="w")
+
+        self.footer_entry = ctk.CTkEntry(
+            self,
+            font=parent.font_normal,
+            placeholder_text="jmeno listu",
         )
-        self.footer_label_name.grid(row=0, column=1, sticky="w")
-
+        self.footer_entry.grid(row=0, column=1, sticky="w")
+        #
         self.columnconfigure(0, weight=0, uniform="a")
-        self.columnconfigure(1, weight=1, uniform="a")
+        self.columnconfigure(1, weight=0, uniform="b")
 
 
 class TaskManager:
@@ -159,11 +162,16 @@ class TaskManager:
         self.new_label()
 
     def save_tasks_to_csv(self):
+        list_name = ""
+        if self.parent.footer.footer_entry.get() == "":
+            list_name = "list"
+        else:
+            list_name = self.parent.footer.footer_entry.get()
         file_path = os.path.join(
             os.path.dirname(__file__), "save_list", f"{list_name}.csv"
         )
         with open(file_path, "w", newline="", encoding="utf-8") as file:
-            writer = csv.writer(file)
+            writer = csv.writer(file, delimiter=";")
             writer.writerow(["description", "status"])
             for task in self.tasks:
                 writer.writerow([task.description, task.status])
