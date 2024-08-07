@@ -61,7 +61,7 @@ class Header(ctk.CTkFrame):
             command=self.parent.task.add_task,
         )
         self.input_btn.grid(row=0, column=1, sticky="e")
-
+        # formatovani gridu pro header
         self.columnconfigure(0, weight=1, uniform="a")
         self.columnconfigure(1, weight=0, uniform="a")
 
@@ -71,6 +71,7 @@ class Header(ctk.CTkFrame):
 
 
 class Display(ctk.CTkFrame):
+
     def __init__(self, parent):
         self.parent = parent
         self.btns_text = ["Remove task", "Edit task", "Save list", "Load list", "Exit"]
@@ -81,7 +82,14 @@ class Display(ctk.CTkFrame):
         self.display_frame.grid(
             row=0, rowspan=len(self.btns_text), column=0, sticky="nsew", padx=(0, 40)
         )
+        # zacatek vypisu labelu
+        # formatovani gridu pro display_frame label
+        self.display_frame.columnconfigure(0, weight=1, uniform="a")
+        self.display_frame.columnconfigure(1, weight=0, uniform="b")
+        self.display_frame.columnconfigure(2, weight=0, uniform="b")
+        self.display_frame.rowconfigure(0, weight=1, uniform="a")
 
+        # side buttons
         for item in self.btns_text:
             self.btn = ctk.CTkButton(
                 self,
@@ -92,6 +100,7 @@ class Display(ctk.CTkFrame):
             row_config = self.btns_text.index(item)
             self.btn.grid(row=row_config, column=1, sticky="e")
 
+        # formatovani gridu pro vsechny tlacitka
         self.columnconfigure(0, weight=1, uniform="b")
         self.columnconfigure(1, weight=0, uniform="a")
         row_config = tuple(range(len(self.btns_text)))
@@ -135,7 +144,8 @@ class Footer(ctk.CTkFrame):
         )
         self.footer_entry.get()
         self.footer_entry.grid(row=0, column=1, sticky="w")
-        #
+
+        # formatovani gridu pro footer
         self.columnconfigure(0, weight=0, uniform="a")
         self.columnconfigure(1, weight=0, uniform="b")
 
@@ -144,6 +154,7 @@ class TaskManager:
     def __init__(self, parent):
         self.parent = parent
         self.tasks = []
+        self.row_count = 0
 
     def load_tasks_from_json(self):
         self.tasks.clear()
@@ -154,33 +165,94 @@ class TaskManager:
         self.new_multi_labels()
 
     def add_task(self, event=None, status="nesplneno"):
+
         user_input = self.parent.header.input_task.get()
-        new_task = Task(user_input, status)
-        self.tasks.append(new_task)
-        self.new_label()
+        if not user_input:
+            self.parent.header.input_task.configure(
+                placeholder_text="Please enter a task",
+                placeholder_text_color="#ff7f00",
+            )
+        else:
 
-    def create_label(self, item):
-        description = getattr(item, "description", "nemame")
-        status = getattr(item, "status", "nemame")
-        text = f"task: {description} status: {status}"
-        self.parent.display.label = ctk.CTkLabel(
-            self.parent.display.display_frame,
-            anchor="w",
-            font=app.font_normal,
-            text=text,
-            corner_radius=10,
-            fg_color="#3e3e3e",
-        )
-        self.parent.display.label.pack(expand=True, fill="x", pady=2)
-        return self.parent.display.label
+            new_task = Task(user_input, status)
+            self.tasks.append(new_task)
+            item = self.tasks[-1] if self.tasks else None
+            description = getattr(item, "description", "Error")
+            status = getattr(item, "status", "Error")
 
-    def new_label(self):
-        item = self.tasks[-1] if self.tasks else None
-        self.create_label(item)
+            DISPLAY_PATH = self.parent.display.display_frame
+            DISPLAY_PATH.label_description = ctk.CTkLabel(
+                DISPLAY_PATH,
+                text=description,
+                font=self.parent.font_normal,
+            )
+            DISPLAY_PATH.label_description.grid(
+                row=self.row_count, column=0, sticky="w"
+            )
+
+            DISPLAY_PATH.label_status = ctk.CTkLabel(
+                DISPLAY_PATH,
+                text=status,
+                font=self.parent.font_normal,
+                text_color="#ff7f00",
+            )
+            DISPLAY_PATH.label_status.grid(row=self.row_count, column=1, sticky="ew")
+
+            DISPLAY_PATH.var = ctk.IntVar()
+            DISPLAY_PATH.checkbox_status = ctk.CTkCheckBox(
+                DISPLAY_PATH,
+                variable=DISPLAY_PATH.var,
+                onvalue=1,
+                offvalue=0,
+                font=self.parent.font_normal,
+                text="",
+                width=0,
+            )
+            DISPLAY_PATH.checkbox_status.grid(
+                row=self.row_count, column=2, sticky="e", padx=10
+            )
+            self.row_count += 1
 
     def new_multi_labels(self):
+
         for item in self.tasks:
-            self.create_label(item)
+            self.row_count += 1
+            ic(self.row_count)
+
+            description = getattr(item, "description", "Error")
+            status = getattr(item, "status", "Error")
+
+            DISPLAY_PATH = self.parent.display.display_frame
+            DISPLAY_PATH.label_description = ctk.CTkLabel(
+                DISPLAY_PATH,
+                text=description,
+                font=self.parent.font_normal,
+            )
+            DISPLAY_PATH.label_description.grid(
+                row=self.row_count, column=0, sticky="w"
+            )
+
+            DISPLAY_PATH.label_status = ctk.CTkLabel(
+                DISPLAY_PATH,
+                text=status,
+                font=self.parent.font_normal,
+                text_color="#ff7f00",
+            )
+            DISPLAY_PATH.label_status.grid(row=self.row_count, column=1, sticky="ew")
+
+            DISPLAY_PATH.var = ctk.IntVar()
+            DISPLAY_PATH.checkbox_status = ctk.CTkCheckBox(
+                DISPLAY_PATH,
+                variable=DISPLAY_PATH.var,
+                onvalue=1,
+                offvalue=0,
+                font=self.parent.font_normal,
+                text="",
+                width=0,
+            )
+            DISPLAY_PATH.checkbox_status.grid(
+                row=self.row_count, column=2, sticky="e", padx=10
+            )
 
 
 class Task:
