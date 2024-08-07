@@ -110,7 +110,7 @@ class Display(ctk.CTkFrame):
         self.parent.task.save_tasks_to_csv()
 
     def load_list(self):
-        self.parent.task.load_tasks_from_json()
+        self.parent.task.load_tasks_from_csv()
 
     @staticmethod
     def exit():
@@ -147,12 +147,18 @@ class TaskManager:
         self.parent = parent
         self.tasks = []
 
-    def load_tasks_from_json(self):
+    def load_tasks_from_csv(self):
         self.tasks.clear()
-        file_path = os.path.join(os.path.dirname(__file__), "import_tasks.json")
+        file_path = os.path.join(
+            os.path.dirname(__file__), "load_list", "import_tasks.csv"
+        )
         with open(file_path, "r", encoding="utf-8") as file:
-            data = json.load(file)
-            self.tasks = [Task(item["description"], item["status"]) for item in data]
+            reader = csv.reader(file, delimiter=";")
+            next(reader)
+            for row in reader:
+                if len(row) >= 2:
+                    description, status = row
+                    self.tasks.append(Task(description, status))
         self.new_multi_labels()
 
     def add_task(self, status="nesplneno"):
