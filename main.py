@@ -133,6 +133,7 @@ class Footer(ctk.CTkFrame):
             font=parent.font_normal,
             placeholder_text="jmeno listu",
         )
+        self.footer_entry.get()
         self.footer_entry.grid(row=0, column=1, sticky="w")
         #
         self.columnconfigure(0, weight=0, uniform="a")
