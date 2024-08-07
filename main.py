@@ -165,7 +165,6 @@ class TaskManager:
         self.new_multi_labels()
 
     def add_task(self, event=None, status="nesplneno"):
-
         user_input = self.parent.header.input_task.get()
         if not user_input:
             self.parent.header.input_task.configure(
@@ -174,6 +173,7 @@ class TaskManager:
             )
         else:
 
+            self.row_count += 1
             new_task = Task(user_input, status)
             self.tasks.append(new_task)
             item = self.tasks[-1] if self.tasks else None
@@ -211,7 +211,7 @@ class TaskManager:
             DISPLAY_PATH.checkbox_status.grid(
                 row=self.row_count, column=2, sticky="e", padx=10
             )
-            self.row_count += 1
+            ic(self.row_count)
 
     def new_multi_labels(self):
 
