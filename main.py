@@ -113,10 +113,10 @@ class Display(ctk.CTkFrame):
         pass
 
     def save_list(self):
-        pass
+        self.parent.task.save_tasks_to_csv()
 
     def load_list(self):
-        self.parent.task.load_tasks_from_json()
+        self.parent.task.load_tasks_from_csv()
 
     @staticmethod
     def exit():
@@ -156,26 +156,48 @@ class TaskManager:
         self.tasks = []
         self.row_count = 0
 
-    def load_tasks_from_json(self):
+    def save_tasks_to_csv(self):
+        list_name = ""
+        if self.parent.footer.footer_entry.get() == "":
+            list_name = "list"
+        else:
+            list_name = self.parent.footer.footer_entry.get().replace(" ", "_")
+        file_path = os.path.join(
+            os.path.dirname(__file__), "load_list", f"{list_name}.csv"
+        )
+        with open(file_path, "w", newline="", encoding="utf-8") as file:
+            writer = csv.writer(file, delimiter=";")
+            writer.writerow(["description", "status"])
+            for task in self.tasks:
+                writer.writerow([task.description, task.status])
+
+    def load_tasks_from_csv(self):
         self.tasks.clear()
-        file_path = os.path.join(os.path.dirname(__file__), "import_tasks.json")
+        file_path = os.path.join(
+            os.path.dirname(__file__), "load_list", "import_tasks.csv"
+        )
         with open(file_path, "r", encoding="utf-8") as file:
-            data = json.load(file)
-            self.tasks = [Task(item["description"], item["status"]) for item in data]
+            reader = csv.reader(file, delimiter=";")
+            next(reader)
+            for row in reader:
+                if len(row) >= 2:
+                    description, status = row
+                    self.tasks.append(Task(description, status))
         self.new_multi_labels(self.tasks)
 
     def create_task_frame(self, item):
         description = getattr(item, "description", "Error")
         status = getattr(item, "status", "Error")
 
-        DISPLAY_PATH = self.parent.display.display_frame
+        DISPLAY_PATH = self.parent.display.display_frame  # cesta k display framu
+        # label description
         DISPLAY_PATH.label_description = ctk.CTkLabel(
             DISPLAY_PATH,
             text=description,
             font=self.parent.font_normal,
         )
         DISPLAY_PATH.label_description.grid(row=self.row_count, column=0, sticky="w")
-
+        # label status
         DISPLAY_PATH.label_status = ctk.CTkLabel(
             DISPLAY_PATH,
             text=status,
@@ -183,7 +205,7 @@ class TaskManager:
             text_color="#ff7f00",
         )
         DISPLAY_PATH.label_status.grid(row=self.row_count, column=1, sticky="ew")
-
+        # checkbox
         DISPLAY_PATH.var = ctk.IntVar()
         DISPLAY_PATH.checkbox_status = ctk.CTkCheckBox(
             DISPLAY_PATH,
