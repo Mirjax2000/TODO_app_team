@@ -174,7 +174,9 @@ class Display(ctk.CTkFrame):
         self.parent.task.load_tasks_from_csv()
 
     def clear_list(self):
-        pass
+        self.parent.task.tasks.clear()
+        for child in self.parent.display.display_frame.winfo_children():
+            child.destroy()
 
     @staticmethod
     def exit():
