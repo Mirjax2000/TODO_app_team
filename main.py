@@ -68,6 +68,7 @@ class Header(ctk.CTkFrame):
     @staticmethod
     def clear_text(event):
         event.widget.delete(0, ctk.END)
+        print("Text cleared")
 
 
 class Display(ctk.CTkFrame):
@@ -253,6 +254,7 @@ class TaskManager:
         DISPLAY_PATH.label_frame = ctk.CTkFrame(DISPLAY_PATH)
         DISPLAY_FRAME = DISPLAY_PATH.label_frame
         DISPLAY_FRAME.pack(side="top", fill="x", pady=(0, 7), ipady=5)
+        DISPLAY_FRAME.bind("<Button-1>", lambda event: self.on_label_click(event))
 
         # Label description
         DISPLAY_FRAME.label_description = ctk.CTkLabel(
@@ -286,7 +288,7 @@ class TaskManager:
             font=self.parent.font_normal,
             text="",
             width=0,
-            command=self.check_status,
+            # command=self.check_status,
         )
         DISPLAY_FRAME.checkbox_status.grid(row=0, column=2, sticky="e", padx=10)
         DISPLAY_FRAME.columnconfigure(0, weight=1, uniform="a")
@@ -321,9 +323,10 @@ class TaskManager:
         for item in list:
             self.create_task_frame(item)
 
-    def check_status(self):
-        DISPLAY_CHECKBOX = self.parent.display.display_frame.label_frame
-        DISPLAY_STATUS = self.parent.display.display_frame.label_frame.label_status
+    def on_label_click(self, event):
+        # DISPLAY_CHECKBOX = self.parent.display.display_frame.label_frame
+        # DISPLAY_STATUS = self.parent.display.display_frame.label_frame.label_status
+        event.widget.master.configure(fg_color="#277bc6")
 
 
 class Task:
