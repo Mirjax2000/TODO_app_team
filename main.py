@@ -63,7 +63,7 @@ class Header(ctk.CTkFrame):
         self.input_btn.grid(row=0, column=1, sticky="e")
         # formatovani gridu pro header
         self.columnconfigure(0, weight=1, uniform="a")
-        self.columnconfigure(1, weight=0, uniform="a")
+        self.columnconfigure(1, weight=0, uniform="b")
 
     @staticmethod
     def clear_text(event):
@@ -74,38 +74,70 @@ class Display(ctk.CTkFrame):
 
     def __init__(self, parent):
         self.parent = parent
-        # self.btns_text = [
-        #     "Remove task",
-        #     "Edit task",
-        #     "Load list",
-        #     "Save list",
-        #     "Clear List",
-        #     "Exit",
-        # ]
+        self.btns_text = ["Remove task", "Edit task", "Save list", "Load list", "Exit"]
+
         super().__init__(parent)
         self.pack(side="top", fill="both", padx=20, expand=True)
 
         self.display_frame = ctk.CTkScrollableFrame(self)
-        self.display_frame.grid(
-            row=0, rowspan=len(self.btns_text), column=0, sticky="nsew", padx=(0, 40)
+        self.display_frame.grid(row=0, column=0, sticky="nsew")
+
+        self.display_btns = ctk.CTkFrame(self, width=140)
+        self.display_btns.grid(row=0, column=1, sticky="ns", padx=(20, 0))
+        # grid pro framy pro vsechny tlacitka
+        self.columnconfigure(0, weight=1, uniform="a")
+        self.columnconfigure(1, weight=0, uniform="b")
+        self.rowconfigure(0, weight=1, uniform="c")
+
+        self.btn_1 = ctk.CTkButton(
+            self.display_btns,
+            text=self.btns_text[0],
+            font=parent.font_normal,
+            command=self.remove_task,
+        )
+        self.btn_2 = ctk.CTkButton(
+            self.display_btns,
+            text=self.btns_text[1],
+            font=parent.font_normal,
+            command=self.edit_task(),
+        )
+        self.btn_3 = ctk.CTkButton(
+            self.display_btns,
+            text=self.btns_text[2],
+            font=parent.font_normal,
+            command=self.save_list,
+        )
+        self.btn_4 = ctk.CTkButton(
+            self.display_btns,
+            text=self.btns_text[3],
+            font=parent.font_normal,
+            command=self.load_list,
+        )
+        self.btn_5 = ctk.CTkButton(
+            self.display_btns,
+            text=self.btns_text[4],
+            font=parent.font_normal,
+            command=self.clear_list,
+        )
+        self.btn_6 = ctk.CTkButton(
+            self.display_btns,
+            text=self.btns_text[5],
+            font=parent.font_normal,
+            command=self.exit,
         )
 
-        # # side buttons
-        # for item in self.btns_text:
-        #     self.btn = ctk.CTkButton(
-        #         self,
-        #         font=parent.font_normal,
-        #         text=item,
-        #         command=getattr(self, item.lower().replace(" ", "_")),
-        #     )
-        #     row_config = self.btns_text.index(item)
-        #     self.btn.grid(row=row_config, column=1, sticky="e")
-        #
-        # # formatovani gridu pro vsechny tlacitka
-        # self.columnconfigure(0, weight=1, uniform="b")
-        # self.columnconfigure(1, weight=0, uniform="a")
-        # row_config = tuple(range(len(self.btns_text)))
-        # self.rowconfigure(row_config, weight=1, uniform="a")
+        self.btn_1.grid(row=0, column=1, sticky="e")
+        self.btn_2.grid(row=1, column=1, sticky="e")
+        self.btn_3.grid(row=2, column=1, sticky="e")
+        self.btn_4.grid(row=3, column=1, sticky="e")
+        self.btn_5.grid(row=4, column=1, sticky="e")
+        self.btn_6.grid(row=5, column=1, sticky="e")
+
+        # formatovani gridu pro vsechny tlacitka
+        self.display_btns.columnconfigure(0, weight=1, uniform="b")
+        self.display_btns.columnconfigure(1, weight=0, uniform="a")
+
+        self.display_btns.rowconfigure((0, 1, 2, 3, 4, 5), weight=0, uniform="a")
 
     def remove_task(self):
         pass
