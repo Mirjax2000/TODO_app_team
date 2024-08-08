@@ -241,7 +241,7 @@ class TaskManager:
                     description, status = row
                     self.tasks.append(Task(description, status))
         self.new_multi_labels(self.tasks)
-        self.check_status()
+        # self.check_status(self.tasks)
 
     def create_task_frame(self, item):
         description = getattr(item, "description", "Error")
@@ -266,14 +266,13 @@ class TaskManager:
             DISPLAY_FRAME,
             text=status,
             font=self.parent.font_normal,
-            text_color="#ff7f00",
-            width=100,
+            width=140,
             anchor="w",
         )
         DISPLAY_FRAME.label_status.grid(
             row=0,
             column=1,
-            sticky="ew",
+            sticky="w",
         )
 
         # checkbox
@@ -294,7 +293,15 @@ class TaskManager:
         DISPLAY_FRAME.columnconfigure(2, weight=0, uniform="c")
         DISPLAY_FRAME.rowconfigure(0, weight=1, uniform="a")
 
-    def add_task(self, event=None, status="nesplneno"):
+        if status == "Completed":
+            DISPLAY_FRAME.label_status.configure(text_color="#00ff00")
+            DISPLAY_FRAME.var.set("on")
+
+        else:
+            DISPLAY_FRAME.label_status.configure(text_color="#ff7f00")
+            DISPLAY_FRAME.var.set("off")
+
+    def add_task(self, event=None, status="Not Completed"):
         user_input = self.parent.header.input_task.get()
         if not user_input:
             self.parent.header.input_task.configure(
@@ -311,17 +318,15 @@ class TaskManager:
         for item in list:
             self.create_task_frame(item)
 
-    def check_status(self):
-        DISPLAY_CHECKBOX = self.parent.display.display_frame.label_frame
-        DISPLAY_STATUS = self.parent.display.display_frame.label_frame.label_status
-        for item in self.tasks:
-            status = getattr(item, "status")
-            ic(status)
-            if status == "splněno":
-                DISPLAY_CHECKBOX.configure(variable="on")
-
-                if DISPLAY_CHECKBOX.var.get() == "on":
-                    DISPLAY_STATUS.configure(text_color="#00ff00", text="Completed")
+    # def check_status(self, list):
+    #     DISPLAY_CHECKBOX = self.parent.display.display_frame.label_frame
+    #     DISPLAY_STATUS = self.parent.display.display_frame.label_frame.label_status
+    #     for item in list:
+    #         status = getattr(item, "status", "Error")
+    #         if status == "Completed":
+    #             DISPLAY_STATUS.configure(text_color="#00ff00")
+    #         else:
+    #             DISPLAY_STATUS.configure(text_color="#ff7f00")
 
 
 class Task:
