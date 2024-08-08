@@ -312,6 +312,8 @@ class TaskManager:
             new_task = Task(user_input, status)
             self.tasks.append(new_task)
             item = self.tasks[-1] if self.tasks else None
+            self.parent.header.input_task.delete(0, ctk.END)
+
             self.create_task_frame(item)
 
     def new_multi_labels(self, list):
