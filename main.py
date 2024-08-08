@@ -255,9 +255,6 @@ class TaskManager:
         DISPLAY_FRAME = DISPLAY_PATH.label_frame
         DISPLAY_FRAME.pack_propagate(True)
         DISPLAY_FRAME.pack(side="top", fill="x", pady=(0, 7), ipady=5)
-        DISPLAY_FRAME.bind(
-            "<Button-1>", lambda event: self.on_label_click(event, index)
-        )
 
         # Label description
         DISPLAY_FRAME.label_description = ctk.CTkLabel(
@@ -307,6 +304,11 @@ class TaskManager:
             DISPLAY_FRAME.label_status.configure(text_color="#ff7f00")
             DISPLAY_FRAME.var.set("off")
 
+        bind_1 = ("<Button-1>", lambda event: self.on_label_click(event, index))
+        DISPLAY_FRAME.bind(*bind_1)
+        DISPLAY_FRAME.label_description.bind(*bind_1)
+        DISPLAY_FRAME.label_status.bind(*bind_1)
+
     def add_task(self, event=None, status="Not Completed"):
         user_input = self.parent.header.input_task.get()
 
@@ -328,14 +330,18 @@ class TaskManager:
             self.create_task_frame(item, index)
 
     def on_label_click(self, event, index):
-        background = event.widget.master.cget("fg_color")
+        parent = event.widget.master
+        while not isinstance(parent, ctk.CTkFrame):
+            parent = parent.master
+            children = parent.winfo_children()
+        background = parent.cget("fg_color")
+
         if background == "#277bc6":
-            event.widget.master.configure(fg_color="#2b2b2b")
-            self.remove.remove(event.widget.master)
+            parent.configure(fg_color="#2b2b2b")
+            self.remove.remove(parent)
         else:
-            event.widget.master.configure(fg_color="#277bc6")
-            self.remove.append(event.widget.master)
-        print(f"Clicked on item with index: {index}")
+            parent.configure(fg_color="#277bc6")
+            self.remove.append(parent)
 
     def remove_task(self):
         for task_frame in self.remove:
