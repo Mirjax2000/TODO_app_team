@@ -326,7 +326,11 @@ class TaskManager:
     def on_label_click(self, event):
         # DISPLAY_CHECKBOX = self.parent.display.display_frame.label_frame
         # DISPLAY_STATUS = self.parent.display.display_frame.label_frame.label_status
-        event.widget.master.configure(fg_color="#277bc6")
+        backround = event.widget.master.cget("fg_color")
+        if backround == "#277bc6":
+            event.widget.master.configure(fg_color="#2b2b2b")
+        else:
+            event.widget.master.configure(fg_color="#277bc6")
 
 
 class Task:
