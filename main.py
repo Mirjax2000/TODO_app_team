@@ -46,7 +46,7 @@ class Header(ctk.CTkFrame):
 
         # widgets input, button
         self.input_task = ctk.CTkEntry(
-            self, placeholder_text="Enter task", font=parent.font_normal
+            self, placeholder_text="Enter a task", font=parent.font_normal
         )
         self.input_task.get()
         self.input_task.focus()
@@ -68,7 +68,6 @@ class Header(ctk.CTkFrame):
     @staticmethod
     def clear_text(event):
         event.widget.delete(0, ctk.END)
-        print("Text cleared")
 
 
 class Display(ctk.CTkFrame):
@@ -246,7 +245,7 @@ class TaskManager:
                     self.tasks.append(Task(description, status))
         self.new_multi_labels(self.tasks)
 
-    def create_task_frame(self, item):
+    def create_task_frame(self, item, index):
         description = getattr(item, "description", "Error")
         status = getattr(item, "status", "Error")
 
@@ -254,8 +253,11 @@ class TaskManager:
 
         DISPLAY_PATH.label_frame = ctk.CTkFrame(DISPLAY_PATH)
         DISPLAY_FRAME = DISPLAY_PATH.label_frame
+        DISPLAY_FRAME.pack_propagate(True)
         DISPLAY_FRAME.pack(side="top", fill="x", pady=(0, 7), ipady=5)
-        DISPLAY_FRAME.bind("<Button-1>", lambda event: self.on_label_click(event))
+        DISPLAY_FRAME.bind(
+            "<Button-1>", lambda event: self.on_label_click(event, index)
+        )
 
         # Label description
         DISPLAY_FRAME.label_description = ctk.CTkLabel(
@@ -307,26 +309,25 @@ class TaskManager:
 
     def add_task(self, event=None, status="Not Completed"):
         user_input = self.parent.header.input_task.get()
+
         if not user_input:
             self.parent.header.input_task.configure(
                 placeholder_text="Please enter a task",
                 placeholder_text_color="#ff7f00",
             )
+
         else:
             new_task = Task(user_input, status)
             self.tasks.append(new_task)
             item = self.tasks[-1] if self.tasks else None
             self.parent.header.input_task.delete(0, ctk.END)
+            self.create_task_frame(item, len(self.tasks) - 1)
 
-            self.create_task_frame(item)
+    def new_multi_labels(self, seznam):
+        for index, item in enumerate(seznam):
+            self.create_task_frame(item, index)
 
-    def new_multi_labels(self, list):
-        for item in list:
-            self.create_task_frame(item)
-
-    def on_label_click(self, event):
-        # DISPLAY_CHECKBOX = self.parent.display.display_frame.label_frame
-        # DISPLAY_STATUS = self.parent.display.display_frame.label_frame.label_status
+    def on_label_click(self, event, index):
         background = event.widget.master.cget("fg_color")
         if background == "#277bc6":
             event.widget.master.configure(fg_color="#2b2b2b")
@@ -334,11 +335,25 @@ class TaskManager:
         else:
             event.widget.master.configure(fg_color="#277bc6")
             self.remove.append(event.widget.master)
+        print(f"Clicked on item with index: {index}")
 
     def remove_task(self):
         for task_frame in self.remove:
+            task_description = task_frame.label_description.cget("text")
+            task_to_remove = next(
+                (task for task in self.tasks if task.description == task_description),
+                None,
+            )
+
+            if task_to_remove:
+                self.tasks.remove(task_to_remove)
+
             task_frame.destroy()
+
         self.remove.clear()
+        for child in self.parent.display.display_frame.winfo_children():
+            child.destroy()
+        self.new_multi_labels(self.tasks)
 
 
 class Task:
