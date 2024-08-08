@@ -241,6 +241,7 @@ class TaskManager:
                     description, status = row
                     self.tasks.append(Task(description, status))
         self.new_multi_labels(self.tasks)
+        self.check_status()
 
     def create_task_frame(self, item):
         description = getattr(item, "description", "Error")
@@ -276,16 +277,16 @@ class TaskManager:
         )
 
         # checkbox
-        DISPLAY_FRAME.var = ctk.IntVar(value=0)
+        DISPLAY_FRAME.var = ctk.StringVar(value="off")
         DISPLAY_FRAME.checkbox_status = ctk.CTkCheckBox(
-            DISPLAY_PATH.label_frame,
+            DISPLAY_FRAME,
             variable=DISPLAY_FRAME.var,
-            onvalue=1,
-            offvalue=0,
+            onvalue="on",
+            offvalue="off",
             font=self.parent.font_normal,
             text="",
             width=0,
-            command=self.check_status,
+            # command=self.check_status,
         )
         DISPLAY_FRAME.checkbox_status.grid(row=0, column=2, sticky="e", padx=10)
         DISPLAY_FRAME.columnconfigure(0, weight=1, uniform="a")
@@ -311,8 +312,16 @@ class TaskManager:
             self.create_task_frame(item)
 
     def check_status(self):
-        pass
-        # if label_frame.var == 1:
+        DISPLAY_CHECKBOX = self.parent.display.display_frame.label_frame
+        DISPLAY_STATUS = self.parent.display.display_frame.label_frame.label_status
+        for item in self.tasks:
+            status = getattr(item, "status")
+            ic(status)
+            if status == "splněno":
+                DISPLAY_CHECKBOX.configure(variable="on")
+
+                if DISPLAY_CHECKBOX.var.get() == "on":
+                    DISPLAY_STATUS.configure(text_color="#00ff00", text="Completed")
 
 
 class Task:
