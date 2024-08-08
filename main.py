@@ -247,53 +247,51 @@ class TaskManager:
         status = getattr(item, "status", "Error")
 
         DISPLAY_PATH = self.parent.display.display_frame  # cesta k display framu
-        # label description
 
         DISPLAY_PATH.label_frame = ctk.CTkFrame(DISPLAY_PATH)
-        DISPLAY_PATH.label_frame.pack(side="top", fill="x", pady=(0, 5))
+        DISPLAY_FRAME = DISPLAY_PATH.label_frame
+        DISPLAY_FRAME.pack(side="top", fill="x", pady=(0, 7), ipady=5)
 
-        DISPLAY_PATH.label_frame.label_description = ctk.CTkLabel(
-            DISPLAY_PATH.label_frame,
+        # Label description
+        DISPLAY_FRAME.label_description = ctk.CTkLabel(
+            DISPLAY_FRAME,
             text=description,
             font=self.parent.font_normal,
         )
-        DISPLAY_PATH.label_frame.label_description.grid(
-            row=0, column=0, sticky="w", padx=5
-        )
+        DISPLAY_FRAME.label_description.grid(row=0, column=0, sticky="w", padx=5)
 
         # label status
-        DISPLAY_PATH.label_frame.label_status = ctk.CTkLabel(
-            DISPLAY_PATH.label_frame,
+        DISPLAY_FRAME.label_status = ctk.CTkLabel(
+            DISPLAY_FRAME,
             text=status,
             font=self.parent.font_normal,
             text_color="#ff7f00",
             width=100,
             anchor="w",
         )
-        DISPLAY_PATH.label_frame.label_status.grid(
+        DISPLAY_FRAME.label_status.grid(
             row=0,
             column=1,
             sticky="ew",
         )
 
         # checkbox
-        DISPLAY_PATH.label_frame.var = ctk.IntVar()
-        DISPLAY_PATH.label_frame.checkbox_status = ctk.CTkCheckBox(
+        DISPLAY_FRAME.var = ctk.IntVar(value=0)
+        DISPLAY_FRAME.checkbox_status = ctk.CTkCheckBox(
             DISPLAY_PATH.label_frame,
-            variable=DISPLAY_PATH.label_frame.var,
+            variable=DISPLAY_FRAME.var,
             onvalue=1,
             offvalue=0,
             font=self.parent.font_normal,
             text="",
             width=0,
+            command=self.check_status,
         )
-        DISPLAY_PATH.label_frame.checkbox_status.grid(
-            row=0, column=2, sticky="e", padx=10
-        )
-        DISPLAY_PATH.label_frame.columnconfigure(0, weight=1, uniform="a")
-        DISPLAY_PATH.label_frame.columnconfigure(1, weight=0, uniform="b")
-        DISPLAY_PATH.label_frame.columnconfigure(2, weight=0, uniform="c")
-        DISPLAY_PATH.label_frame.rowconfigure(0, weight=1, uniform="a")
+        DISPLAY_FRAME.checkbox_status.grid(row=0, column=2, sticky="e", padx=10)
+        DISPLAY_FRAME.columnconfigure(0, weight=1, uniform="a")
+        DISPLAY_FRAME.columnconfigure(1, weight=0, uniform="b")
+        DISPLAY_FRAME.columnconfigure(2, weight=0, uniform="c")
+        DISPLAY_FRAME.rowconfigure(0, weight=1, uniform="a")
 
     def add_task(self, event=None, status="nesplneno"):
         user_input = self.parent.header.input_task.get()
@@ -311,6 +309,10 @@ class TaskManager:
     def new_multi_labels(self, list):
         for item in list:
             self.create_task_frame(item)
+
+    def check_status(self):
+        pass
+        # if label_frame.var == 1:
 
 
 class Task:
