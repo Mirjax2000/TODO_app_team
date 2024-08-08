@@ -163,7 +163,7 @@ class Display(ctk.CTkFrame):
         self.btn_6.grid(row=5, column=0, sticky="sew")
 
     def remove_task(self):
-        pass
+        self.parent.task.remove_task()
 
     def edit_task(self):
         pass
@@ -215,6 +215,7 @@ class TaskManager:
     def __init__(self, parent):
         self.parent = parent
         self.tasks = []
+        self.remove = []
 
     def save_tasks_to_csv(self):
         list_name = ""
@@ -326,11 +327,18 @@ class TaskManager:
     def on_label_click(self, event):
         # DISPLAY_CHECKBOX = self.parent.display.display_frame.label_frame
         # DISPLAY_STATUS = self.parent.display.display_frame.label_frame.label_status
-        backround = event.widget.master.cget("fg_color")
-        if backround == "#277bc6":
+        background = event.widget.master.cget("fg_color")
+        if background == "#277bc6":
             event.widget.master.configure(fg_color="#2b2b2b")
+            self.remove.remove(event.widget.master)
         else:
             event.widget.master.configure(fg_color="#277bc6")
+            self.remove.append(event.widget.master)
+
+    def remove_task(self):
+        for task_frame in self.remove:
+            task_frame.destroy()
+        self.remove.clear()
 
 
 class Task:
