@@ -74,7 +74,14 @@ class Display(ctk.CTkFrame):
 
     def __init__(self, parent):
         self.parent = parent
-        self.btns_text = ["Remove task", "Edit task", "Save list", "Load list", "Exit"]
+        self.btns_text = [
+            "Remove task",
+            "Edit task",
+            "Load list",
+            "Save list",
+            "Clear list",
+            "Exit",
+        ]
 
         super().__init__(parent)
         self.pack(side="top", fill="both", padx=20, expand=True)
@@ -82,62 +89,77 @@ class Display(ctk.CTkFrame):
         self.display_frame = ctk.CTkScrollableFrame(self)
         self.display_frame.grid(row=0, column=0, sticky="nsew")
 
-        self.display_btns = ctk.CTkFrame(self, width=140)
-        self.display_btns.grid(row=0, column=1, sticky="ns", padx=(20, 0))
+        self.display_btns = ctk.CTkFrame(self, fg_color="#2b2b2b", width=140)
+        self.display_btns.grid(row=0, column=1, sticky="nsew", padx=(20, 0))
         # grid pro framy pro vsechny tlacitka
         self.columnconfigure(0, weight=1, uniform="a")
         self.columnconfigure(1, weight=0, uniform="b")
         self.rowconfigure(0, weight=1, uniform="c")
 
+        self.display_btns_top = ctk.CTkFrame(
+            self.display_btns, fg_color="#333333", height=100, width=140
+        )
+        self.display_btns_mid = ctk.CTkFrame(
+            self.display_btns, fg_color="#333333", height=100, width=140
+        )
+        self.display_btns_btm = ctk.CTkFrame(
+            self.display_btns, fg_color="#333333", height=100, width=140
+        )
+
+        self.display_btns_top.grid(row=0, column=0, sticky="ns")
+        self.display_btns_mid.grid(row=1, column=0, sticky="ns", pady=20)
+        self.display_btns_btm.grid(row=2, column=0, sticky="s")
+        #
+        self.display_btns.columnconfigure(0, weight=0, uniform="a")
+        self.display_btns.rowconfigure(0, weight=1, uniform="a")
+        self.display_btns.rowconfigure(1, weight=1, uniform="b")
+        self.display_btns.rowconfigure(2, weight=1, uniform="c")
+        #  region
         self.btn_1 = ctk.CTkButton(
-            self.display_btns,
+            self.display_btns_top,
             text=self.btns_text[0],
             font=parent.font_normal,
             command=self.remove_task,
         )
         self.btn_2 = ctk.CTkButton(
-            self.display_btns,
+            self.display_btns_top,
             text=self.btns_text[1],
             font=parent.font_normal,
             command=self.edit_task(),
         )
         self.btn_3 = ctk.CTkButton(
-            self.display_btns,
+            self.display_btns_mid,
             text=self.btns_text[2],
-            font=parent.font_normal,
-            command=self.save_list,
-        )
-        self.btn_4 = ctk.CTkButton(
-            self.display_btns,
-            text=self.btns_text[3],
             font=parent.font_normal,
             command=self.load_list,
         )
+        self.btn_4 = ctk.CTkButton(
+            self.display_btns_mid,
+            text=self.btns_text[3],
+            font=parent.font_normal,
+            command=self.save_list,
+        )
         self.btn_5 = ctk.CTkButton(
-            self.display_btns,
+            self.display_btns_mid,
             text=self.btns_text[4],
             font=parent.font_normal,
             command=self.clear_list,
         )
         self.btn_6 = ctk.CTkButton(
-            self.display_btns,
+            self.display_btns_btm,
             text=self.btns_text[5],
             font=parent.font_normal,
             command=self.exit,
         )
+        # endregion
+        self.btn_1.grid(row=0, column=0, sticky="new", pady=(0, 10))
+        self.btn_2.grid(row=1, column=0, sticky="new")
 
-        self.btn_1.grid(row=0, column=1, sticky="e")
-        self.btn_2.grid(row=1, column=1, sticky="e")
-        self.btn_3.grid(row=2, column=1, sticky="e")
-        self.btn_4.grid(row=3, column=1, sticky="e")
-        self.btn_5.grid(row=4, column=1, sticky="e")
-        self.btn_6.grid(row=5, column=1, sticky="e")
+        self.btn_3.grid(row=2, column=0, sticky="new")
+        self.btn_4.grid(row=3, column=0, sticky="new", pady=10)
+        self.btn_5.grid(row=4, column=0, sticky="new")
 
-        # formatovani gridu pro vsechny tlacitka
-        self.display_btns.columnconfigure(0, weight=1, uniform="b")
-        self.display_btns.columnconfigure(1, weight=0, uniform="a")
-
-        self.display_btns.rowconfigure((0, 1, 2, 3, 4, 5), weight=0, uniform="a")
+        self.btn_6.grid(row=5, column=0, sticky="sew")
 
     def remove_task(self):
         pass
@@ -235,7 +257,9 @@ class TaskManager:
             text=description,
             font=self.parent.font_normal,
         )
-        DISPLAY_PATH.label_frame.label_description.grid(row=0, column=0, sticky="w")
+        DISPLAY_PATH.label_frame.label_description.grid(
+            row=0, column=0, sticky="w", padx=5
+        )
 
         # label status
         DISPLAY_PATH.label_frame.label_status = ctk.CTkLabel(
