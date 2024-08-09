@@ -203,6 +203,7 @@ class Footer(ctk.CTkFrame):
 
 
 class TaskManager:
+    '''Trida pro správu úkolů'''
     def __init__(self, parent):
         self.parent = parent
         self.tasks = []
