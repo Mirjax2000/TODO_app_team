@@ -156,7 +156,7 @@ class Display(ctk.CTkFrame):
         self.parent.task.remove_task()
 
     def edit_task(self):
-        pass
+        self.parent.task.edit_task()
 
     def save_list(self):
         self.parent.task.save_tasks_to_csv()
@@ -215,33 +215,91 @@ class TaskManager:
         self.remove = []  # Inicializujeme self.remove
 
     def save_tasks_to_csv(self):
-        list_name = ""
-        if self.parent.footer.footer_entry.get() == "":
-            list_name = "list"
-        else:
-            list_name = self.parent.footer.footer_entry.get().replace(" ", "_")
-        file_path = os.path.join(
-            os.path.dirname(__file__), "load_list", f"{list_name}.csv"
-        )
-        with open(file_path, "w", newline="", encoding="utf-8") as file:
-            writer = csv.writer(file, delimiter=";")
-            writer.writerow(["description", "status"])
-            for task in self.tasks:
-                writer.writerow([task.description, task.status])
+        try:
+            list_name = self.parent.footer.footer_entry.get().strip() or "list"
+            file_path = os.path.join(
+                os.path.dirname(__file__),
+                "load_list",
+                f"{list_name.replace(' ', '_')}.csv",
+            )
+            os.makedirs(os.path.dirname(file_path), exist_ok=True)
+            with open(file_path, "w", newline="", encoding="utf-8") as file:
+                writer = csv.writer(file, delimiter=";")
+                writer.writerow(["description", "status"])
+                for task in self.tasks:
+                    writer.writerow([task.description, task.status])
+            self.parent.footer.message_label.configure(text="List saved successfully.")
+        except Exception as e:
+            self.parent.footer.message_label.configure(
+                text=f"Error saving list: {str(e)}"
+            )
 
     def load_tasks_from_csv(self):
-        self.tasks.clear()
-        file_path = os.path.join(
-            os.path.dirname(__file__), "load_list", "import_tasks.csv"
+        try:
+            file_path = os.path.join(
+                os.path.dirname(__file__), "load_list", "import_tasks.csv"
+            )
+            with open(file_path, "r", encoding="utf-8") as file:
+                reader = csv.reader(file, delimiter=";")
+                next(reader)
+                for row in reader:
+                    if len(row) >= 2:
+                        description, status = row
+                        self.tasks.append(Task(description, status))
+            self.new_multi_labels(self.tasks)
+            self.parent.footer.message_label.configure(text="List loaded successfully.")
+        except FileNotFoundError:
+            self.parent.footer.message_label.configure(text="File not found.")
+        except Exception as e:
+            self.parent.footer.message_label.configure(
+                text=f"Error loading list: {str(e)}"
+            )
+
+    def edit_task(self):
+        if not self.remove:
+            self.parent.footer.message_label.configure(
+                text="Please select a task to edit."
+            )
+            return
+
+        task_frame = self.remove[0]
+        task_description = task_frame.label_description.cget("text")
+        task_to_edit = next(
+            (task for task in self.tasks if task.description == task_description),
+            None,
         )
-        with open(file_path, "r", encoding="utf-8") as file:
-            reader = csv.reader(file, delimiter=";")
-            next(reader)
-            for row in reader:
-                if len(row) >= 2:
-                    description, status = row
-                    self.tasks.append(Task(description, status))
-        self.new_multi_labels(self.tasks)
+
+        if task_to_edit:
+            self.edit_window = ctk.CTkToplevel(self.parent)
+            self.edit_window.title("Edit Task")
+            self.edit_window.geometry("600x200")
+            self.edit_window.grab_set()
+            edit_entry = ctk.CTkEntry(
+                self.edit_window, font=self.parent.font_normal, width=400
+            )
+            edit_entry.insert(0, task_to_edit.description)
+            edit_entry.pack(pady=20)
+            save_button = ctk.CTkButton(
+                self.edit_window,
+                text="Save Changes",
+                command=lambda: self.save_edited_task(task_to_edit, edit_entry.get()),
+            )
+            save_button.pack(pady=20)
+        else:
+            self.parent.footer.message_label.configure(text="Task not found.")
+
+    def save_edited_task(self, task, new_description):
+        if new_description.strip() == "":
+            self.parent.footer.message_label.configure(
+                text="Description cannot be empty."
+            )
+        else:
+            task.description = new_description.strip()
+            self.edit_window.destroy()
+            for child in self.parent.display.display_frame.winfo_children():
+                child.destroy()
+            self.new_multi_labels(self.tasks)
+            self.remove.clear()
 
     def create_task_frame(self, item, index):
         description = getattr(item, "description", "Error")
@@ -368,6 +426,7 @@ class Task:
     def __init__(self, description, status):
         self.description = description
         self.status = status
+
 
 if __name__ == "__main__":
     app = App()
