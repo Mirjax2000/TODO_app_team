@@ -27,7 +27,6 @@ class App(ctk.CTk):  # Main app
         self.display = Display(self)
         self.footer = Footer(self)
 
-
     def center_window(self):
         self.update_idletasks()
         width = 800
@@ -179,6 +178,7 @@ class TaskManager:
 
     def get_task_list(self):
         return [(task.description, task.status) for task in self.tasks]
+
 
 if __name__ == "__main__":
     app = App()
