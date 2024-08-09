@@ -53,9 +53,6 @@ class Header(ctk.CTkFrame):
         )
         self.input_task.get()
         self.input_task.focus()
-        self.input_task.bind(
-            "<FocusIn>", self.clear_placeholder
-        )  # Kliknutím na pole se aktivuje
         self.input_task.bind("<Return>", self.parent.task.add_task)
         self.input_task.grid(row=0, column=0, padx=(0, 20), sticky="ew")
 
@@ -71,16 +68,6 @@ class Header(ctk.CTkFrame):
         # Grid konfigurace
         self.columnconfigure(0, weight=1, uniform="a")
         self.columnconfigure(1, weight=0, uniform="b")
-
-    def clear_placeholder(self, event):
-        """Vymaže textové pole a obnoví výchozí barvu textu a placeholderu při kliknutí."""
-        if self.input_task.get() == "Please enter a task":
-            self.input_task.delete(0, ctk.END)  # Vymaže textové pole
-            self.input_task.configure(
-                placeholder_text="Enter a task",
-                placeholder_text_color="#888888",  # Standardní šedá barva pro placeholder
-                text_color="#000000",  # Standardní barva textu černá
-            )
 
 
 class Display(ctk.CTkFrame):
@@ -168,12 +155,14 @@ class Display(ctk.CTkFrame):
         pass
 
     def clear_list(self):
+        """Funkce na vymazani hlavniho listu a smazani textu v display"""
         self.parent.task.tasks.clear()
         for child in self.parent.display.display_frame.winfo_children():
             child.destroy()
 
     @staticmethod
     def exit():
+        """Ukonceni appky"""
         app.destroy()
 
 
@@ -191,18 +180,17 @@ class Footer(ctk.CTkFrame):
         self.footer_label.grid(row=0, column=0, sticky="w")
         self.footer_entry = ctk.CTkEntry(
             self,
+            width=300,
             font=parent.font_normal,
             placeholder_text="List name: ",
         )
         self.footer_entry.get()
-        self.footer_entry.grid(row=0, column=1, sticky="w")
+        self.footer_entry.grid(row=0, column=1, sticky="ew")
+
         self.message_label = ctk.CTkLabel(
-            self,
-            font=parent.font_small,
-            text_color="#ff7f00",
-            text="",
+            self, font=parent.font_small, text_color="#ff7f00", text=""
         )
-        self.message_label.grid(row=0, column=2, sticky="w")
+        self.message_label.grid(row=0, column=2, sticky="ew")
         self.columnconfigure(0, weight=0, uniform="a")
         self.columnconfigure(1, weight=0, uniform="b")
         self.columnconfigure(2, weight=1, uniform="c")
@@ -215,6 +203,7 @@ class TaskManager:
         self.remove = []  # Inicializujeme self.remove
 
     def save_tasks_to_csv(self):
+        """Uloží všechny úkoly do CSV souboru"""
         list_name = ""
         if self.parent.footer.footer_entry.get() == "":
             list_name = "list"
@@ -230,6 +219,7 @@ class TaskManager:
                 writer.writerow([task.description, task.status])
 
     def load_tasks_from_csv(self):
+        """Načte úkoly z CSV souboru"""
         self.tasks.clear()
         file_path = os.path.join(
             os.path.dirname(__file__), "load_list", "import_tasks.csv"
@@ -240,10 +230,11 @@ class TaskManager:
             for row in reader:
                 if len(row) >= 2:
                     description, status = row
-                    self.tasks.append(Task(description, status))
+                    self.tasks.append(Task(description, status, self.parent))
         self.new_multi_labels(self.tasks)
 
     def create_task_frame(self, item, index):
+        """Vytvoří label pro úkol"""
         description = getattr(item, "description", "Error")
         status = getattr(item, "status", "Error")
 
@@ -307,30 +298,25 @@ class TaskManager:
         DISPLAY_FRAME.label_status.bind(*bind_1)
 
     def add_task(self, event=None, status="Not Completed"):
+        """Prida novy ukol do seznamu a vypise na display"""
         user_input = self.parent.header.input_task.get().strip()
         self.parent.header.input_task.delete(0, ctk.END)
         if not user_input:
             self.parent.footer.message_label.configure(text="Please enter a task.")
         else:
-            new_task = Task(user_input, status)
+            new_task = Task(user_input, status, self.parent)
             self.tasks.append(new_task)
             item = self.tasks[-1] if self.tasks else None
             self.create_task_frame(item, len(self.tasks) - 1)
             self.parent.footer.message_label.configure(text="")
 
-    def warning_input_task(self):
-        """Resetuje vstupní pole do stavu varování."""
-        self.parent.header.input_task.configure(
-            placeholder_text="Please enter a task",
-            placeholder_text_color="#ff7f00",
-            text_color="#ff7f00",
-        )
-
     def new_multi_labels(self, seznam):
+        """predává všechny položky na disply a do hlavniho seznamu"""
         for index, item in enumerate(seznam):
             self.create_task_frame(item, index)
 
     def on_label_click(self, event, index):
+        """Kliknuti na task label a zmeni jeho barvu"""
         parent = event.widget.master
         while not isinstance(parent, ctk.CTkFrame):
             parent = parent.master
@@ -346,6 +332,7 @@ class TaskManager:
         print(f"Index: {index}, Description: {self.tasks[index].description}")
 
     def remove_task(self):
+        """Smaze vybrane tasky z seznamu a odstrani je z disple"""
         for task_frame in self.remove:
             task_description = task_frame.label_description.cget("text")
             task_to_remove = next(
@@ -365,9 +352,17 @@ class TaskManager:
 
 
 class Task:
-    def __init__(self, description, status):
+    def __init__(self, description, status, parent):
+        self.parent = parent
         self.description = description
         self.status = status
+
+    def __str__(self):
+        return f"Description: {self.description}, Status: {self.status}"
+
+    def print_task(self):
+        for task in self.parent.task.tasks:
+            print(f"__str__: {str(task)}")
 
 
 if __name__ == "__main__":
