@@ -180,7 +180,6 @@ class TaskManager:
     def get_task_list(self):
         return [(task.description, task.status) for task in self.tasks]
 
-
 if __name__ == "__main__":
     app = App()
     app.mainloop()
