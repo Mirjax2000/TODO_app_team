@@ -54,7 +54,6 @@ class Header(ctk.CTkFrame):
             self, placeholder_text="Enter a task", font=parent.font_normal
         )
         self.input_task.get()
-        self.input_task.focus()
         self.input_task.bind("<Return>", self.parent.task.add_task)
         self.input_task.grid(row=0, column=0, padx=(0, 20), sticky="ew")
 
