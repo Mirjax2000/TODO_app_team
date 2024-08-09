@@ -311,6 +311,7 @@ class TaskManager:
 
     def add_task(self, event=None, status="Not Completed"):
         """Prida novy ukol do seznamu a vypise na display"""
+
         user_input = self.parent.header.input_task.get().strip()
         self.parent.header.input_task.delete(0, ctk.END)
         if not user_input:
