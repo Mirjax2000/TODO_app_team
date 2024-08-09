@@ -168,9 +168,42 @@ class Display(ctk.CTkFrame):
         pass
 
     def clear_list(self):
+        # Vytvoření okna pro potvrzení
+        confirm_window = ctk.CTkToplevel(self.parent)
+        confirm_window.title("Confirm Clear")
+        confirm_window.geometry("400x200")
+        confirm_window.grab_set()
+
+        # Popis v okně
+        label = ctk.CTkLabel(
+            confirm_window,
+            text="Are you sure you want to clear the entire list?",
+            font=self.parent.font_normal,
+            wraplength=300,  # Zalomí text, pokud je příliš dlouhý
+        )
+        label.pack(pady=20, padx=20)
+
+        # Tlačítka pro potvrzení nebo zrušení
+        button_frame = ctk.CTkFrame(confirm_window)
+        button_frame.pack(pady=20)
+
+        yes_button = ctk.CTkButton(
+            button_frame, text="Yes", command=lambda: self.confirm_clear(confirm_window)
+        )
+        yes_button.grid(row=0, column=0, padx=10)
+
+        no_button = ctk.CTkButton(
+            button_frame, text="No", command=confirm_window.destroy
+        )
+        no_button.grid(row=0, column=1, padx=10)
+
+    def confirm_clear(self, confirm_window):
+        # Skutečně vymaže seznam úkolů a zavře potvrzovací okno
         self.parent.task.tasks.clear()
         for child in self.parent.display.display_frame.winfo_children():
             child.destroy()
+        self.parent.footer.message_label.configure(text="List cleared.")
+        confirm_window.destroy()
 
     @staticmethod
     def exit():
