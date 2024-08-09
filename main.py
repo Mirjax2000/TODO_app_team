@@ -1,7 +1,9 @@
 import tkinter as tk
 import customtkinter as ctk
+import json
 import os
 import csv
+from icecream import ic
 
 ctk.set_default_color_theme("blue")
 ctk.set_appearance_mode("Dark")
@@ -21,6 +23,7 @@ class App(ctk.CTk):  # Main app
         self.center_window()
         self.resizable(False, False)
         self.configure(fg_color="#2b2b2b")
+
         # Frames
         self.task = TaskManager(self)
         self.header = Header(self)
@@ -48,6 +51,7 @@ class Header(ctk.CTkFrame):
         self.input_task = ctk.CTkEntry(
             self, placeholder_text="Enter a task", font=parent.font_normal
         )
+        self.input_task.get()
         self.input_task.focus()
         self.input_task.bind(
             "<FocusIn>", self.clear_placeholder
@@ -80,87 +84,73 @@ class Header(ctk.CTkFrame):
 
 
 class Display(ctk.CTkFrame):
+
     def __init__(self, parent):
         self.parent = parent
         self.btns_text = [
             "Remove task",
             "Edit task",
             "Load list",
+            "Extend list",
             "Save list",
             "Clear list",
             "Exit",
         ]
+
         super().__init__(parent)
         self.pack(side="top", fill="both", padx=20, expand=True)
+
         self.display_frame = ctk.CTkScrollableFrame(self)
         self.display_frame.grid(row=0, column=0, sticky="nsew")
+
         self.display_btns = ctk.CTkFrame(self, fg_color="#2b2b2b", width=140)
         self.display_btns.grid(row=0, column=1, sticky="nsew", padx=(20, 0))
         # grid pro framy pro vsechny tlacitka
         self.columnconfigure(0, weight=1, uniform="a")
         self.columnconfigure(1, weight=0, uniform="b")
         self.rowconfigure(0, weight=1, uniform="c")
-        self.display_btns_top = ctk.CTkFrame(
-            self.display_btns, fg_color="#333333", height=100, width=140
-        )
-        self.display_btns_mid = ctk.CTkFrame(
-            self.display_btns, fg_color="#333333", height=100, width=140
-        )
-        self.display_btns_btm = ctk.CTkFrame(
-            self.display_btns, fg_color="#333333", height=100, width=140
-        )
+
+        # framy top, mid, bottom
+        self.frame_config = {
+            "master": self.display_btns,
+            "width": 140,
+        }
+        self.display_btns_top = ctk.CTkFrame(**self.frame_config)
+        self.display_btns_mid = ctk.CTkFrame(**self.frame_config)
+        self.display_btns_btm = ctk.CTkFrame(**self.frame_config)
+        #
         self.display_btns_top.grid(row=0, column=0, sticky="ns")
         self.display_btns_mid.grid(row=1, column=0, sticky="ns", pady=20)
         self.display_btns_btm.grid(row=2, column=0, sticky="s")
         #
-        self.display_btns.columnconfigure(0, weight=0, uniform="a")
         self.display_btns.rowconfigure(0, weight=1, uniform="a")
         self.display_btns.rowconfigure(1, weight=1, uniform="b")
         self.display_btns.rowconfigure(2, weight=1, uniform="c")
-        #  region
-        self.btn_1 = ctk.CTkButton(
-            self.display_btns_top,
-            text=self.btns_text[0],
-            font=parent.font_normal,
-            command=self.remove_task,
-        )
-        self.btn_2 = ctk.CTkButton(
-            self.display_btns_top,
-            text=self.btns_text[1],
-            font=parent.font_normal,
-            command=self.edit_task,
-        )
-        self.btn_3 = ctk.CTkButton(
-            self.display_btns_mid,
-            text=self.btns_text[2],
-            font=parent.font_normal,
-            command=self.load_list,
-        )
-        self.btn_4 = ctk.CTkButton(
-            self.display_btns_mid,
-            text=self.btns_text[3],
-            font=parent.font_normal,
-            command=self.save_list,
-        )
-        self.btn_5 = ctk.CTkButton(
-            self.display_btns_mid,
-            text=self.btns_text[4],
-            font=parent.font_normal,
-            command=self.clear_list,
-        )
-        self.btn_6 = ctk.CTkButton(
-            self.display_btns_btm,
-            text=self.btns_text[5],
-            font=parent.font_normal,
-            command=self.exit,
-        )
-        # endregion
-        self.btn_1.grid(row=0, column=0, sticky="new", pady=(0, 10))
-        self.btn_2.grid(row=1, column=0, sticky="new")
-        self.btn_3.grid(row=2, column=0, sticky="new")
-        self.btn_4.grid(row=3, column=0, sticky="new", pady=10)
-        self.btn_5.grid(row=4, column=0, sticky="new")
-        self.btn_6.grid(row=5, column=0, sticky="sew")
+        #
+        # Create buttons dynamically
+        self.button_configs = [
+            (self.display_btns_top, self.btns_text[0], self.remove_task, "btn_1"),
+            (self.display_btns_top, self.btns_text[1], self.edit_task, "btn_2"),
+            (self.display_btns_mid, self.btns_text[2], self.load_list, "btn_3"),
+            (self.display_btns_mid, self.btns_text[3], self.save_list, "btn_4"),
+            (self.display_btns_mid, self.btns_text[4], self.extend_list, "btn_5"),
+            (self.display_btns_mid, self.btns_text[5], self.clear_list, "btn_6"),
+            (self.display_btns_btm, self.btns_text[6], self.exit, "btn_7"),
+        ]
+        #
+        for parent, text, command, attr_name in self.button_configs:
+            button = ctk.CTkButton(
+                parent, text=text, font=self.parent.font_normal, command=command
+            )
+            setattr(self, attr_name, button)
+        #
+        for i in range(len(self.button_configs)):
+            button = getattr(self, f"btn_{i + 1}")
+            button.grid(row=i, column=0, sticky="n", pady=1)
+
+        self.display_btns_mid.rowconfigure(4, weight=1, uniform="a")
+        #
+        # methods
 
     def remove_task(self):
         self.parent.task.remove_task()
@@ -174,13 +164,17 @@ class Display(ctk.CTkFrame):
     def load_list(self):
         self.parent.task.load_tasks_from_csv()
 
+    def extend_list(self):
+        pass
+
     def clear_list(self):
         self.parent.task.tasks.clear()
         for child in self.parent.display.display_frame.winfo_children():
             child.destroy()
 
-    def exit(self):
-        self.parent.destroy()
+    @staticmethod
+    def exit():
+        app.destroy()
 
 
 class Footer(ctk.CTkFrame):
@@ -188,6 +182,7 @@ class Footer(ctk.CTkFrame):
         super().__init__(parent)
         self.parent = parent
         self.pack(side="bottom", fill="x", pady=20, padx=20)
+
         self.footer_label = ctk.CTkLabel(
             self,
             font=parent.font_normal,
@@ -197,7 +192,7 @@ class Footer(ctk.CTkFrame):
         self.footer_entry = ctk.CTkEntry(
             self,
             font=parent.font_normal,
-            placeholder_text="jmeno listu",
+            placeholder_text="List name: ",
         )
         self.footer_entry.get()
         self.footer_entry.grid(row=0, column=1, sticky="w")
@@ -248,83 +243,68 @@ class TaskManager:
                     self.tasks.append(Task(description, status))
         self.new_multi_labels(self.tasks)
 
-    def toggle_task_status(self, task_frame, index):
-        task = self.tasks[index]
-        if task.status == "Completed":
-            task.status = "Not Completed"
-        else:
-            task.status = "Completed"
-        task_frame.label_status.configure(
-            text=task.status,
-            text_color="#00ff00" if task.status == "Completed" else "#ff7f00",
-        )
-        if task.status == "Completed":
-            task_frame.checkbox_var.set("on")
-        else:
-            task_frame.checkbox_var.set("off")
-
     def create_task_frame(self, item, index):
         description = getattr(item, "description", "Error")
         status = getattr(item, "status", "Error")
+
         DISPLAY_PATH = self.parent.display.display_frame  # cesta k display framu
+
         DISPLAY_PATH.label_frame = ctk.CTkFrame(DISPLAY_PATH)
         DISPLAY_FRAME = DISPLAY_PATH.label_frame
-        DISPLAY_FRAME.pack_propagate(True)
         DISPLAY_FRAME.pack(side="top", fill="x", pady=(0, 7), ipady=5)
 
-        label_description = ctk.CTkLabel(
+        # Label description
+        DISPLAY_FRAME.label_description = ctk.CTkLabel(
             DISPLAY_FRAME,
             text=description,
             font=self.parent.font_normal,
         )
-        label_description.grid(row=0, column=0, sticky="w", padx=5)
+        DISPLAY_FRAME.label_description.grid(row=0, column=0, sticky="w", padx=5)
 
-        label_status = ctk.CTkLabel(
+        # label status
+        DISPLAY_FRAME.label_status = ctk.CTkLabel(
             DISPLAY_FRAME,
             text=status,
             font=self.parent.font_normal,
             width=140,
             anchor="w",
         )
-        label_status.grid(row=0, column=1, sticky="w")
+        DISPLAY_FRAME.label_status.grid(
+            row=0,
+            column=1,
+            sticky="w",
+        )
 
-        var = ctk.StringVar(value="off")
-        checkbox_status = ctk.CTkCheckBox(
+        # checkbox
+        DISPLAY_FRAME.var = ctk.StringVar(value="off")
+        DISPLAY_FRAME.checkbox_status = ctk.CTkCheckBox(
             DISPLAY_FRAME,
-            variable=var,
+            variable=DISPLAY_FRAME.var,
             onvalue="on",
             offvalue="off",
             font=self.parent.font_normal,
             text="",
             width=0,
+            # command=self.check_status,
         )
-        checkbox_status.grid(row=0, column=2, sticky="e", padx=10)
-
-        DISPLAY_FRAME.label_description = label_description
-        DISPLAY_FRAME.label_status = label_status
-        DISPLAY_FRAME.checkbox_var = var
-
-        if status == "Completed":
-            label_status.configure(text_color="#00ff00")
-            var.set("on")
-        else:
-            label_status.configure(text_color="#ff7f00")
-            var.set("off")
-
-        DISPLAY_FRAME.bind(
-            "<Button-1>", lambda event: self.toggle_task_status(DISPLAY_FRAME, index)
-        )
-        label_description.bind(
-            "<Button-1>", lambda event: self.toggle_task_status(DISPLAY_FRAME, index)
-        )
-        label_status.bind(
-            "<Button-1>", lambda event: self.toggle_task_status(DISPLAY_FRAME, index)
-        )
-
+        DISPLAY_FRAME.checkbox_status.grid(row=0, column=2, sticky="e", padx=10)
         DISPLAY_FRAME.columnconfigure(0, weight=1, uniform="a")
         DISPLAY_FRAME.columnconfigure(1, weight=0, uniform="b")
         DISPLAY_FRAME.columnconfigure(2, weight=0, uniform="c")
         DISPLAY_FRAME.rowconfigure(0, weight=1, uniform="a")
+
+        if status == "Completed":
+            DISPLAY_FRAME.label_status.configure(text_color="#00ff00")
+            DISPLAY_FRAME.var.set("on")
+
+        else:
+            DISPLAY_FRAME.label_status.configure(text_color="#ff7f00")
+            DISPLAY_FRAME.var.set("off")
+
+        bind_1 = ("<Button-1>", lambda event: self.on_label_click(event, index))
+        DISPLAY_FRAME.bind(*bind_1)
+        DISPLAY_FRAME.label_description.bind(*bind_1)
+        DISPLAY_FRAME.label_status.bind(*bind_1)
 
     def add_task(self, event=None, status="Not Completed"):
         user_input = self.parent.header.input_task.get().strip()
@@ -350,23 +330,35 @@ class TaskManager:
         for index, item in enumerate(seznam):
             self.create_task_frame(item, index)
 
-    def remove_task(self):
-        for task_frame in self.parent.display.display_frame.winfo_children():
-            if task_frame.checkbox_var.get() == "on":
-                task_description = task_frame.label_description.cget("text")
-                task_to_remove = next(
-                    (
-                        task
-                        for task in self.tasks
-                        if task.description == task_description
-                    ),
-                    None,
-                )
-                if task_to_remove:
-                    self.tasks.remove(task_to_remove)
-                task_frame.destroy()
+    def on_label_click(self, event, index):
+        parent = event.widget.master
+        while not isinstance(parent, ctk.CTkFrame):
+            parent = parent.master
+            children = parent.winfo_children()
+        background = parent.cget("fg_color")
 
-        # Aktualizace zobrazení
+        if background == "#277bc6":
+            parent.configure(fg_color="#2b2b2b")
+            self.remove.remove(parent)
+        else:
+            parent.configure(fg_color="#277bc6")
+            self.remove.append(parent)
+        print(f"Index: {index}, Description: {self.tasks[index].description}")
+
+    def remove_task(self):
+        for task_frame in self.remove:
+            task_description = task_frame.label_description.cget("text")
+            task_to_remove = next(
+                (task for task in self.tasks if task.description == task_description),
+                None,
+            )
+
+            if task_to_remove:
+                self.tasks.remove(task_to_remove)
+
+            task_frame.destroy()
+
+        self.remove.clear()
         for child in self.parent.display.display_frame.winfo_children():
             child.destroy()
         self.new_multi_labels(self.tasks)
@@ -376,7 +368,6 @@ class Task:
     def __init__(self, description, status):
         self.description = description
         self.status = status
-
 
 if __name__ == "__main__":
     app = App()
