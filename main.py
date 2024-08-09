@@ -1,15 +1,15 @@
-import tkinter as tk
-import customtkinter as ctk
-import os
 import csv
+import os
+import customtkinter as ctk
 from icecream import ic
 
 ctk.set_default_color_theme("blue")
 ctk.set_appearance_mode("Dark")
 
 
-class App(ctk.CTk):  # Main app
-    # constants
+class App(ctk.CTk):
+    """Main App"""
+
     font_big = ("Arial", 30, "normal")
     font_normal = ("Arial", 20, "normal")
     font_small = ("Arial", 16, "normal")
@@ -30,6 +30,7 @@ class App(ctk.CTk):  # Main app
         self.footer = Footer(self)
 
     def center_window(self):
+        """Centers the window on the screen."""
         self.update_idletasks()
         width = 1000
         height = 600
@@ -70,6 +71,7 @@ class Header(ctk.CTkFrame):
 
 
 class Display(ctk.CTkFrame):
+    """Frame pro zobrazeni seznamu úkolů"""
 
     def __init__(self, parent):
         self.parent = parent
@@ -139,18 +141,23 @@ class Display(ctk.CTkFrame):
         # methods
 
     def remove_task(self):
+        """Funkce pro odebrani tasku z listu a odstraneni jeho labelu"""
         self.parent.task.remove_task()
 
     def edit_task(self):
+        """Funkce pro editaci task labelu"""
         pass
 
     def save_list(self):
+        """"""
         self.parent.task.save_tasks_to_csv()
 
     def load_list(self):
+        """"""
         self.parent.task.load_tasks_from_csv()
 
     def extend_list(self):
+        """Funkce pro zvetseni pocet polozek v listu"""
         pass
 
     def clear_list(self):
@@ -237,39 +244,39 @@ class TaskManager:
         description = getattr(item, "description", "Error")
         status = getattr(item, "status", "Error")
 
-        DISPLAY_PATH = self.parent.display.display_frame  # cesta k display framu
+        display_path = self.parent.display.display_frame  # cesta k display framu
 
-        DISPLAY_PATH.label_frame = ctk.CTkFrame(DISPLAY_PATH)
-        DISPLAY_FRAME = DISPLAY_PATH.label_frame
-        DISPLAY_FRAME.pack(side="top", fill="x", pady=(0, 7), ipady=5)
+        display_path.label_frame = ctk.CTkFrame(display_path)
+        display_frame = display_path.label_frame
+        display_frame.pack(side="top", fill="x", pady=(0, 7), ipady=5)
 
         # Label description
-        DISPLAY_FRAME.label_description = ctk.CTkLabel(
-            DISPLAY_FRAME,
+        display_frame.label_description = ctk.CTkLabel(
+            display_frame,
             text=description,
             font=self.parent.font_normal,
         )
-        DISPLAY_FRAME.label_description.grid(row=0, column=0, sticky="w", padx=5)
+        display_frame.label_description.grid(row=0, column=0, sticky="w", padx=5)
 
         # label status
-        DISPLAY_FRAME.label_status = ctk.CTkLabel(
-            DISPLAY_FRAME,
+        display_frame.label_status = ctk.CTkLabel(
+            display_frame,
             text=status,
             font=self.parent.font_normal,
             width=140,
             anchor="w",
         )
-        DISPLAY_FRAME.label_status.grid(
+        display_frame.label_status.grid(
             row=0,
             column=1,
             sticky="w",
         )
 
         # checkbox
-        DISPLAY_FRAME.var = ctk.StringVar(value="off")
-        DISPLAY_FRAME.checkbox_status = ctk.CTkCheckBox(
-            DISPLAY_FRAME,
-            variable=DISPLAY_FRAME.var,
+        display_frame.var = ctk.StringVar(value="off")
+        display_frame.checkbox_status = ctk.CTkCheckBox(
+            display_frame,
+            variable=display_frame.var,
             onvalue="on",
             offvalue="off",
             font=self.parent.font_normal,
@@ -277,24 +284,24 @@ class TaskManager:
             width=0,
             # command=self.check_status,
         )
-        DISPLAY_FRAME.checkbox_status.grid(row=0, column=2, sticky="e", padx=10)
-        DISPLAY_FRAME.columnconfigure(0, weight=1, uniform="a")
-        DISPLAY_FRAME.columnconfigure(1, weight=0, uniform="b")
-        DISPLAY_FRAME.columnconfigure(2, weight=0, uniform="c")
-        DISPLAY_FRAME.rowconfigure(0, weight=1, uniform="a")
+        display_frame.checkbox_status.grid(row=0, column=2, sticky="e", padx=10)
+        display_frame.columnconfigure(0, weight=1, uniform="a")
+        display_frame.columnconfigure(1, weight=0, uniform="b")
+        display_frame.columnconfigure(2, weight=0, uniform="c")
+        display_frame.rowconfigure(0, weight=1, uniform="a")
 
         if status == "Completed":
-            DISPLAY_FRAME.label_status.configure(text_color="#00ff00")
-            DISPLAY_FRAME.var.set("on")
+            display_frame.label_status.configure(text_color="#00ff00")
+            display_frame.var.set("on")
 
         else:
-            DISPLAY_FRAME.label_status.configure(text_color="#ff7f00")
-            DISPLAY_FRAME.var.set("off")
+            display_frame.label_status.configure(text_color="#ff7f00")
+            display_frame.var.set("off")
 
         bind_1 = ("<Button-1>", lambda event: self.on_label_click(event, index))
-        DISPLAY_FRAME.bind(*bind_1)
-        DISPLAY_FRAME.label_description.bind(*bind_1)
-        DISPLAY_FRAME.label_status.bind(*bind_1)
+        display_frame.bind(*bind_1)
+        display_frame.label_description.bind(*bind_1)
+        display_frame.label_status.bind(*bind_1)
 
     def add_task(self, event=None, status="Not Completed"):
         """Prida novy ukol do seznamu a vypise na display"""
@@ -319,7 +326,6 @@ class TaskManager:
         parent = event.widget.master
         while not isinstance(parent, ctk.CTkFrame):
             parent = parent.master
-            children = parent.winfo_children()
         background = parent.cget("fg_color")
 
         if background == "#277bc6":
@@ -352,6 +358,7 @@ class TaskManager:
 
 class Task:
     def __init__(self, description, status, parent):
+        """Inicializuje ukol"""
         self.parent = parent
         self.description = description
         self.status = status
@@ -360,6 +367,7 @@ class Task:
         return f"Description: {self.description}, Status: {self.status}"
 
     def print_task(self):
+        """Vypise ukol primo z classy Task"""
         for task in self.parent.task.tasks:
             print(f"__str__: {str(task)}")
 
