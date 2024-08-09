@@ -376,6 +376,7 @@ class Task:
 
     def print_task(self):
         """Vypise ukol primo z classy Task"""
+
         for task in self.parent.task.tasks:
             print(f"__str__: {str(task)}")
 
