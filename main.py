@@ -104,7 +104,6 @@ class Display(ctk.CTkFrame):
         # framy top, mid, bottom
         self.frame_config = {
             "master": self.display_btns,
-            "fg_color": "#333333",
             "width": 140,
         }
         self.display_btns_top = ctk.CTkFrame(**self.frame_config)
@@ -115,7 +114,6 @@ class Display(ctk.CTkFrame):
         self.display_btns_mid.grid(row=1, column=0, sticky="ns", pady=20)
         self.display_btns_btm.grid(row=2, column=0, sticky="s")
         #
-        self.display_btns.columnconfigure(0, weight=0, uniform="a")
         self.display_btns.rowconfigure(0, weight=1, uniform="a")
         self.display_btns.rowconfigure(1, weight=1, uniform="b")
         self.display_btns.rowconfigure(2, weight=1, uniform="c")
@@ -139,7 +137,9 @@ class Display(ctk.CTkFrame):
         #
         for i in range(len(self.button_configs)):
             button = getattr(self, f"btn_{i + 1}")
-            button.grid(row=i, column=0, sticky="n")
+            button.grid(row=i, column=0, sticky="n", pady=1)
+
+        self.display_btns_mid.rowconfigure(4, weight=1, uniform="a")
         #
         # methods
 
