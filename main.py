@@ -47,16 +47,19 @@ class Header(ctk.CTkFrame):
         super().__init__(parent)
         self.pack(side="top", fill="x", padx=20, pady=20)
 
-        # widgets input, button
+        # Vstupní pole pro zadání úkolu
         self.input_task = ctk.CTkEntry(
             self, placeholder_text="Enter a task", font=parent.font_normal
         )
         self.input_task.get()
         self.input_task.focus()
-        self.input_task.bind("<FocusIn>", self.clear_text)
+        self.input_task.bind(
+            "<FocusIn>", self.clear_placeholder
+        )  # Kliknutím na pole se aktivuje
         self.input_task.bind("<Return>", self.parent.task.add_task)
         self.input_task.grid(row=0, column=0, padx=(0, 20), sticky="ew")
 
+        # Tlačítko pro přidání úkolu
         self.input_btn = ctk.CTkButton(
             self,
             text="Add Task",
@@ -64,13 +67,20 @@ class Header(ctk.CTkFrame):
             command=self.parent.task.add_task,
         )
         self.input_btn.grid(row=0, column=1, sticky="e")
-        # formatovani gridu pro header
+
+        # Grid konfigurace
         self.columnconfigure(0, weight=1, uniform="a")
         self.columnconfigure(1, weight=0, uniform="b")
 
-    @staticmethod
-    def clear_text(event):
-        event.widget.delete(0, ctk.END)
+    def clear_placeholder(self, event):
+        """Vymaže textové pole a obnoví výchozí barvu textu a placeholderu při kliknutí."""
+        if self.input_task.get() == "Please enter a task":
+            self.input_task.delete(0, ctk.END)  # Vymaže textové pole
+            self.input_task.configure(
+                placeholder_text="Enter a task",
+                placeholder_text_color="#888888",  # Standardní šedá barva pro placeholder
+                text_color="#000000",  # Standardní barva textu černá
+            )
 
 
 class Display(ctk.CTkFrame):
@@ -179,25 +189,30 @@ class Footer(ctk.CTkFrame):
             text="List name: ",
         )
         self.footer_label.grid(row=0, column=0, sticky="w")
-
         self.footer_entry = ctk.CTkEntry(
             self,
             font=parent.font_normal,
-            placeholder_text="jmeno listu",
+            placeholder_text="List name: ",
         )
         self.footer_entry.get()
         self.footer_entry.grid(row=0, column=1, sticky="w")
-
-        # formatovani gridu pro footer
+        self.message_label = ctk.CTkLabel(
+            self,
+            font=parent.font_small,
+            text_color="#ff7f00",
+            text="",
+        )
+        self.message_label.grid(row=0, column=2, sticky="w")
         self.columnconfigure(0, weight=0, uniform="a")
         self.columnconfigure(1, weight=0, uniform="b")
+        self.columnconfigure(2, weight=1, uniform="c")
 
 
 class TaskManager:
     def __init__(self, parent):
         self.parent = parent
         self.tasks = []
-        self.remove = []
+        self.remove = []  # Inicializujeme self.remove
 
     def save_tasks_to_csv(self):
         list_name = ""
@@ -236,7 +251,6 @@ class TaskManager:
 
         DISPLAY_PATH.label_frame = ctk.CTkFrame(DISPLAY_PATH)
         DISPLAY_FRAME = DISPLAY_PATH.label_frame
-        DISPLAY_FRAME.pack_propagate(True)
         DISPLAY_FRAME.pack(side="top", fill="x", pady=(0, 7), ipady=5)
 
         # Label description
@@ -293,20 +307,24 @@ class TaskManager:
         DISPLAY_FRAME.label_status.bind(*bind_1)
 
     def add_task(self, event=None, status="Not Completed"):
-        user_input = self.parent.header.input_task.get()
-
+        user_input = self.parent.header.input_task.get().strip()
+        self.parent.header.input_task.delete(0, ctk.END)
         if not user_input:
-            self.parent.header.input_task.configure(
-                placeholder_text="Please enter a task",
-                placeholder_text_color="#ff7f00",
-            )
-
+            self.parent.footer.message_label.configure(text="Please enter a task.")
         else:
             new_task = Task(user_input, status)
             self.tasks.append(new_task)
             item = self.tasks[-1] if self.tasks else None
-            self.parent.header.input_task.delete(0, ctk.END)
             self.create_task_frame(item, len(self.tasks) - 1)
+            self.parent.footer.message_label.configure(text="")
+
+    def warning_input_task(self):
+        """Resetuje vstupní pole do stavu varování."""
+        self.parent.header.input_task.configure(
+            placeholder_text="Please enter a task",
+            placeholder_text_color="#ff7f00",
+            text_color="#ff7f00",
+        )
 
     def new_multi_labels(self, seznam):
         for index, item in enumerate(seznam):
