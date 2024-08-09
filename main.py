@@ -29,7 +29,7 @@ class App(ctk.CTk):  # Main app
 
     def center_window(self):
         self.update_idletasks()
-        width = 800
+        width = 1000
         height = 600
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
@@ -128,6 +128,7 @@ class Footer(ctk.CTkFrame):
             font=parent.font_normal,
             text="List name: ",
         )
+        self.footer_label.grid(row=0, column=0, sticky="e")
 
         self.footer_label.grid(row=0, column=0, sticky="w")
 
@@ -161,12 +162,13 @@ class TaskManager:
                     self.tasks.append(Task(description, status))
         self.new_multi_labels()
 
-    def add_task(self, status="nesplneno"):
+    def add_task(self, event=None, status="nesplneno"):
         user_input = self.parent.header.input_task.get()
         new_task = Task(user_input, status)
         self.tasks.append(new_task)
         self.new_label()
 
+    def create_label(self, item):
     def save_tasks_to_csv(self):
         list_name = ""
         if self.parent.footer.footer_entry.get() == "":
@@ -186,29 +188,25 @@ class TaskManager:
         item = self.tasks[-1] if self.tasks else None
         description = getattr(item, "description", "nemame")
         status = getattr(item, "status", "nemame")
-        text = f"task: {description:<40} status: {status} "
+        text = f"task: {description} status: {status}"
         self.parent.display.label = ctk.CTkLabel(
             self.parent.display.display_frame,
             anchor="w",
             font=app.font_normal,
             text=text,
+            corner_radius=10,
             fg_color="#3e3e3e",
         )
         self.parent.display.label.pack(expand=True, fill="x", pady=2)
+        return self.parent.display.label
+
+    def new_label(self):
+        item = self.tasks[-1] if self.tasks else None
+        self.create_label(item)
 
     def new_multi_labels(self):
         for item in self.tasks:
-            description = getattr(item, "description", "nemame")
-            status = getattr(item, "status", "nemame")
-            text = f"task: {description:<40} status: {status} "
-            self.parent.display.label = ctk.CTkLabel(
-                self.parent.display.display_frame,
-                anchor="w",
-                font=app.font_normal,
-                text=text,
-                fg_color="#3e3e3e",
-            )
-            self.parent.display.label.pack(expand=True, fill="x", pady=2)
+            self.create_label(item)
 
 
 class Task:
