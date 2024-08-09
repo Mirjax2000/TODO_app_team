@@ -6,6 +6,7 @@ from icecream import ic
 ctk.set_default_color_theme("blue")
 ctk.set_appearance_mode("Dark")
 
+
 class App(ctk.CTk):
     """Main App"""
 
