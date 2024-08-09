@@ -380,7 +380,6 @@ class Task:
         for task in self.parent.task.tasks:
             print(f"__str__: {str(task)}")
 
-
 if __name__ == "__main__":
     app = App()
     app.mainloop()
