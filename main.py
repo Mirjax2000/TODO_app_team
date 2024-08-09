@@ -1,6 +1,5 @@
 import tkinter as tk
 import customtkinter as ctk
-import json
 import os
 import csv
 from icecream import ic
