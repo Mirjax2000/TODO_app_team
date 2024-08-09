@@ -5,6 +5,10 @@ import os
 import csv
 from icecream import ic
 
+ctk.set_default_color_theme("blue")
+
+ctk.set_appearance_mode("Dark")
+
 
 class App(ctk.CTk):  # Main app
     # constants
@@ -78,6 +82,7 @@ class Display(ctk.CTkFrame):
             "Remove task",
             "Edit task",
             "Load list",
+            "Extend list",
             "Save list",
             "Clear list",
             "Exit",
@@ -96,16 +101,16 @@ class Display(ctk.CTkFrame):
         self.columnconfigure(1, weight=0, uniform="b")
         self.rowconfigure(0, weight=1, uniform="c")
 
-        self.display_btns_top = ctk.CTkFrame(
-            self.display_btns, fg_color="#333333", height=100, width=140
-        )
-        self.display_btns_mid = ctk.CTkFrame(
-            self.display_btns, fg_color="#333333", height=100, width=140
-        )
-        self.display_btns_btm = ctk.CTkFrame(
-            self.display_btns, fg_color="#333333", height=100, width=140
-        )
-
+        # framy top, mid, bottom
+        self.frame_config = {
+            "master": self.display_btns,
+            "fg_color": "#333333",
+            "width": 140,
+        }
+        self.display_btns_top = ctk.CTkFrame(**self.frame_config)
+        self.display_btns_mid = ctk.CTkFrame(**self.frame_config)
+        self.display_btns_btm = ctk.CTkFrame(**self.frame_config)
+        #
         self.display_btns_top.grid(row=0, column=0, sticky="ns")
         self.display_btns_mid.grid(row=1, column=0, sticky="ns", pady=20)
         self.display_btns_btm.grid(row=2, column=0, sticky="s")
@@ -114,52 +119,29 @@ class Display(ctk.CTkFrame):
         self.display_btns.rowconfigure(0, weight=1, uniform="a")
         self.display_btns.rowconfigure(1, weight=1, uniform="b")
         self.display_btns.rowconfigure(2, weight=1, uniform="c")
-        #  region
-        self.btn_1 = ctk.CTkButton(
-            self.display_btns_top,
-            text=self.btns_text[0],
-            font=parent.font_normal,
-            command=self.remove_task,
-        )
-        self.btn_2 = ctk.CTkButton(
-            self.display_btns_top,
-            text=self.btns_text[1],
-            font=parent.font_normal,
-            command=self.edit_task(),
-        )
-        self.btn_3 = ctk.CTkButton(
-            self.display_btns_mid,
-            text=self.btns_text[2],
-            font=parent.font_normal,
-            command=self.load_list,
-        )
-        self.btn_4 = ctk.CTkButton(
-            self.display_btns_mid,
-            text=self.btns_text[3],
-            font=parent.font_normal,
-            command=self.save_list,
-        )
-        self.btn_5 = ctk.CTkButton(
-            self.display_btns_mid,
-            text=self.btns_text[4],
-            font=parent.font_normal,
-            command=self.clear_list,
-        )
-        self.btn_6 = ctk.CTkButton(
-            self.display_btns_btm,
-            text=self.btns_text[5],
-            font=parent.font_normal,
-            command=self.exit,
-        )
-        # endregion
-        self.btn_1.grid(row=0, column=0, sticky="new", pady=(0, 10))
-        self.btn_2.grid(row=1, column=0, sticky="new")
-
-        self.btn_3.grid(row=2, column=0, sticky="new")
-        self.btn_4.grid(row=3, column=0, sticky="new", pady=10)
-        self.btn_5.grid(row=4, column=0, sticky="new")
-
-        self.btn_6.grid(row=5, column=0, sticky="sew")
+        #
+        # Create buttons dynamically
+        self.button_configs = [
+            (self.display_btns_top, self.btns_text[0], self.remove_task, "btn_1"),
+            (self.display_btns_top, self.btns_text[1], self.edit_task, "btn_2"),
+            (self.display_btns_mid, self.btns_text[2], self.load_list, "btn_3"),
+            (self.display_btns_mid, self.btns_text[3], self.save_list, "btn_4"),
+            (self.display_btns_mid, self.btns_text[4], self.extend_list, "btn_5"),
+            (self.display_btns_mid, self.btns_text[5], self.clear_list, "btn_6"),
+            (self.display_btns_btm, self.btns_text[6], self.exit, "btn_7"),
+        ]
+        #
+        for parent, text, command, attr_name in self.button_configs:
+            button = ctk.CTkButton(
+                parent, text=text, font=self.parent.font_normal, command=command
+            )
+            setattr(self, attr_name, button)
+        #
+        for i in range(len(self.button_configs)):
+            button = getattr(self, f"btn_{i + 1}")
+            button.grid(row=i, column=0, sticky="n")
+        #
+        # methods
 
     def remove_task(self):
         self.parent.task.remove_task()
@@ -172,6 +154,9 @@ class Display(ctk.CTkFrame):
 
     def load_list(self):
         self.parent.task.load_tasks_from_csv()
+
+    def extend_list(self):
+        pass
 
     def clear_list(self):
         self.parent.task.tasks.clear()
@@ -342,6 +327,7 @@ class TaskManager:
         else:
             parent.configure(fg_color="#277bc6")
             self.remove.append(parent)
+        print(f"Index: {index}, Description: {self.tasks[index].description}")
 
     def remove_task(self):
         for task_frame in self.remove:
