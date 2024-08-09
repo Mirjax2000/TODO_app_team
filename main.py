@@ -178,7 +178,6 @@ class Footer(ctk.CTkFrame):
             font=parent.font_normal,
             text="List name: ",
         )
-
         self.footer_label.grid(row=0, column=0, sticky="w")
 
         self.footer_entry = ctk.CTkEntry(
