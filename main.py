@@ -149,11 +149,11 @@ class Display(ctk.CTkFrame):
         pass
 
     def save_list(self):
-        """"""
+        """Ulozeni tasku do csv souboru"""
         self.parent.task.save_tasks_to_csv()
 
     def load_list(self):
-        """"""
+        """nacitani tasku z csv souboru a vytvoreni labelu"""
         self.parent.task.load_tasks_from_csv()
 
     def extend_list(self):
@@ -173,6 +173,8 @@ class Display(ctk.CTkFrame):
 
 
 class Footer(ctk.CTkFrame):
+    """spodni frame pro text a tlacitko pro ulozeni seznamu"""
+
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
@@ -203,7 +205,8 @@ class Footer(ctk.CTkFrame):
 
 
 class TaskManager:
-    '''Trida pro správu úkolů'''
+    """Trida pro správu úkolů"""
+
     def __init__(self, parent):
         self.parent = parent
         self.tasks = []
@@ -358,6 +361,8 @@ class TaskManager:
 
 
 class Task:
+    """Trida pro uchování jednoho úkolu"""
+
     def __init__(self, description, status, parent):
         """Inicializuje ukol"""
         self.parent = parent
