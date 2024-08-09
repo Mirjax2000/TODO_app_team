@@ -3,7 +3,7 @@ import customtkinter as ctk
 import os
 import csv
 
-ctk.set_default_color_theme("dark-blue")
+ctk.set_default_color_theme("blue")
 ctk.set_appearance_mode("Dark")
 
 
