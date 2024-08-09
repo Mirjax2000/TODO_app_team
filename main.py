@@ -136,7 +136,9 @@ class Display(ctk.CTkFrame):
         #
         for i in range(len(self.button_configs)):
             button = getattr(self, f"btn_{i + 1}")
-            button.grid(row=i, column=0, sticky="n")
+            button.grid(row=i, column=0, sticky="n", pady=1)
+
+        self.display_btns_mid.rowconfigure(4, weight=1, uniform="a")
         #
         # methods
 
