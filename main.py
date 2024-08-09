@@ -42,6 +42,8 @@ class App(ctk.CTk):
 
 
 class Header(ctk.CTkFrame):
+    """Frame pro hlavičku"""
+
     def __init__(self, parent):
         self.parent = parent
         super().__init__(parent)
