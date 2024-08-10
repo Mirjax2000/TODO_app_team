@@ -2,6 +2,7 @@ import csv
 import os
 import customtkinter as ctk
 from icecream import ic
+from pywinstyles import set_opacity
 
 ctk.set_default_color_theme("blue")
 ctk.set_appearance_mode("Dark")
@@ -10,9 +11,9 @@ ctk.set_appearance_mode("Dark")
 class App(ctk.CTk):
     """Main App"""
 
-    font_big = ("Arial", 30, "normal")
-    font_normal = ("Arial", 20, "normal")
-    font_small = ("Arial", 16, "normal")
+    font_big: tuple = ("Arial", 30, "normal")
+    font_normal: tuple = ("Arial", 20, "normal")
+    font_small: tuple = ("Arial", 16, "normal")
 
     # constructor
     def __init__(self):
@@ -32,12 +33,12 @@ class App(ctk.CTk):
     def center_window(self):
         """Centers the window on the screen."""
         self.update_idletasks()
-        width = 1000
-        height = 600
-        screen_width = self.winfo_screenwidth()
-        screen_height = self.winfo_screenheight()
-        x = screen_width // 2 - width // 2
-        y = screen_height // 2 - height // 2
+        width: int = 1000
+        height: int = 600
+        screen_width: int = self.winfo_screenwidth()
+        screen_height: int = self.winfo_screenheight()
+        x: int = screen_width // 2 - width // 2
+        y: int = screen_height // 2 - height // 2
         self.geometry(f"{width}x{height}+{x}+{y}")
 
 
@@ -76,7 +77,7 @@ class Display(ctk.CTkFrame):
 
     def __init__(self, parent):
         self.parent = parent
-        self.btns_text = [
+        self.btns_text: list = [
             "Remove task",
             "Edit task",
             "Load list",
@@ -100,7 +101,7 @@ class Display(ctk.CTkFrame):
         self.rowconfigure(0, weight=1, uniform="c")
 
         # framy top, mid, bottom
-        self.frame_config = {
+        self.frame_config: dict = {
             "master": self.display_btns,
             "width": 140,
         }
@@ -117,7 +118,7 @@ class Display(ctk.CTkFrame):
         self.display_btns.rowconfigure(2, weight=1, uniform="c")
         #
         # Create buttons dynamically
-        self.button_configs = [
+        self.button_configs: list = [
             (self.display_btns_top, self.btns_text[0], self.remove_task, "btn_1"),
             (self.display_btns_top, self.btns_text[1], self.edit_task, "btn_2"),
             (self.display_btns_mid, self.btns_text[2], self.load_list, "btn_3"),
@@ -138,6 +139,7 @@ class Display(ctk.CTkFrame):
             button.grid(row=i, column=0, sticky="n", pady=1)
 
         self.display_btns_mid.rowconfigure(4, weight=1, uniform="a")
+
         #
         # methods
 
@@ -210,14 +212,14 @@ class TaskManager:
 
     def __init__(self, parent):
         self.parent = parent
-        self.tasks = []
-        self.remove = []  # Inicializujeme self.remove
+        self.tasks: list = []
+        self.remove: list = []  # Inicializujeme self.remove
 
     def save_tasks_to_csv(self):
         """Uloží všechny úkoly do CSV souboru"""
         list_name = ""
         if self.parent.footer.footer_entry.get() == "":
-            list_name = "list"
+            list_name: str = "list"
         else:
             list_name = self.parent.footer.footer_entry.get().replace(" ", "_")
         file_path = os.path.join(
@@ -232,7 +234,7 @@ class TaskManager:
     def load_tasks_from_csv(self):
         """Načte úkoly z CSV souboru"""
         self.tasks.clear()
-        file_path = os.path.join(
+        file_path: str = os.path.join(
             os.path.dirname(__file__), "load_list", "import_tasks.csv"
         )
         with open(file_path, "r", encoding="utf-8") as file:
@@ -382,5 +384,5 @@ class Task:
 
 
 if __name__ == "__main__":
-    app = App()
+    app: App = App()
     app.mainloop()
