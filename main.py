@@ -16,7 +16,8 @@ class App(ctk.CTk):
     font_small: tuple[str, int, str] = ("Arial", 16, "normal")
 
     # constructor
-    def __init__(self):
+    def __init__(self, version: float):
+        self.version = version
         super().__init__()
         self.title("TODO-List")
         self.iconbitmap("./assets/ico.ico")
@@ -383,5 +384,6 @@ class Task:
 
 
 if __name__ == "__main__":
-    app: App = App()
+    app: App = App(0.5)
+    print(f"App version: {app.version}")
     app.mainloop()
