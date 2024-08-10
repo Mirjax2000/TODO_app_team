@@ -325,12 +325,12 @@ class TaskManager:
             self.create_task_frame(item, len(self.tasks) - 1)
             self.parent.footer.message_label.configure(text="")
 
-    def new_multi_labels(self, seznam):
+    def new_multi_labels(self, seznam: list) -> None:
         """predává všechny položky na disply a do hlavniho seznamu"""
         for index, item in enumerate(seznam):
             self.create_task_frame(item, index)
 
-    def on_label_click(self, event, index):
+    def on_label_click(self, event, index) -> None:
         """Kliknuti na task label a zmeni jeho barvu"""
         parent = event.widget.master
         while not isinstance(parent, ctk.CTkFrame):
@@ -345,7 +345,7 @@ class TaskManager:
             self.remove.append(parent)
         print(f"Index: {index}, Description: {self.tasks[index].description}")
 
-    def remove_task(self):
+    def remove_task(self) -> None:
         """Smaze vybrane tasky z seznamu a odstrani je z disple"""
         for task_frame in self.remove:
             task_description = task_frame.label_description.cget("text")
@@ -368,16 +368,16 @@ class TaskManager:
 class Task:
     """Trida pro uchování jednoho úkolu"""
 
-    def __init__(self, description: str, status: str, parent):
+    def __init__(self, description: str, status: str, parent) -> None:
         """Inicializuje ukol"""
         self.parent = parent
         self.description = description
         self.status = status
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Description: {self.description}, Status: {self.status}"
 
-    def print_task(self):
+    def print_task(self) -> None:
         """Vypise ukol primo z classy Task"""
         for task in self.parent.task.tasks:
             print(f"__str__: {str(task)}")
@@ -385,5 +385,5 @@ class Task:
 
 if __name__ == "__main__":
     app: App = App(0.5)
-    print(f"App version: {app.version}")
+    # print(f"App version: {app.version}")
     app.mainloop()
