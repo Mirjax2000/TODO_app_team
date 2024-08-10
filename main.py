@@ -11,9 +11,9 @@ ctk.set_appearance_mode("Dark")
 class App(ctk.CTk):
     """Main App"""
 
-    font_big: tuple = ("Arial", 30, "normal")
-    font_normal: tuple = ("Arial", 20, "normal")
-    font_small: tuple = ("Arial", 16, "normal")
+    font_big: tuple[str, int, str] = ("Arial", 30, "normal")
+    font_normal: tuple[str, int, str] = ("Arial", 20, "normal")
+    font_small: tuple[str, int, str] = ("Arial", 16, "normal")
 
     # constructor
     def __init__(self):
@@ -77,7 +77,7 @@ class Display(ctk.CTkFrame):
 
     def __init__(self, parent):
         self.parent = parent
-        self.btns_text: list = [
+        self.btns_text: list[str] = [
             "Remove task",
             "Edit task",
             "Load list",
@@ -305,12 +305,12 @@ class TaskManager:
             display_frame.label_status.configure(text_color="#ff7f00")
             display_frame.var.set("off")
 
-        bind_1 = ("<Button-1>", lambda event: self.on_label_click(event, index))
+        bind_1: tuple = ("<Button-1>", lambda event: self.on_label_click(event, index))
         display_frame.bind(*bind_1)
         display_frame.label_description.bind(*bind_1)
         display_frame.label_status.bind(*bind_1)
 
-    def add_task(self, event=None, status="Not Completed"):
+    def add_task(self, event=None, status: str = "Not Completed"):
         """Prida novy ukol do seznamu a vypise na display"""
 
         user_input = self.parent.header.input_task.get().strip()
@@ -367,7 +367,7 @@ class TaskManager:
 class Task:
     """Trida pro uchování jednoho úkolu"""
 
-    def __init__(self, description, status, parent):
+    def __init__(self, description: str, status: str, parent):
         """Inicializuje ukol"""
         self.parent = parent
         self.description = description
