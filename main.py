@@ -1,8 +1,7 @@
 import csv
 import os
 import customtkinter as ctk
-from icecream import ic
-from pywinstyles import set_opacity
+from data import btn_text
 
 ctk.set_default_color_theme("blue")
 ctk.set_appearance_mode("Dark")
@@ -34,6 +33,7 @@ class App(ctk.CTk):
 
     def center_window(self):
         """Centers the window on the screen."""
+
         self.update_idletasks()
         width: int = 1000
         height: int = 600
@@ -77,16 +77,6 @@ class Header(ctk.CTkFrame):
 class Display(ctk.CTkFrame):
     """Frame pro zobrazeni seznamu úkolů"""
 
-    btns_text: list[str] = [
-        "Remove task",
-        "Edit task",
-        "Load list",
-        "Extend list",
-        "Save list",
-        "Clear list",
-        "Exit",
-    ]
-
     def __init__(self, parent):
         self.parent = parent
 
@@ -121,14 +111,15 @@ class Display(ctk.CTkFrame):
         self.display_btns.rowconfigure(2, weight=1, uniform="c")
         #
         # Create buttons dynamically
+
         self.button_configs: list[tuple] = [
-            (self.display_btns_top, Display.btns_text[0], self.remove_task, "btn_1"),
-            (self.display_btns_top, Display.btns_text[1], self.edit_task, "btn_2"),
-            (self.display_btns_mid, Display.btns_text[2], self.load_list, "btn_3"),
-            (self.display_btns_mid, Display.btns_text[3], self.save_list, "btn_4"),
-            (self.display_btns_mid, Display.btns_text[4], self.extend_list, "btn_5"),
-            (self.display_btns_mid, Display.btns_text[5], self.clear_list, "btn_6"),
-            (self.display_btns_btm, Display.btns_text[6], self.exit, "btn_7"),
+            (self.display_btns_top, btn_text[0], self.remove_task, "btn_1"),
+            (self.display_btns_top, btn_text[1], self.edit_task, "btn_2"),
+            (self.display_btns_mid, btn_text[2], self.load_list, "btn_3"),
+            (self.display_btns_mid, btn_text[3], self.save_list, "btn_4"),
+            (self.display_btns_mid, btn_text[4], self.extend_list, "btn_5"),
+            (self.display_btns_mid, btn_text[5], self.clear_list, "btn_6"),
+            (self.display_btns_btm, btn_text[6], self.exit, "btn_7"),
         ]
         #
         for parent, text, command, attr_name in self.button_configs:
