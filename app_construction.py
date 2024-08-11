@@ -108,7 +108,7 @@ class Display(ctk.CTkFrame):
         self.rowconfigure(0, weight=1, uniform="c")
 
         # framy top, mid, bottom
-        self.frame_config: dict = {
+        self.frame_config = {
             "master": self.display_btns,
             "width": 140,
         }
@@ -125,17 +125,17 @@ class Display(ctk.CTkFrame):
         self.display_btns.rowconfigure(2, weight=1, uniform="c")
         #
         # Create buttons dynamically
-        path = self.parent.task
-        self.button_configs: list[tuple] = [
+        path = parent.task
+        self.button_configs = [
             (self.display_btns_top, btn_text[0], path.remove_task, "btn_1"),
             (self.display_btns_top, btn_text[1], path.edit_task, "btn_2"),
             (self.display_btns_mid, btn_text[2], path.load_list, "btn_3"),
             (self.display_btns_mid, btn_text[3], path.save_list, "btn_4"),
             (self.display_btns_mid, btn_text[4], path.extend_list, "btn_5"),
             (self.display_btns_mid, btn_text[5], path.clear_list, "btn_6"),
-            (self.display_btns_mid, btn_text[6], path.exit, "btn_7"),
+            (self.display_btns_btm, btn_text[6], path.exit, "btn_7"),
         ]
-
+        #
         for parent, text, command, attr_name in self.button_configs:
             button = ctk.CTkButton(parent, text=text, font=font_normal, command=command)
             setattr(self, attr_name, button)
