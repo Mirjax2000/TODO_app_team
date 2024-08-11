@@ -96,7 +96,7 @@ class Display(ctk.CTkFrame):
 
         super().__init__(parent)
         self.pack(side="top", fill="both", padx=20, expand=True)
-
+        # levy frame s tasky
         self.display_frame = ctk.CTkScrollableFrame(self)
         self.display_frame.grid(row=0, column=0, sticky="nsew")
 
@@ -107,7 +107,7 @@ class Display(ctk.CTkFrame):
         self.columnconfigure(1, weight=0, uniform="b")
         self.rowconfigure(0, weight=1, uniform="c")
 
-        # framy top, mid, bottom
+        # buttons framy top, mid, bottom
         self.frame_config = {
             "master": self.display_btns,
             "width": 140,
