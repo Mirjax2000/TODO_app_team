@@ -1,5 +1,7 @@
 import csv
 import os
+
+import app_construction
 from app_construction import *
 
 
@@ -109,7 +111,7 @@ class TaskManager:
         display_frame.label_description = ctk.CTkLabel(
             display_frame,
             text=description,
-            font=font_normal,
+            font=app_construction.font_normal,
         )
         display_frame.label_description.grid(row=0, column=0, sticky="w", padx=5)
 
@@ -117,7 +119,7 @@ class TaskManager:
         display_frame.label_status = ctk.CTkLabel(
             display_frame,
             text=status,
-            font=font_normal,
+            font=app_construction.font_normal,
             width=140,
             anchor="w",
         )
@@ -134,7 +136,7 @@ class TaskManager:
             variable=display_frame.var,
             onvalue="on",
             offvalue="off",
-            font=font_normal,
+            font=app_construction.font_normal,
             text="",
             width=0,
             # command=self.check_status,
