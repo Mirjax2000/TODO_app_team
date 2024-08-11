@@ -14,10 +14,11 @@ class App(ctk.CTk):
     font_big: tuple[str, int, str] = ("Arial", 30, "normal")
     font_normal: tuple[str, int, str] = ("Arial", 20, "normal")
     font_small: tuple[str, int, str] = ("Arial", 16, "normal")
+    version: float = 0.5
 
     # constructor
-    def __init__(self, version: float):
-        self.version = version
+    def __init__(self):
+
         super().__init__()
         self.title("TODO-List")
         self.iconbitmap("./assets/ico.ico")
@@ -76,17 +77,18 @@ class Header(ctk.CTkFrame):
 class Display(ctk.CTkFrame):
     """Frame pro zobrazeni seznamu úkolů"""
 
+    btns_text: list[str] = [
+        "Remove task",
+        "Edit task",
+        "Load list",
+        "Extend list",
+        "Save list",
+        "Clear list",
+        "Exit",
+    ]
+
     def __init__(self, parent):
         self.parent = parent
-        self.btns_text: list[str] = [
-            "Remove task",
-            "Edit task",
-            "Load list",
-            "Extend list",
-            "Save list",
-            "Clear list",
-            "Exit",
-        ]
 
         super().__init__(parent)
         self.pack(side="top", fill="both", padx=20, expand=True)
@@ -119,14 +121,14 @@ class Display(ctk.CTkFrame):
         self.display_btns.rowconfigure(2, weight=1, uniform="c")
         #
         # Create buttons dynamically
-        self.button_configs: list = [
-            (self.display_btns_top, self.btns_text[0], self.remove_task, "btn_1"),
-            (self.display_btns_top, self.btns_text[1], self.edit_task, "btn_2"),
-            (self.display_btns_mid, self.btns_text[2], self.load_list, "btn_3"),
-            (self.display_btns_mid, self.btns_text[3], self.save_list, "btn_4"),
-            (self.display_btns_mid, self.btns_text[4], self.extend_list, "btn_5"),
-            (self.display_btns_mid, self.btns_text[5], self.clear_list, "btn_6"),
-            (self.display_btns_btm, self.btns_text[6], self.exit, "btn_7"),
+        self.button_configs: list[tuple] = [
+            (self.display_btns_top, Display.btns_text[0], self.remove_task, "btn_1"),
+            (self.display_btns_top, Display.btns_text[1], self.edit_task, "btn_2"),
+            (self.display_btns_mid, Display.btns_text[2], self.load_list, "btn_3"),
+            (self.display_btns_mid, Display.btns_text[3], self.save_list, "btn_4"),
+            (self.display_btns_mid, Display.btns_text[4], self.extend_list, "btn_5"),
+            (self.display_btns_mid, Display.btns_text[5], self.clear_list, "btn_6"),
+            (self.display_btns_btm, Display.btns_text[6], self.exit, "btn_7"),
         ]
         #
         for parent, text, command, attr_name in self.button_configs:
@@ -218,7 +220,6 @@ class TaskManager:
 
     def save_tasks_to_csv(self):
         """Uloží všechny úkoly do CSV souboru"""
-        list_name = ""
         if self.parent.footer.footer_entry.get() == "":
             list_name: str = "list"
         else:
@@ -325,12 +326,12 @@ class TaskManager:
             self.create_task_frame(item, len(self.tasks) - 1)
             self.parent.footer.message_label.configure(text="")
 
-    def new_multi_labels(self, seznam: list) -> None:
+    def new_multi_labels(self, seznam):
         """predává všechny položky na disply a do hlavniho seznamu"""
         for index, item in enumerate(seznam):
             self.create_task_frame(item, index)
 
-    def on_label_click(self, event, index) -> None:
+    def on_label_click(self, event, index):
         """Kliknuti na task label a zmeni jeho barvu"""
         parent = event.widget.master
         while not isinstance(parent, ctk.CTkFrame):
@@ -345,7 +346,7 @@ class TaskManager:
             self.remove.append(parent)
         print(f"Index: {index}, Description: {self.tasks[index].description}")
 
-    def remove_task(self) -> None:
+    def remove_task(self):
         """Smaze vybrane tasky z seznamu a odstrani je z disple"""
         for task_frame in self.remove:
             task_description = task_frame.label_description.cget("text")
@@ -368,7 +369,7 @@ class TaskManager:
 class Task:
     """Trida pro uchování jednoho úkolu"""
 
-    def __init__(self, description: str, status: str, parent) -> None:
+    def __init__(self, description: str, status: str, parent):
         """Inicializuje ukol"""
         self.parent = parent
         self.description = description
@@ -377,13 +378,13 @@ class Task:
     def __str__(self) -> str:
         return f"Description: {self.description}, Status: {self.status}"
 
-    def print_task(self) -> None:
+    def print_task(self):
         """Vypise ukol primo z classy Task"""
         for task in self.parent.task.tasks:
             print(f"__str__: {str(task)}")
 
 
 if __name__ == "__main__":
-    app: App = App(0.5)
-    # print(f"App version: {app.version}")
+    app: App = App()
+    print(f"App version: {App.version}")
     app.mainloop()
