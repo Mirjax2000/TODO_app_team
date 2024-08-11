@@ -1,6 +1,6 @@
 import csv
 import os
-from assets.app_construction import *
+from app_construction import *
 
 
 class TaskManager:
