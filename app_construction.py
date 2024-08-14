@@ -12,7 +12,7 @@ outer_color: str = "#1c1c1c"
 bad_color: str = "#ff7f00"
 btn_color_dark: str = "#14375e"
 btn_color_light: str = "#144870"
-border_color: str = "#737373"
+border_color: str = "#9e9e9e"
 
 # lists
 btn_text = [
