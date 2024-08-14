@@ -4,8 +4,12 @@ from main import TaskManager
 # variables
 font_big: tuple[str, int, str] = ("Arial", 30, "normal")
 font_normal: tuple[str, int, str] = ("Arial", 20, "normal")
-font_small: tuple[str, int, str] = ("Arial", 16, "normal")
+font_small: tuple[str, int, str] = ("Arial", 12, "normal")
 version: float = 0.5
+
+inner_color: str = "#1e1e1e"
+outer_color: str = "#1c1c1c"
+bad_color: str = "#ff7f00"
 
 # lists
 btn_text = [
@@ -19,7 +23,7 @@ btn_text = [
 ]
 
 
-ctk.set_default_color_theme("blue")
+# ctk.set_default_color_theme("blue")
 ctk.set_appearance_mode("Dark")
 
 
@@ -37,7 +41,7 @@ class App(ctk.CTk):
         self.iconbitmap("./assets/ico.ico")
         self.center_window()
         self.resizable(False, False)
-        self.configure(fg_color="#2b2b2b")
+        self.configure(fg_color=outer_color)
 
         # Frames
         self.task = TaskManager(self)
@@ -63,7 +67,7 @@ class Header(ctk.CTkFrame):
 
     def __init__(self, parent):
         self.parent = parent
-        super().__init__(parent)
+        super().__init__(parent, fg_color=outer_color)
         self.pack(side="top", fill="x", padx=20, pady=20)
 
         # Vstupní pole pro zadání úkolu
@@ -93,24 +97,23 @@ class Display(ctk.CTkFrame):
 
     def __init__(self, parent):
         self.parent = parent
-
-        super().__init__(parent)
+        super().__init__(parent, fg_color=outer_color)
         self.pack(side="top", fill="both", padx=20, expand=True)
         # levy frame s tasky
-        self.display_frame = ctk.CTkScrollableFrame(self)
+        self.display_frame = ctk.CTkScrollableFrame(self, fg_color=inner_color)
         self.display_frame.grid(row=0, column=0, sticky="nsew")
-
-        self.display_btns = ctk.CTkFrame(self, fg_color="#2b2b2b", width=140)
+        # pravy frame s tlacitkama
+        self.display_btns = ctk.CTkFrame(self, fg_color=outer_color, width=140)
         self.display_btns.grid(row=0, column=1, sticky="nsew", padx=(20, 0))
         # grid pro framy pro vsechny tlacitka
         self.columnconfigure(0, weight=1, uniform="a")
         self.columnconfigure(1, weight=0, uniform="b")
         self.rowconfigure(0, weight=1, uniform="c")
-
         # buttons framy top, mid, bottom
         self.frame_config = {
             "master": self.display_btns,
             "width": 140,
+            "fg_color": outer_color,
         }
         self.display_btns_top = ctk.CTkFrame(**self.frame_config)
         self.display_btns_mid = ctk.CTkFrame(**self.frame_config)
@@ -142,16 +145,35 @@ class Display(ctk.CTkFrame):
         #
         for i in range(len(self.button_configs)):
             button = getattr(self, f"btn_{i + 1}")
-            button.grid(row=i, column=0, sticky="n", pady=1)
+            button.grid(row=i + 1, column=0, sticky="n", pady=1)
 
-        self.display_btns_mid.rowconfigure(4, weight=1, uniform="a")
+        self.display_btns_mid.rowconfigure(5, weight=1, uniform="a")
+
+        # labels
+        self.label_tasks = ctk.CTkLabel(
+            self.display_btns_top,
+            font=font_small,
+            text="Task operations",
+            fg_color=inner_color,
+            corner_radius=10,
+        )
+        self.label_tasks.grid(row=0, column=0, sticky="ew")
+
+        self.label_lists = ctk.CTkLabel(
+            self.display_btns_mid,
+            font=font_small,
+            text="List operations",
+            fg_color=inner_color,
+            corner_radius=10,
+        )
+        self.label_lists.grid(row=0, column=0, sticky="ew")
 
 
 class Footer(ctk.CTkFrame):
     """spodni frame pro text a tlacitko pro ulozeni seznamu"""
 
     def __init__(self, parent):
-        super().__init__(parent)
+        super().__init__(parent, fg_color=outer_color)
         self.parent = parent
         self.pack(side="bottom", fill="x", pady=20, padx=20)
 
@@ -171,7 +193,7 @@ class Footer(ctk.CTkFrame):
         self.footer_entry.grid(row=0, column=1, sticky="ew")
 
         self.message_label = ctk.CTkLabel(
-            self, font=font_small, text_color="#ff7f00", text=""
+            self, font=font_small, text_color=bad_color, text=""
         )
         self.message_label.grid(row=0, column=2, sticky="ew")
         self.columnconfigure(0, weight=0, uniform="a")
