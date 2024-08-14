@@ -7,9 +7,12 @@ font_normal: tuple[str, int, str] = ("Arial", 20, "normal")
 font_small: tuple[str, int, str] = ("Arial", 12, "normal")
 version: float = 0.5
 
-inner_color: str = "#1e1e1e"
+inner_color: str = "#292929"
 outer_color: str = "#1c1c1c"
 bad_color: str = "#ff7f00"
+btn_color_dark: str = "#14375e"
+btn_color_light: str = "#144870"
+border_color: str = "#737373"
 
 # lists
 btn_text = [
@@ -23,7 +26,7 @@ btn_text = [
 ]
 
 
-# ctk.set_default_color_theme("blue")
+ctk.set_default_color_theme("blue")
 ctk.set_appearance_mode("Dark")
 
 
@@ -72,7 +75,11 @@ class Header(ctk.CTkFrame):
 
         # Vstupní pole pro zadání úkolu
         self.input_task = ctk.CTkEntry(
-            self, placeholder_text="Enter a task", font=font_normal
+            self,
+            placeholder_text="Enter a task",
+            font=font_normal,
+            border_width=1,
+            border_color=border_color,
         )
         self.input_task.get()
         self.input_task.bind("<Return>", self.parent.task.add_task)
@@ -100,7 +107,9 @@ class Display(ctk.CTkFrame):
         super().__init__(parent, fg_color=outer_color)
         self.pack(side="top", fill="both", padx=20, expand=True)
         # levy frame s tasky
-        self.display_frame = ctk.CTkScrollableFrame(self, fg_color=inner_color)
+        self.display_frame = ctk.CTkFrame(
+            self, fg_color=inner_color, border_width=1, border_color=border_color
+        )
         self.display_frame.grid(row=0, column=0, sticky="nsew")
         # pravy frame s tlacitkama
         self.display_btns = ctk.CTkFrame(self, fg_color=outer_color, width=140)
@@ -188,6 +197,9 @@ class Footer(ctk.CTkFrame):
             width=300,
             font=font_normal,
             placeholder_text="List name: ",
+            fg_color=inner_color,
+            border_color=border_color,
+            border_width=1,
         )
         self.footer_entry.get()
         self.footer_entry.grid(row=0, column=1, sticky="ew")
