@@ -34,7 +34,6 @@ class TaskManager:
 
             if task_to_remove:
                 self.tasks.remove(task_to_remove)
-
             task_frame.destroy()
 
         self.remove.clear()
@@ -104,4 +103,3 @@ if __name__ == "__main__":
     app: App = App()
     print(f"App version: {version}")
     app.mainloop()
-
