@@ -4,7 +4,7 @@ from main import TaskManager
 # variables
 font_big: tuple[str, int, str] = ("Arial", 30, "normal")
 font_normal: tuple[str, int, str] = ("Arial", 20, "normal")
-font_small: tuple[str, int, str] = ("Arial", 12, "normal")
+font_small: tuple[str, int, str] = ("Arial", 16, "normal")
 version: float = 0.5
 
 inner_color: str = "#292929"
@@ -91,13 +91,14 @@ class Header(ctk.CTkFrame):
             self,
             text="Add Task",
             font=font_normal,
-            command=self.parent.task.add_task,
+            # command=,
         )
         self.input_btn.grid(row=0, column=1, sticky="e")
 
-        # Grid konfigurace
+        # Grid konfigurace headru
         self.columnconfigure(0, weight=1, uniform="a")
         self.columnconfigure(1, weight=0, uniform="b")
+        self.rowconfigure(0, weight=0, uniform="a")
 
 
 class Display(ctk.CTkFrame):
@@ -105,37 +106,45 @@ class Display(ctk.CTkFrame):
 
     def __init__(self, parent):
         self.parent = parent
+        # a main frame: body
         super().__init__(parent, fg_color=outer_color)
         self.pack(side="top", fill="both", padx=20, expand=True)
-        # levy frame s tasky
+        # left btn frame
         self.display_frame = ctk.CTkFrame(
             self, fg_color=inner_color, border_width=1, border_color=border_color
         )
-        self.display_frame.grid(row=0, column=0, sticky="nsew")
-        # pravy frame s tlacitkama
+        # right btn frame
         self.display_btns = ctk.CTkFrame(self, fg_color=outer_color, width=140)
+        # aktivace widgetu pro right and left frame
+        self.display_frame.grid(row=0, column=0, sticky="nsew")
         self.display_btns.grid(row=0, column=1, sticky="nsew", padx=(20, 0))
-        # grid pro framy pro vsechny tlacitka
+        # grid config pravy a levy grid
         self.columnconfigure(0, weight=1, uniform="a")
         self.columnconfigure(1, weight=0, uniform="b")
         self.rowconfigure(0, weight=1, uniform="c")
+
         # buttons framy top, mid, bottom
-        self.frame_config = {
-            "master": self.display_btns,
+        self.btn_frame = {  # config pro vsechny tlacitka
+            "master": self.display_btns,  # kdo je rodic
             "width": 140,
             "fg_color": outer_color,
         }
-        self.display_btns_top = ctk.CTkFrame(**self.frame_config)
-        self.display_btns_mid = ctk.CTkFrame(**self.frame_config)
-        self.display_btns_btm = ctk.CTkFrame(**self.frame_config)
-        #
+        # tlacitka v top
+        self.display_btns_top = ctk.CTkFrame(**self.btn_frame)
+        # tlacitka v mid
+        self.display_btns_mid = ctk.CTkFrame(**self.btn_frame)
+        # tlacitka v bottom
+        self.display_btns_btm = ctk.CTkFrame(**self.btn_frame)
+        # activace widgetu pro btn framy
         self.display_btns_top.grid(row=0, column=0, sticky="ns")
         self.display_btns_mid.grid(row=1, column=0, sticky="ns", pady=20)
         self.display_btns_btm.grid(row=2, column=0, sticky="s")
         #
+        # grid pr tlacitkovy framy
         self.display_btns.rowconfigure(0, weight=1, uniform="a")
         self.display_btns.rowconfigure(1, weight=1, uniform="b")
         self.display_btns.rowconfigure(2, weight=1, uniform="c")
+        self.display_btns.columnconfigure(0, weight=0, uniform="a")
         #
         # Create buttons dynamically
         path = parent.task
@@ -152,14 +161,14 @@ class Display(ctk.CTkFrame):
         for parent, text, command, attr_name in self.button_configs:
             button = ctk.CTkButton(parent, text=text, font=font_normal, command=command)
             setattr(self, attr_name, button)
-        #
+        # grid config
         for i in range(len(self.button_configs)):
             button = getattr(self, f"btn_{i + 1}")
             button.grid(row=i + 1, column=0, sticky="n", pady=1)
-
+        # clear list config
         self.display_btns_mid.rowconfigure(5, weight=1, uniform="a")
 
-        # labels
+        # label task operations
         self.label_tasks = ctk.CTkLabel(
             self.display_btns_top,
             font=font_small,
@@ -167,8 +176,8 @@ class Display(ctk.CTkFrame):
             fg_color=inner_color,
             corner_radius=10,
         )
-        self.label_tasks.grid(row=0, column=0, sticky="ew")
 
+        # label list operations
         self.label_lists = ctk.CTkLabel(
             self.display_btns_mid,
             font=font_small,
@@ -176,7 +185,12 @@ class Display(ctk.CTkFrame):
             fg_color=inner_color,
             corner_radius=10,
         )
+        # activation
+        self.label_tasks.grid(row=0, column=0, sticky="ew")
         self.label_lists.grid(row=0, column=0, sticky="ew")
+        # label config
+        self.display_btns_top.rowconfigure(0, weight=0, uniform="b")
+        self.display_btns_mid.rowconfigure(0, weight=0, uniform="b")
 
 
 class Footer(ctk.CTkFrame):
@@ -187,12 +201,14 @@ class Footer(ctk.CTkFrame):
         self.parent = parent
         self.pack(side="bottom", fill="x", pady=20, padx=20)
 
+        # Vstupní pole pro zadání jména seznamu
         self.footer_label = ctk.CTkLabel(
             self,
             font=font_normal,
             text="List name: ",
         )
-        self.footer_label.grid(row=0, column=0, sticky="w")
+
+        # Vstupní pole pro zadání jména seznamu
         self.footer_entry = ctk.CTkEntry(
             self,
             width=300,
@@ -203,15 +219,21 @@ class Footer(ctk.CTkFrame):
             border_width=1,
         )
         self.footer_entry.get()
-        self.footer_entry.grid(row=0, column=1, sticky="ew")
 
-        self.message_label = ctk.CTkLabel(
-            self, font=font_small, text_color=bad_color, text=""
+        # error label
+        self.error_label = ctk.CTkLabel(
+            self, font=font_small, text_color=bad_color, text="error message"
         )
-        self.message_label.grid(row=0, column=2, sticky="ew")
+
+        # activation
+        self.footer_label.grid(row=0, column=0, sticky="w")
+        self.footer_entry.grid(row=0, column=1, sticky="ew")
+        self.error_label.grid(row=0, column=2, sticky="ew")
+        # grid config
         self.columnconfigure(0, weight=0, uniform="a")
         self.columnconfigure(1, weight=0, uniform="b")
         self.columnconfigure(2, weight=1, uniform="c")
+        self.rowconfigure(0, weight=0, uniform="a")
 
 
 if __name__ == "__main__":
