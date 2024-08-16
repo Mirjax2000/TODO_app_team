@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from main import TaskManager
+from PIL import Image
 
 # variables
 font_big: tuple[str, int, str] = ("Arial", 30, "normal")
