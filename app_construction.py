@@ -28,7 +28,8 @@ btn_text = [
 
 ctk.set_default_color_theme("blue")
 ctk.set_appearance_mode("Dark")
-
+ctk.set_window_scaling(1.0)
+ctk.set_widget_scaling(1.0)
 
 # CTK classes
 
