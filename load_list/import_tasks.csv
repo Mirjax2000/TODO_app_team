@@ -1,6 +1,6 @@
-description;status
-úkol číslo 1;Not Completed
-úkol číslo 2;Not Completed
-úkol číslo 3;Completed
-úkol číslo 4;Not Completed
-úkol číslo 5;Completed
+task_name;status;description
+úkol číslo 1;Not Completed;Empty
+úkol číslo 2;Not Completed;Empty
+úkol číslo 3;Completed;Empty
+úkol číslo 4;Not Completed;Empty
+úkol číslo 5;Completed;Empty
