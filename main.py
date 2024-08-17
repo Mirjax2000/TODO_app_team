@@ -12,9 +12,10 @@ class TaskManager:
         self.remove: list = []
 
     # methods
+    @staticmethod
+    def add_task():
+        new: TaskFrame = TaskFrame(app.display_frame)
 
-    def add_task(self):
-    # new = app.
     def edit_task(self):
         """Funkce pro editaci task labelu"""
         pass
@@ -72,7 +73,7 @@ class TaskManager:
         pass
 
     @staticmethod
-    def exit(self):
+    def exit():
         """Exit app"""
         app.destroy()
 

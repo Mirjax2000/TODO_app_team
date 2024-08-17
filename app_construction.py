@@ -36,8 +36,6 @@ ctk.set_appearance_mode("Dark")
 ctk.set_window_scaling(1.0)
 ctk.set_widget_scaling(1.0)
 
-# CTK classes
-
 
 class App(ctk.CTk):
     """Main App"""
@@ -73,7 +71,7 @@ class App(ctk.CTk):
             self.header,
             text="Add Task",
             font=font_normal,
-            # command=, # Todo dopln funkci
+            command=task_manager.add_task,
         )
         self.input_button.grid(row=0, column=1, sticky="e")
 
@@ -198,7 +196,6 @@ class App(ctk.CTk):
         self.footer_entry.get()
 
         # error label + img
-
         self.error_label = ctk.CTkLabel(
             self.footer,
             font=font_small,
@@ -222,6 +219,8 @@ class App(ctk.CTk):
         self.footer.columnconfigure(2, weight=1, uniform="c")
         self.footer.rowconfigure(0, weight=0, uniform="a")
 
+        # self.new = TaskFrame(self.display_frame)
+
     def center_window(self):  # center screen in the middle
         """Centers the window on the screen."""
         self.update_idletasks()
@@ -235,20 +234,43 @@ class App(ctk.CTk):
 
 
 class TaskFrame(ctk.CTkFrame):
-    """frame na jednotlive tasky"""
+    """Single task frame"""
 
     def __init__(self, parent):
-        self.parent = parent.display_frame
-        super().__init__(self.parent, fg_color="white")
-        self.pack(fill="x", padx=20, pady=20)
+        self.parent = parent
+        super().__init__(self.parent, fg_color=outer_color)
+        self.pack(fill="x", padx=10, pady=3, ipady=8)
 
         self.task_label = ctk.CTkLabel(self, font=font_normal, text="Task 1")
         self.status_label = ctk.CTkLabel(self, font=font_normal, text="Not Started")
-        self.checkbox = ctk.CTkLabel(self, text="| |", font=font_normal)
-
-        self.task_label.grid(row=0, column=0, sticky="ew")
-        self.status_label.grid(row=0, column=1, sticky="ew")
-        self.checkbox.grid(row=0, column=2, sticky="ew")
+        # checkbox config
+        self.parent.var = ctk.StringVar(value="off")
+        self.parent.checkbox_status = ctk.CTkCheckBox(
+            self,
+            variable=self.parent.var,
+            onvalue="on",
+            offvalue="off",
+            text="",
+            width=0,
+            corner_radius=5,
+            border_color=border_color,
+            bg_color=inner_color,
+            border_width=1,
+            checkbox_width=30,
+            checkbox_height=30,
+            # command=self.check_status,
+        )
+        # activation
+        self.task_label.grid(row=0, column=0, sticky="w", pady=(12, 0), padx=20)
+        self.status_label.grid(row=0, column=1, sticky="e", pady=(12, 0))
+        self.parent.checkbox_status.grid(
+            row=0, column=2, sticky="e", padx=20, pady=(12, 0)
+        )
+        # grid config
+        self.columnconfigure(0, weight=1, uniform="a")
+        self.columnconfigure(1, weight=0, uniform="b")
+        self.columnconfigure(2, weight=0, uniform="c")
+        self.rowconfigure(0, weight=0, uniform="a")
 
 
 if __name__ == "__main__":
