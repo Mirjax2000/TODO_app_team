@@ -1,89 +1,80 @@
 from dataclasses import dataclass, field
 import csv
 import os
-
-import app_construction
 from app_construction import *
 
 
 class TaskManager:
     """Trida pro správu úkolů"""
 
-    def __init__(self, parent):
-        self.parent = parent
+    def __init__(self):
         self.tasks: list = []
         self.remove: list = []
 
     # methods
 
     def add_task(self):
-        pass
-
+    # new = app.
     def edit_task(self):
         """Funkce pro editaci task labelu"""
         pass
 
     def remove_task(self):
         """Smaze vybrane tasky z seznamu a odstrani je z disple"""
-        for task_frame in self.remove:
-            task_description = task_frame.label_description.cget("text")
-            task_to_remove = next(
-                (task for task in self.tasks if task.description == task_description),
-                None,
-            )
-
-            if task_to_remove:
-                self.tasks.remove(task_to_remove)
-            task_frame.destroy()
-
-        self.remove.clear()
-        for child in self.parent.display.display_frame.winfo_children():
-            child.destroy()
-        self.new_multi_labels(self.tasks)
+        pass
 
     def load_list(self):
         """Načte úkoly z CSV souboru"""
         self.tasks.clear()
+        # Todo pridat load dialog s vyberem souboru
         file_path: str = os.path.join(
-            os.path.dirname(__file__), "load_list", "import_tasks.csv"
+            os.path.dirname(__file__), "load_list", "list.csv"
         )
         with open(file_path, "r", encoding="utf-8") as file:
             reader = csv.reader(file, delimiter=";")
             next(reader)
             for row in reader:
                 if len(row) >= 2:
-                    description, status = row
-                    self.tasks.append(Task(description, status, self.parent))
-        self.new_multi_labels(self.tasks)
+                    task_name, description, status = row
+                    self.tasks.append(Task(task_name, status, description))
 
     def save_list(self):
         """Uloží všechny úkoly do CSV souboru"""
-        if self.parent.footer.footer_entry.get() == "":
+        if app.footer_entry.get() == "":
             list_name: str = "list"
         else:
-            list_name = self.parent.footer.footer_entry.get().replace(" ", "_")
+            list_name = app.footer_entry.get().replace(" ", "_")
         file_path = os.path.join(
             os.path.dirname(__file__), "load_list", f"{list_name}.csv"
         )
         with open(file_path, "w", newline="", encoding="utf-8") as file:
             writer = csv.writer(file, delimiter=";")
-            writer.writerow(["description", "status"])
+            writer.writerow(["task_name", "status", "description"])
             for task in self.tasks:
-                writer.writerow([task.description, task.status])
+                writer.writerow([task.task_name, task.status, task.description])
 
     def extend_list(self):
         """Funkce pro zvetseni pocet polozek v listu"""
-        pass
+        # Todo pridat load dialog s vyberem souboru
+        file_path: str = os.path.join(
+            os.path.dirname(__file__), "load_list", "list.csv"
+        )
+        with open(file_path, "r", encoding="utf-8") as file:
+            reader = csv.reader(file, delimiter=";")
+            next(reader)
+            for row in reader:
+                if len(row) >= 2:
+                    task_name, description, status = row
+                    self.tasks.append(Task(task_name, status, description))
 
     def clear_list(self):
         """Funkce na vymazani hlavniho listu a smazani textu v display"""
-        self.tasks.clear()
-        for child in self.parent.display.display_frame.winfo_children():
-            child.destroy()
+        pass
 
+    @staticmethod
     def exit(self):
-        """"""
-        self.parent.destroy()
+        """Exit app"""
+        app.destroy()
 
     def create_task_frame(self):
         pass
@@ -93,13 +84,12 @@ class TaskManager:
 class Task:
     """Trida pro uchování jednoho úkolu"""
 
-    task_name: str
-    parent: TaskManager = field(default=None)
+    task_name: str = field(default="")
     status: str = field(default="Not started")
     description: str = field(default="")
 
 
 if __name__ == "__main__":
-    app: App = App()
     print(f"App version: {version}")
+    app: App = App(TaskManager())
     app.mainloop()
