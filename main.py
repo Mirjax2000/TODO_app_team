@@ -8,13 +8,13 @@ class TaskManager:
     """Trida pro správu úkolů"""
 
     def __init__(self):
-        self.tasks: list = []
-        self.remove: list = []
+        self.tasks: list[Task] = []
+        self.remove: list[Task] = []
 
     # methods
     @staticmethod
     def add_task():
-        new: TaskFrame = TaskFrame(app.display_frame)
+        new = TaskFrame(app.display_frame)
 
     def edit_task(self):
         """Funkce pro editaci task labelu"""
@@ -93,4 +93,7 @@ class Task:
 if __name__ == "__main__":
     print(f"App version: {version}")
     app: App = App(TaskManager())
+    # ujub na spatne umisteny scrollbar
+    app.padding_in_scrollable(app.display_frame)
+
     app.mainloop()

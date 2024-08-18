@@ -1,6 +1,9 @@
 import customtkinter as ctk
 from main import TaskManager, Task
 from PIL import Image
+from pywinstyles import set_opacity
+
+print(ctk.__file__)
 
 # variables
 font_big: tuple[str, int, str] = ("Arial", 30, "normal")
@@ -15,9 +18,17 @@ img_error = ctk.CTkImage(
 inner_color: str = "#292929"
 outer_color: str = "#1c1c1c"
 bad_color: str = "#ff7f00"
+good_color: str = "#08ff00"
 btn_color_dark: str = "#14375e"
 btn_color_light: str = "#144870"
 border_color: str = "#696969"
+started_color: str = "#00519e"
+not_started_color: str = "#c86300"
+complete_color: str = "#059400"
+fg_started_color: str = "#001021"
+on_hold_color: str = "#ffee4c"
+fg_on_hold_color: str = "#241f0f"
+
 
 # lists
 btn_text = [
@@ -50,6 +61,7 @@ class App(ctk.CTk):
         self.configure(fg_color=outer_color)
 
         # Frames
+        # HEADER
         # Header Frame
         self.header = ctk.CTkFrame(self, fg_color=outer_color)
         self.header.pack(side="top", fill="x", padx=20, pady=20)
@@ -66,7 +78,7 @@ class App(ctk.CTk):
         # self.input_task.bind("<Return>", self.add_task) # Todo dopln Funkci
         self.input_task.grid(row=0, column=0, padx=(0, 20), sticky="ew")
 
-        # # Tlačítko pro přidání úkolu
+        # Tlačítko pro přidání úkolu
         self.input_button = ctk.CTkButton(
             self.header,
             text="Add Task",
@@ -79,19 +91,22 @@ class App(ctk.CTk):
         self.header.columnconfigure(0, weight=1, uniform="a")
         self.header.columnconfigure(1, weight=0, uniform="b")
         self.header.rowconfigure(0, weight=0, uniform="a")
-
-        # a main frame: body
+        #
+        # BODY
+        # a main frame
         self.display = ctk.CTkFrame(self, fg_color=outer_color)
         self.display.pack(side="top", fill="both", padx=20, expand=True)
+        #
         # left btn frame
-        self.display_frame = ctk.CTkFrame(
+        self.display_frame = ctk.CTkScrollableFrame(
             self.display,
             fg_color=inner_color,
             border_width=1,
             border_color=border_color,
+            corner_radius=8,
         )
         #
-        # # right btn frame
+        #  right btn frame
         self.display_buttons = ctk.CTkFrame(
             self.display, fg_color=outer_color, width=140
         )
@@ -151,7 +166,7 @@ class App(ctk.CTk):
         for i in range(len(self.button_configs)):
             button = getattr(self, f"btn_{i + 1}")
             button.grid(row=i + 1, column=0, sticky="n", pady=1)
-        # clear list config
+        #  clear_list btn config
         self.display_buttons_mid.rowconfigure(5, weight=1, uniform="a")
 
         # label task operations
@@ -177,7 +192,8 @@ class App(ctk.CTk):
         # label config
         self.display_buttons_top.rowconfigure(0, weight=0, uniform="b")
         self.display_buttons_mid.rowconfigure(0, weight=0, uniform="b")
-
+        #
+        #  region FOOTER
         #  Footer frame
         self.footer = ctk.CTkFrame(self, fg_color=outer_color)
         self.footer.pack(side="bottom", fill="x", pady=20, padx=20)
@@ -224,8 +240,7 @@ class App(ctk.CTk):
         self.footer.columnconfigure(1, weight=0, uniform="b")
         self.footer.columnconfigure(2, weight=1, uniform="c")
         self.footer.rowconfigure(0, weight=0, uniform="a")
-
-        # self.new = TaskFrame(self.display_frame)
+        #  endregion
 
     def center_window(self):  # center screen in the middle
         """Centers the window on the screen."""
@@ -238,6 +253,14 @@ class App(ctk.CTk):
         y: int = screen_height // 2 - height // 2
         self.geometry(f"{width}x{height}+{x}+{y}")
 
+    # ujub na spatne umisteny scrollbar
+    @staticmethod
+    def padding_in_scrollable(display_frame: ctk.CTkScrollableFrame):
+        """Adds padding to scrollbar of a scrollable frame."""
+        if scrollbar := getattr(display_frame, "_scrollbar", None):
+            padding = display_frame.cget("border_width") * 1
+            ctk.CTkScrollbar.grid_configure(scrollbar, padx=padding)
+
 
 class TaskFrame(ctk.CTkFrame):
     """Single task frame"""
@@ -248,38 +271,97 @@ class TaskFrame(ctk.CTkFrame):
             self.parent,
             fg_color=outer_color,
             corner_radius=5,
-            border_color=btn_color_light,
             border_width=1,
+            border_color=not_started_color,
         )
         self.pack(fill="x", padx=10, pady=3, ipady=5)
+        set_opacity(self, value=0.8, color="black")
 
         self.task_label = ctk.CTkLabel(self, font=font_normal, text="Task 1")
-        self.options: list[str] = [
-            "Not Started",
-            "Started",
-            "Complete",
+        self.options_users: list[str] = [
+            "User #1",
+            "User #2",
+            "User #3",
+            "Group #1",
+            "Group #2",
         ]
-        self.status_label = ctk.CTkOptionMenu(
+        self.user_label = ctk.CTkOptionMenu(
             self,
-            font=font_normal,
-            values=self.options,
-            width=150,
+            font=font_small,
+            values=self.options_users,
+            width=130,
             anchor="center",
             dropdown_font=font_small,
-            dynamic_resizing=True,
+            dynamic_resizing=False,
             dropdown_fg_color=outer_color,
             dropdown_hover_color=btn_color_light,
             corner_radius=8,
         )
+
+        self.user_label.set("not asigned")
+        self.user_label.get()
+        self.options_status: list[str] = [
+            "Started",
+            "On Hold",
+            "Complete",
+            "Not Started",
+        ]
+        self.status_label = ctk.CTkOptionMenu(
+            self,
+            font=font_small,
+            values=self.options_status,
+            width=130,
+            anchor="center",
+            dropdown_font=font_small,
+            dynamic_resizing=False,
+            dropdown_fg_color=outer_color,
+            dropdown_hover_color=btn_color_light,
+            corner_radius=8,
+            command=self.update_color,
+        )
+
         self.status_label.set("Not Started")
+        self.status_label.get()
 
         # activation
-        self.task_label.grid(row=0, column=0, sticky="w", padx=20, pady=(5, 0))
-        self.status_label.grid(row=0, column=1, sticky="e", padx=20, pady=(5, 0))
+        self.task_label.grid(row=0, column=0, sticky="w", padx=20, pady=(10, 0))
+        self.user_label.grid(row=0, column=1, sticky="e", padx=(0, 10), pady=(10, 0))
+        self.status_label.grid(row=0, column=2, sticky="e", padx=(0, 10), pady=(10, 0))
         # grid config
         self.columnconfigure(0, weight=1, uniform="a")
         self.columnconfigure(1, weight=0, uniform="b")
+        self.columnconfigure(2, weight=0, uniform="b")
         self.rowconfigure(0, weight=0, uniform="a")
+
+    def update_color(self, choice: str) -> None:
+        status = choice
+
+        config_map = {
+            "Not Started": {
+                "border_color": not_started_color,
+                "fg_color": outer_color,
+                "opacity": 0.8,
+            },
+            "Started": {
+                "border_color": started_color,
+                "fg_color": fg_started_color,
+                "opacity": 1,
+            },
+            "On Hold": {
+                "border_color": on_hold_color,
+                "fg_color": fg_on_hold_color,
+                "opacity": 0.7,
+            },
+            "Complete": {
+                "border_color": complete_color,
+                "fg_color": inner_color,
+                "opacity": 0.4,
+            },
+        }
+
+        config = config_map.get(status, config_map["Complete"])
+        self.configure(border_color=config["border_color"], fg_color=config["fg_color"])
+        set_opacity(self, value=config["opacity"], color="black")
 
 
 if __name__ == "__main__":
