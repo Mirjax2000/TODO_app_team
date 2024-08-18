@@ -139,7 +139,13 @@ class App(ctk.CTk):
         ]
         #
         for parent, text, command, attr_name in self.button_configs:
-            button = ctk.CTkButton(parent, text=text, font=font_normal, command=command)
+            button = ctk.CTkButton(
+                parent,
+                text=text,
+                font=font_normal,
+                command=command,
+                corner_radius=8,
+            )
             setattr(self, attr_name, button)
         # grid config
         for i in range(len(self.button_configs)):
@@ -238,38 +244,41 @@ class TaskFrame(ctk.CTkFrame):
 
     def __init__(self, parent):
         self.parent = parent
-        super().__init__(self.parent, fg_color=outer_color)
-        self.pack(fill="x", padx=10, pady=3, ipady=8)
+        super().__init__(
+            self.parent,
+            fg_color=outer_color,
+            corner_radius=5,
+            border_color=btn_color_light,
+            border_width=1,
+        )
+        self.pack(fill="x", padx=10, pady=3, ipady=5)
 
         self.task_label = ctk.CTkLabel(self, font=font_normal, text="Task 1")
-        self.status_label = ctk.CTkLabel(self, font=font_normal, text="Not Started")
-        # checkbox config
-        self.parent.var = ctk.StringVar(value="off")
-        self.parent.checkbox_status = ctk.CTkCheckBox(
+        self.options: list[str] = [
+            "Not Started",
+            "Started",
+            "Complete",
+        ]
+        self.status_label = ctk.CTkOptionMenu(
             self,
-            variable=self.parent.var,
-            onvalue="on",
-            offvalue="off",
-            text="",
-            width=0,
-            corner_radius=5,
-            border_color=border_color,
-            bg_color=inner_color,
-            border_width=1,
-            checkbox_width=30,
-            checkbox_height=30,
-            # command=self.check_status,
+            font=font_normal,
+            values=self.options,
+            width=150,
+            anchor="center",
+            dropdown_font=font_small,
+            dynamic_resizing=True,
+            dropdown_fg_color=outer_color,
+            dropdown_hover_color=btn_color_light,
+            corner_radius=8,
         )
+        self.status_label.set("Not Started")
+
         # activation
-        self.task_label.grid(row=0, column=0, sticky="w", pady=(12, 0), padx=20)
-        self.status_label.grid(row=0, column=1, sticky="e", pady=(12, 0))
-        self.parent.checkbox_status.grid(
-            row=0, column=2, sticky="e", padx=20, pady=(12, 0)
-        )
+        self.task_label.grid(row=0, column=0, sticky="w", padx=20, pady=(5, 0))
+        self.status_label.grid(row=0, column=1, sticky="e", padx=20, pady=(5, 0))
         # grid config
         self.columnconfigure(0, weight=1, uniform="a")
         self.columnconfigure(1, weight=0, uniform="b")
-        self.columnconfigure(2, weight=0, uniform="c")
         self.rowconfigure(0, weight=0, uniform="a")
 
 
