@@ -1,6 +1,7 @@
 import customtkinter as ctk
 
 
+# zakladni nastaveni appky / theme a scaling
 def basic_app_settings():
     ctk.set_default_color_theme("blue")
     ctk.set_appearance_mode("Dark")
@@ -8,6 +9,7 @@ def basic_app_settings():
     ctk.set_widget_scaling(1.0)
 
 
+# centrovani appky uprostred obrazovky a rozmer
 def center_window(self):  # center screen in the middle
     """Centers the window on the screen."""
     self.update_idletasks()
@@ -22,6 +24,7 @@ def center_window(self):  # center screen in the middle
     # ujub na spatne umisteny scrollbar
 
 
+# oprava chyby CTK scrollbaru
 def padding_in_scrollable(display_frame: ctk.CTkScrollableFrame):
     """Adds padding to scrollbar of a scrollable frame."""
     if scrollbar := getattr(display_frame, "_scrollbar", None):

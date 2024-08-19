@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from PIL import Image
 
+
 # variables
 font_big: tuple[str, int, str] = ("Arial", 30, "normal")
 font_normal: tuple[str, int, str] = ("Arial", 20, "normal")
@@ -8,7 +9,7 @@ font_small: tuple[str, int, str] = ("Arial", 16, "normal")
 version: float = 0.5
 # images
 img_error = ctk.CTkImage(
-    light_image=Image.open("./assets/exclamation2.png"), size=(30, 30)
+    light_image=Image.open("./assets/exclamation2.png"), size=(25, 25)
 )
 # colors
 inner_color: str = "#292929"

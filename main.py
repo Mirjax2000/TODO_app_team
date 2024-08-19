@@ -10,13 +10,23 @@ class TaskManager:
     """Trida pro správu úkolů"""
 
     def __init__(self):
-        self.tasks: list[Task] = []
-        self.remove: list[Task] = []
+        self.tasks: dict = {}
+        self.id: int = 0
 
     # methods
-    @staticmethod
-    def add_task():
-        new = TaskFrame(app.display_frame)
+    def add_task(self, event=None):
+
+        if app.input_task.get():
+            new_task = Task()
+            new_frame = TaskFrame(app.display_frame, app.input_task.get())
+            self.id += 1
+            self.tasks[self.id] = new_frame
+            app.input_task.delete(0, "end")
+        else:
+            app.error_label.grid(row=0, column=2, sticky="", ipadx=10)
+            app.error_label.configure(text="Task name cannot be empty!")
+            # TODO udelat slovnik ci funkci s chybovyma hlasenima ???
+            # TODO jako argument predat jen stringem chybu
 
     def edit_task(self):
         """Funkce pro editaci task labelu"""
@@ -59,7 +69,7 @@ class TaskManager:
 
     def extend_list(self):
         """Funkce pro zvetseni pocet polozek v listu"""
-        # Todo pridat load dialog s vyberem souboru
+        # TODO pridat load dialog s vyberem souboru
         file_path: str = os.path.join(
             os.path.dirname(__file__), "load_list", "list.csv"
         )
@@ -89,6 +99,11 @@ class TaskManager:
     def create_task_frame(self):
         pass
 
+    @staticmethod
+    def clear_entry(event):
+        """Clears input entry"""
+        app.error_label.grid_remove()
+
 
 @dataclass
 class Task:
@@ -96,7 +111,6 @@ class Task:
 
     task_name: str = field(default="")
     status: str = field(default="Not started")
-    description: str = field(default="")
 
 
 if __name__ == "__main__":

@@ -33,7 +33,8 @@ class App(ctk.CTk):
             border_color=var.border_color,
         )
         self.input_task.get()
-        # self.input_task.bind("<Return>", self.add_task) # Todo dopln Funkci
+        self.input_task.bind("<Return>", task_manager.add_task)
+        self.input_task.bind("<KeyRelease>", task_manager.clear_entry)
         self.input_task.grid(row=0, column=0, padx=(0, 20), sticky="ew")
 
         # Tlačítko pro přidání úkolu
@@ -250,7 +251,7 @@ class App(ctk.CTk):
             font=var.font_small,
             text_color=var.bad_color,
             fg_color=var.inner_color,
-            text="error message",
+            text="",
             justify="center",
             corner_radius=10,
             image=var.img_error,
@@ -261,7 +262,7 @@ class App(ctk.CTk):
         self.footer_label.grid(row=0, column=0, sticky="w")
         self.footer_entry.grid(row=0, column=1, sticky="ew")
         self.error_label.grid(row=0, column=2, sticky="", ipadx=10)
-        # self.error_label.grid_remove()  # skryt error label
+        self.error_label.grid_remove()  # skryt error label, defaultně skryte
         # grid config
         self.footer.columnconfigure(0, weight=0, uniform="a")
         self.footer.columnconfigure(1, weight=0, uniform="b")
@@ -275,7 +276,7 @@ class App(ctk.CTk):
 class TaskFrame(ctk.CTkFrame):
     """Single task frame"""
 
-    def __init__(self, parent):
+    def __init__(self, parent, text):
         self.parent = parent
         super().__init__(
             self.parent,
@@ -287,7 +288,7 @@ class TaskFrame(ctk.CTkFrame):
         self.pack(fill="x", padx=10, pady=3, ipady=5)
         set_opacity(self, value=0.8, color="black")
 
-        self.task_label = ctk.CTkLabel(self, font=var.font_normal, text="Task 1")
+        self.task_label = ctk.CTkLabel(self, font=var.font_normal, text=text)
         self.options_users: list[str] = [
             "Not assigned",
         ]
