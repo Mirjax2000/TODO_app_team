@@ -279,11 +279,7 @@ class TaskFrame(ctk.CTkFrame):
 
         self.task_label = ctk.CTkLabel(self, font=font_normal, text="Task 1")
         self.options_users: list[str] = [
-            "User #1",
-            "User #2",
-            "User #3",
-            "Group #1",
-            "Group #2",
+            "Not assigned",
         ]
         self.user_label = ctk.CTkOptionMenu(
             self,
@@ -298,7 +294,7 @@ class TaskFrame(ctk.CTkFrame):
             corner_radius=8,
         )
 
-        self.user_label.set("not asigned")
+        self.user_label.set("Not asigned")
         self.user_label.get()
         self.options_status: list[str] = [
             "Started",
