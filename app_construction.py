@@ -1,22 +1,21 @@
 import customtkinter as ctk
 from main import TaskManager, Task
 from pywinstyles import set_opacity
-from config import mixiny
+from config import mixins
 from config import variables as var
-from PIL import Image
 
 
 class App(ctk.CTk):
     """Main App"""
 
-    mixiny.basic_app_settings()
+    mixins.basic_app_settings()
 
     def __init__(self, task_manager):
         self.task_manager: TaskManager = task_manager
         super().__init__()
         self.title("TODO-List")
         self.iconbitmap("./assets/ico.ico")
-        mixiny.center_window(self)
+        mixins.center_window(self)
         self.resizable(False, False)
         self.configure(fg_color=var.outer_color)
 
@@ -67,7 +66,7 @@ class App(ctk.CTk):
             corner_radius=8,
         )
         # ujub na spatne umisteny scrollbar
-        mixiny.padding_in_scrollable(self.display_frame)
+        mixins.padding_in_scrollable(self.display_frame)
         #
         #  right btn frame
         self.display_buttons = ctk.CTkFrame(

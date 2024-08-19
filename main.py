@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 import csv
 import os
 from app_construction import *
-from config import mixiny
+from config import mixins
 from config import variables as var
 
 
