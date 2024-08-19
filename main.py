@@ -22,6 +22,7 @@ class TaskManager:
             self.id += 1
             self.tasks[self.id] = new_frame
             app.input_task.delete(0, "end")
+
         else:
             app.error_label.grid(row=0, column=2, sticky="", ipadx=10)
             app.error_label.configure(text="Task name cannot be empty!")
@@ -100,9 +101,10 @@ class TaskManager:
         pass
 
     @staticmethod
-    def clear_entry(event):
+    def clear_error(event):
         """Clears input entry"""
         app.error_label.grid_remove()
+        # app.input_task.configure(placeholder_text="")
 
 
 @dataclass

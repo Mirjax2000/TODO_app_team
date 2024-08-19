@@ -32,9 +32,10 @@ class App(ctk.CTk):
             border_width=1,
             border_color=var.border_color,
         )
+        self.input_task.focus()
         self.input_task.get()
         self.input_task.bind("<Return>", task_manager.add_task)
-        self.input_task.bind("<KeyRelease>", task_manager.clear_entry)
+        self.input_task.bind("<KeyPress>", task_manager.clear_error)
         self.input_task.grid(row=0, column=0, padx=(0, 20), sticky="ew")
 
         # Tlačítko pro přidání úkolu
