@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 import csv
 import os
 from app_construction import *
+from mixiny import mixiny
 
 
 class TaskManager:
@@ -70,6 +71,10 @@ class TaskManager:
 
     def clear_list(self):
         """Funkce na vymazani hlavniho listu a smazani textu v display"""
+        pass
+
+    def user_group(selfself):
+        """Groups and users"""
         pass
 
     @staticmethod

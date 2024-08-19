@@ -2,6 +2,7 @@ import customtkinter as ctk
 from main import TaskManager, Task
 from PIL import Image
 from pywinstyles import set_opacity
+from mixiny import mixiny
 
 print(ctk.__file__)
 
@@ -30,18 +31,6 @@ on_hold_color: str = "#ffee4c"
 fg_on_hold_color: str = "#241f0f"
 
 
-# lists
-btn_text = [
-    "Remove task",
-    "Edit task",
-    "Load list",
-    "Extend list",
-    "Save list",
-    "Clear list",
-    "Exit",
-]
-
-
 ctk.set_default_color_theme("blue")
 ctk.set_appearance_mode("Dark")
 ctk.set_window_scaling(1.0)
@@ -56,12 +45,11 @@ class App(ctk.CTk):
         super().__init__()
         self.title("TODO-List")
         self.iconbitmap("./assets/ico.ico")
-        self.center_window()
+        mixiny.center_window(self)
         self.resizable(False, False)
         self.configure(fg_color=outer_color)
 
-        # Frames
-        # HEADER
+        # region HEADER
         # Header Frame
         self.header = ctk.CTkFrame(self, fg_color=outer_color)
         self.header.pack(side="top", fill="x", padx=20, pady=20)
@@ -91,8 +79,9 @@ class App(ctk.CTk):
         self.header.columnconfigure(0, weight=1, uniform="a")
         self.header.columnconfigure(1, weight=0, uniform="b")
         self.header.rowconfigure(0, weight=0, uniform="a")
+        # endregion
         #
-        # BODY
+        # region BODY
         # a main frame
         self.display = ctk.CTkFrame(self, fg_color=outer_color)
         self.display.pack(side="top", fill="both", padx=20, expand=True)
@@ -133,15 +122,25 @@ class App(ctk.CTk):
         # activace widgetu pro btn framy
         self.display_buttons_top.grid(row=0, column=0, sticky="ns")
         self.display_buttons_mid.grid(row=1, column=0, sticky="ns", pady=20)
-        self.display_buttons_btm.grid(row=2, column=0, sticky="s")
+        self.display_buttons_btm.grid(row=2, column=0, sticky="ns")
         #
         # grid pr tlacitkovy framy
         self.display_buttons.rowconfigure(0, weight=1, uniform="a")
-        self.display_buttons.rowconfigure(1, weight=1, uniform="b")
-        self.display_buttons.rowconfigure(2, weight=1, uniform="c")
+        self.display_buttons.rowconfigure(1, weight=1, uniform="a")
+        self.display_buttons.rowconfigure(2, weight=1, uniform="a")
         self.display_buttons.columnconfigure(0, weight=0, uniform="a")
         #
         # Create buttons dynamically
+        btn_text = [
+            "Remove task",
+            "Edit task",
+            "Load list",
+            "Extend list",
+            "Save list",
+            "Clear list",
+            "Users/Groups",
+            "Exit",
+        ]
         path = self.task_manager
         self.button_configs = [
             (self.display_buttons_top, btn_text[0], path.remove_task, "btn_1"),
@@ -150,24 +149,9 @@ class App(ctk.CTk):
             (self.display_buttons_mid, btn_text[3], path.extend_list, "btn_4"),
             (self.display_buttons_mid, btn_text[4], path.save_list, "btn_5"),
             (self.display_buttons_mid, btn_text[5], path.clear_list, "btn_6"),
-            (self.display_buttons_btm, btn_text[6], path.exit, "btn_7"),
+            (self.display_buttons_btm, btn_text[6], path.user_group, "btn_7"),
+            (self.display_buttons_btm, btn_text[7], path.exit, "btn_8"),
         ]
-        #
-        for parent, text, command, attr_name in self.button_configs:
-            button = ctk.CTkButton(
-                parent,
-                text=text,
-                font=font_normal,
-                command=command,
-                corner_radius=8,
-            )
-            setattr(self, attr_name, button)
-        # grid config
-        for i in range(len(self.button_configs)):
-            button = getattr(self, f"btn_{i + 1}")
-            button.grid(row=i + 1, column=0, sticky="n", pady=1)
-        #  clear_list btn config
-        self.display_buttons_mid.rowconfigure(5, weight=1, uniform="a")
 
         # label task operations
         self.label_tasks = ctk.CTkLabel(
@@ -186,12 +170,45 @@ class App(ctk.CTk):
             fg_color=inner_color,
             corner_radius=10,
         )
+
+        self.label_settings = ctk.CTkLabel(
+            self.display_buttons_mid,
+            font=font_small,
+            text="Settings",
+            fg_color=inner_color,
+            corner_radius=10,
+        )
         # activation
-        self.label_tasks.grid(row=0, column=0, sticky="ew")
-        self.label_lists.grid(row=0, column=0, sticky="ew")
+        # create buttons and grid placement
+        for parent, text, command, attr_name in self.button_configs:
+            button = ctk.CTkButton(
+                parent,
+                text=text,
+                font=font_normal,
+                command=command,
+                corner_radius=8,
+            )
+            setattr(self, attr_name, button)
+        # task operations
+        self.label_tasks.grid(row=0, column=0, sticky="ew")  # Task operations
+        self.btn_1.grid(row=1, column=0, sticky="ew")  # Remove task
+        self.btn_2.grid(row=2, column=0, sticky="ew")  # Edit task
+        # list operations
+        self.label_lists.grid(row=0, column=0, sticky="ew")  # List operations
+        self.btn_3.grid(row=1, column=0, sticky="ew")  # Load list
+        self.btn_4.grid(row=2, column=0, sticky="ew")  # Extend list
+        self.btn_5.grid(row=3, column=0, sticky="ew")  # Save list
+        self.btn_6.grid(row=4, column=0, sticky="ew")  # Clear list
+        # settings operations
+        self.label_settings.grid(row=0, column=0, sticky="ew")  # Settings operations
+        self.btn_7.grid(row=1, column=0, sticky="ew")  # Users/Groups
+        self.btn_8.grid(row=2, column=0, sticky="ew")  # Exit
+
         # label config
         self.display_buttons_top.rowconfigure(0, weight=0, uniform="b")
         self.display_buttons_mid.rowconfigure(0, weight=0, uniform="b")
+        self.display_buttons_btm.rowconfigure(0, weight=0, uniform="b")
+        # endregion
         #
         #  region FOOTER
         #  Footer frame
@@ -242,26 +259,9 @@ class App(ctk.CTk):
         self.footer.rowconfigure(0, weight=0, uniform="a")
         #  endregion
 
-    def center_window(self):  # center screen in the middle
-        """Centers the window on the screen."""
-        self.update_idletasks()
-        width: int = 1000
-        height: int = 600
-        screen_width: int = self.winfo_screenwidth()
-        screen_height: int = self.winfo_screenheight()
-        x: int = screen_width // 2 - width // 2
-        y: int = screen_height // 2 - height // 2
-        self.geometry(f"{width}x{height}+{x}+{y}")
 
-    # ujub na spatne umisteny scrollbar
-    @staticmethod
-    def padding_in_scrollable(display_frame: ctk.CTkScrollableFrame):
-        """Adds padding to scrollbar of a scrollable frame."""
-        if scrollbar := getattr(display_frame, "_scrollbar", None):
-            padding = display_frame.cget("border_width") * 1
-            ctk.CTkScrollbar.grid_configure(scrollbar, padx=padding)
-
-
+#
+# region TaskFrame
 class TaskFrame(ctk.CTkFrame):
     """Single task frame"""
 
@@ -358,6 +358,9 @@ class TaskFrame(ctk.CTkFrame):
         config = config_map.get(status, config_map["Complete"])
         self.configure(border_color=config["border_color"], fg_color=config["fg_color"])
         set_opacity(self, value=config["opacity"], color="black")
+
+
+# endregion
 
 
 if __name__ == "__main__":
