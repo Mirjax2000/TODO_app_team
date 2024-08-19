@@ -19,6 +19,7 @@ class TaskManager:
 
     def edit_task(self):
         """Funkce pro editaci task labelu"""
+        # TODO: new window dialog
         pass
 
     def remove_task(self):
@@ -28,7 +29,7 @@ class TaskManager:
     def load_list(self):
         """Načte úkoly z CSV souboru"""
         self.tasks.clear()
-        # Todo pridat load dialog s vyberem souboru
+        # Todo: pridat load dialog s vyberem souboru
         file_path: str = os.path.join(
             os.path.dirname(__file__), "load_list", "list.csv"
         )
@@ -71,10 +72,12 @@ class TaskManager:
 
     def clear_list(self):
         """Funkce na vymazani hlavniho listu a smazani textu v display"""
+        # TODO confirm dialog, are you sure?
         pass
 
     def user_group(selfself):
         """Groups and users"""
+        # Todo new window for group and users
         pass
 
     @staticmethod
@@ -98,7 +101,5 @@ class Task:
 if __name__ == "__main__":
     print(f"App version: {version}")
     app: App = App(TaskManager())
-    # ujub na spatne umisteny scrollbar
-    app.padding_in_scrollable(app.display_frame)
 
     app.mainloop()

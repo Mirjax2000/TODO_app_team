@@ -81,6 +81,7 @@ class App(ctk.CTk):
         self.header.rowconfigure(0, weight=0, uniform="a")
         # endregion
         #
+        #
         # region BODY
         # a main frame
         self.display = ctk.CTkFrame(self, fg_color=outer_color)
@@ -94,6 +95,8 @@ class App(ctk.CTk):
             border_color=border_color,
             corner_radius=8,
         )
+        # ujub na spatne umisteny scrollbar
+        mixiny.padding_in_scrollable(self.display_frame)
         #
         #  right btn frame
         self.display_buttons = ctk.CTkFrame(
@@ -103,31 +106,31 @@ class App(ctk.CTk):
         self.display_frame.grid(row=0, column=0, sticky="nsew")
         self.display_buttons.grid(row=0, column=1, sticky="nsew", padx=(20, 0))
         # right and left frame configure
-        self.display.columnconfigure(0, weight=1, uniform="a")
-        self.display.columnconfigure(1, weight=0, uniform="b")
-        self.display.rowconfigure(0, weight=1, uniform="c")
+        self.display.rowconfigure(0, weight=1, uniform="c")  # both frames
+        self.display.columnconfigure(0, weight=1, uniform="a")  # left frame
+        self.display.columnconfigure(1, weight=0, uniform="b")  # right frame
         #
         # buttons frames top, mid, bottom
         self.button_frame = {  # config for all buttons
             "master": self.display_buttons,  # parent
-            "width": 140,
+            # "width": 140,
             "fg_color": outer_color,
         }
-        # Buttons in top
+        # Buttons top frame
         self.display_buttons_top = ctk.CTkFrame(**self.button_frame)
-        # Buttons in mid
+        # Buttons mid frame
         self.display_buttons_mid = ctk.CTkFrame(**self.button_frame)
-        # Buttons in bottom
+        # Buttons bottom frame
         self.display_buttons_btm = ctk.CTkFrame(**self.button_frame)
         # activace widgetu pro btn framy
         self.display_buttons_top.grid(row=0, column=0, sticky="ns")
         self.display_buttons_mid.grid(row=1, column=0, sticky="ns", pady=20)
         self.display_buttons_btm.grid(row=2, column=0, sticky="ns")
         #
-        # grid pr tlacitkovy framy
-        self.display_buttons.rowconfigure(0, weight=1, uniform="a")
-        self.display_buttons.rowconfigure(1, weight=1, uniform="a")
-        self.display_buttons.rowconfigure(2, weight=1, uniform="a")
+        # grid pro tlacitkovy framy
+        self.display_buttons.rowconfigure(0, weight=0, uniform="a")
+        self.display_buttons.rowconfigure(1, weight=1, uniform="b")
+        self.display_buttons.rowconfigure(2, weight=1, uniform="c")
         self.display_buttons.columnconfigure(0, weight=0, uniform="a")
         #
         # Create buttons dynamically
@@ -143,14 +146,49 @@ class App(ctk.CTk):
         ]
         path = self.task_manager
         self.button_configs = [
-            (self.display_buttons_top, btn_text[0], path.remove_task, "btn_1"),
-            (self.display_buttons_top, btn_text[1], path.edit_task, "btn_2"),
-            (self.display_buttons_mid, btn_text[2], path.load_list, "btn_3"),
-            (self.display_buttons_mid, btn_text[3], path.extend_list, "btn_4"),
-            (self.display_buttons_mid, btn_text[4], path.save_list, "btn_5"),
-            (self.display_buttons_mid, btn_text[5], path.clear_list, "btn_6"),
-            (self.display_buttons_btm, btn_text[6], path.user_group, "btn_7"),
-            (self.display_buttons_btm, btn_text[7], path.exit, "btn_8"),
+            (
+                self.display_buttons_top,
+                btn_text[0],
+                path.remove_task,
+                "btn_1",
+            ),  # remove task
+            (
+                self.display_buttons_top,
+                btn_text[1],
+                path.edit_task,
+                "btn_2",
+            ),  # edit task
+            (
+                self.display_buttons_mid,
+                btn_text[2],
+                path.load_list,
+                "btn_3",
+            ),  # load list
+            (
+                self.display_buttons_mid,
+                btn_text[3],
+                path.extend_list,
+                "btn_4",
+            ),  # extend list
+            (
+                self.display_buttons_mid,
+                btn_text[4],
+                path.save_list,
+                "btn_5",
+            ),  # save list
+            (
+                self.display_buttons_mid,
+                btn_text[5],
+                path.clear_list,
+                "btn_6",
+            ),  # clear list
+            (
+                self.display_buttons_btm,
+                btn_text[6],
+                path.user_group,
+                "btn_7",
+            ),  # users/groups
+            (self.display_buttons_btm, btn_text[7], path.exit, "btn_8"),  # exit
         ]
 
         # label task operations
@@ -172,7 +210,7 @@ class App(ctk.CTk):
         )
 
         self.label_settings = ctk.CTkLabel(
-            self.display_buttons_mid,
+            self.display_buttons_btm,
             font=font_small,
             text="Settings",
             fg_color=inner_color,
@@ -189,25 +227,27 @@ class App(ctk.CTk):
                 corner_radius=8,
             )
             setattr(self, attr_name, button)
-        # task operations
+        # task operations: top frame
         self.label_tasks.grid(row=0, column=0, sticky="ew")  # Task operations
         self.btn_1.grid(row=1, column=0, sticky="ew")  # Remove task
         self.btn_2.grid(row=2, column=0, sticky="ew")  # Edit task
-        # list operations
+        # list operations: mid frame
         self.label_lists.grid(row=0, column=0, sticky="ew")  # List operations
         self.btn_3.grid(row=1, column=0, sticky="ew")  # Load list
         self.btn_4.grid(row=2, column=0, sticky="ew")  # Extend list
         self.btn_5.grid(row=3, column=0, sticky="ew")  # Save list
         self.btn_6.grid(row=4, column=0, sticky="ew")  # Clear list
-        # settings operations
+        # settings operations: btm frame
         self.label_settings.grid(row=0, column=0, sticky="ew")  # Settings operations
-        self.btn_7.grid(row=1, column=0, sticky="ew")  # Users/Groups
-        self.btn_8.grid(row=2, column=0, sticky="ew")  # Exit
+        self.btn_7.grid(row=1, column=0, sticky="ewn")  # Users/Groups
+        self.btn_8.grid(row=2, column=0, sticky="ews")  # Exit
 
-        # label config
+        # config
         self.display_buttons_top.rowconfigure(0, weight=0, uniform="b")
         self.display_buttons_mid.rowconfigure(0, weight=0, uniform="b")
         self.display_buttons_btm.rowconfigure(0, weight=0, uniform="b")
+        self.display_buttons_btm.rowconfigure(1, weight=0, uniform="b")
+        self.display_buttons_btm.rowconfigure(2, weight=1, uniform="b")
         # endregion
         #
         #  region FOOTER
