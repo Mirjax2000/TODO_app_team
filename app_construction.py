@@ -1,44 +1,15 @@
 import customtkinter as ctk
 from main import TaskManager, Task
-from PIL import Image
 from pywinstyles import set_opacity
-from mixiny import mixiny
-
-print(ctk.__file__)
-
-# variables
-font_big: tuple[str, int, str] = ("Arial", 30, "normal")
-font_normal: tuple[str, int, str] = ("Arial", 20, "normal")
-font_small: tuple[str, int, str] = ("Arial", 16, "normal")
-version: float = 0.5
-
-img_error = ctk.CTkImage(
-    light_image=Image.open("./assets/exclamation2.png"), size=(30, 30)
-)
-
-inner_color: str = "#292929"
-outer_color: str = "#1c1c1c"
-bad_color: str = "#ff7f00"
-good_color: str = "#08ff00"
-btn_color_dark: str = "#14375e"
-btn_color_light: str = "#144870"
-border_color: str = "#696969"
-started_color: str = "#00519e"
-not_started_color: str = "#c86300"
-complete_color: str = "#059400"
-fg_started_color: str = "#001021"
-on_hold_color: str = "#ffee4c"
-fg_on_hold_color: str = "#241f0f"
-
-
-ctk.set_default_color_theme("blue")
-ctk.set_appearance_mode("Dark")
-ctk.set_window_scaling(1.0)
-ctk.set_widget_scaling(1.0)
+from config import mixiny
+from config import variables as var
+from PIL import Image
 
 
 class App(ctk.CTk):
     """Main App"""
+
+    mixiny.basic_app_settings()
 
     def __init__(self, task_manager):
         self.task_manager: TaskManager = task_manager
@@ -47,20 +18,20 @@ class App(ctk.CTk):
         self.iconbitmap("./assets/ico.ico")
         mixiny.center_window(self)
         self.resizable(False, False)
-        self.configure(fg_color=outer_color)
+        self.configure(fg_color=var.outer_color)
 
         # region HEADER
         # Header Frame
-        self.header = ctk.CTkFrame(self, fg_color=outer_color)
+        self.header = ctk.CTkFrame(self, fg_color=var.outer_color)
         self.header.pack(side="top", fill="x", padx=20, pady=20)
 
         # Entre field for input task
         self.input_task = ctk.CTkEntry(
             self.header,
             placeholder_text="Enter a task",
-            font=font_normal,
+            font=var.font_normal,
             border_width=1,
-            border_color=border_color,
+            border_color=var.border_color,
         )
         self.input_task.get()
         # self.input_task.bind("<Return>", self.add_task) # Todo dopln Funkci
@@ -70,7 +41,7 @@ class App(ctk.CTk):
         self.input_button = ctk.CTkButton(
             self.header,
             text="Add Task",
-            font=font_normal,
+            font=var.font_normal,
             command=task_manager.add_task,
         )
         self.input_button.grid(row=0, column=1, sticky="e")
@@ -84,15 +55,15 @@ class App(ctk.CTk):
         #
         # region BODY
         # a main frame
-        self.display = ctk.CTkFrame(self, fg_color=outer_color)
+        self.display = ctk.CTkFrame(self, fg_color=var.outer_color)
         self.display.pack(side="top", fill="both", padx=20, expand=True)
         #
         # left btn frame
         self.display_frame = ctk.CTkScrollableFrame(
             self.display,
-            fg_color=inner_color,
+            fg_color=var.inner_color,
             border_width=1,
-            border_color=border_color,
+            border_color=var.border_color,
             corner_radius=8,
         )
         # ujub na spatne umisteny scrollbar
@@ -100,7 +71,7 @@ class App(ctk.CTk):
         #
         #  right btn frame
         self.display_buttons = ctk.CTkFrame(
-            self.display, fg_color=outer_color, width=140
+            self.display, fg_color=var.outer_color, width=140
         )
         # right and left frame activated
         self.display_frame.grid(row=0, column=0, sticky="nsew")
@@ -114,7 +85,7 @@ class App(ctk.CTk):
         self.button_frame = {  # config for all buttons
             "master": self.display_buttons,  # parent
             # "width": 140,
-            "fg_color": outer_color,
+            "fg_color": var.outer_color,
         }
         # Buttons top frame
         self.display_buttons_top = ctk.CTkFrame(**self.button_frame)
@@ -194,26 +165,26 @@ class App(ctk.CTk):
         # label task operations
         self.label_tasks = ctk.CTkLabel(
             self.display_buttons_top,
-            font=font_small,
+            font=var.font_small,
             text="Task operations",
-            fg_color=inner_color,
+            fg_color=var.inner_color,
             corner_radius=10,
         )
 
         # label list operations
         self.label_lists = ctk.CTkLabel(
             self.display_buttons_mid,
-            font=font_small,
+            font=var.font_small,
             text="List operations",
-            fg_color=inner_color,
+            fg_color=var.inner_color,
             corner_radius=10,
         )
 
         self.label_settings = ctk.CTkLabel(
             self.display_buttons_btm,
-            font=font_small,
+            font=var.font_small,
             text="Settings",
-            fg_color=inner_color,
+            fg_color=var.inner_color,
             corner_radius=10,
         )
         # activation
@@ -222,7 +193,7 @@ class App(ctk.CTk):
             button = ctk.CTkButton(
                 parent,
                 text=text,
-                font=font_normal,
+                font=var.font_normal,
                 command=command,
                 corner_radius=8,
             )
@@ -252,13 +223,13 @@ class App(ctk.CTk):
         #
         #  region FOOTER
         #  Footer frame
-        self.footer = ctk.CTkFrame(self, fg_color=outer_color)
+        self.footer = ctk.CTkFrame(self, fg_color=var.outer_color)
         self.footer.pack(side="bottom", fill="x", pady=20, padx=20)
 
         # Vstupní pole pro zadání jména seznamu
         self.footer_label = ctk.CTkLabel(
             self.footer,
-            font=font_normal,
+            font=var.font_normal,
             text="List name: ",
         )
 
@@ -266,10 +237,10 @@ class App(ctk.CTk):
         self.footer_entry = ctk.CTkEntry(
             self.footer,
             width=300,
-            font=font_normal,
+            font=var.font_normal,
             placeholder_text="List name: ",
-            fg_color=inner_color,
-            border_color=border_color,
+            fg_color=var.inner_color,
+            border_color=var.border_color,
             border_width=1,
         )
         self.footer_entry.get()
@@ -277,13 +248,13 @@ class App(ctk.CTk):
         # error label + img
         self.error_label = ctk.CTkLabel(
             self.footer,
-            font=font_small,
-            text_color=bad_color,
-            fg_color=inner_color,
+            font=var.font_small,
+            text_color=var.bad_color,
+            fg_color=var.inner_color,
             text="error message",
             justify="center",
             corner_radius=10,
-            image=img_error,
+            image=var.img_error,
             compound="left",
         )
 
@@ -291,7 +262,7 @@ class App(ctk.CTk):
         self.footer_label.grid(row=0, column=0, sticky="w")
         self.footer_entry.grid(row=0, column=1, sticky="ew")
         self.error_label.grid(row=0, column=2, sticky="", ipadx=10)
-        self.error_label.grid_remove()  # skryt error label
+        # self.error_label.grid_remove()  # skryt error label
         # grid config
         self.footer.columnconfigure(0, weight=0, uniform="a")
         self.footer.columnconfigure(1, weight=0, uniform="b")
@@ -309,28 +280,28 @@ class TaskFrame(ctk.CTkFrame):
         self.parent = parent
         super().__init__(
             self.parent,
-            fg_color=outer_color,
+            fg_color=var.outer_color,
             corner_radius=5,
             border_width=1,
-            border_color=not_started_color,
+            border_color=var.not_started_color,
         )
         self.pack(fill="x", padx=10, pady=3, ipady=5)
         set_opacity(self, value=0.8, color="black")
 
-        self.task_label = ctk.CTkLabel(self, font=font_normal, text="Task 1")
+        self.task_label = ctk.CTkLabel(self, font=var.font_normal, text="Task 1")
         self.options_users: list[str] = [
             "Not assigned",
         ]
         self.user_label = ctk.CTkOptionMenu(
             self,
-            font=font_small,
+            font=var.font_small,
             values=self.options_users,
             width=130,
             anchor="center",
-            dropdown_font=font_small,
+            dropdown_font=var.font_small,
             dynamic_resizing=False,
-            dropdown_fg_color=outer_color,
-            dropdown_hover_color=btn_color_light,
+            dropdown_fg_color=var.outer_color,
+            dropdown_hover_color=var.btn_color_light,
             corner_radius=8,
         )
 
@@ -344,14 +315,14 @@ class TaskFrame(ctk.CTkFrame):
         ]
         self.status_label = ctk.CTkOptionMenu(
             self,
-            font=font_small,
+            font=var.font_small,
             values=self.options_status,
             width=130,
             anchor="center",
-            dropdown_font=font_small,
+            dropdown_font=var.font_small,
             dynamic_resizing=False,
-            dropdown_fg_color=outer_color,
-            dropdown_hover_color=btn_color_light,
+            dropdown_fg_color=var.outer_color,
+            dropdown_hover_color=var.btn_color_light,
             corner_radius=8,
             command=self.update_color,
         )
@@ -374,23 +345,23 @@ class TaskFrame(ctk.CTkFrame):
 
         config_map = {
             "Not Started": {
-                "border_color": not_started_color,
-                "fg_color": outer_color,
+                "border_color": var.not_started_color,
+                "fg_color": var.outer_color,
                 "opacity": 0.8,
             },
             "Started": {
-                "border_color": started_color,
-                "fg_color": fg_started_color,
+                "border_color": var.started_color,
+                "fg_color": var.fg_started_color,
                 "opacity": 1,
             },
             "On Hold": {
-                "border_color": on_hold_color,
-                "fg_color": fg_on_hold_color,
+                "border_color": var.on_hold_color,
+                "fg_color": var.fg_on_hold_color,
                 "opacity": 0.7,
             },
             "Complete": {
-                "border_color": complete_color,
-                "fg_color": inner_color,
+                "border_color": var.complete_color,
+                "fg_color": var.inner_color,
                 "opacity": 0.4,
             },
         }

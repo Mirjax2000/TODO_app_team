@@ -1,6 +1,13 @@
 import customtkinter as ctk
 
 
+def basic_app_settings():
+    ctk.set_default_color_theme("blue")
+    ctk.set_appearance_mode("Dark")
+    ctk.set_window_scaling(1.0)
+    ctk.set_widget_scaling(1.0)
+
+
 def center_window(self):  # center screen in the middle
     """Centers the window on the screen."""
     self.update_idletasks()

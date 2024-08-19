@@ -2,7 +2,8 @@ from dataclasses import dataclass, field
 import csv
 import os
 from app_construction import *
-from mixiny import mixiny
+from config import mixiny
+from config import variables as var
 
 
 class TaskManager:
@@ -99,7 +100,7 @@ class Task:
 
 
 if __name__ == "__main__":
-    print(f"App version: {version}")
+    print(f"App version: {var.version}")
     app: App = App(TaskManager())
 
     app.mainloop()
