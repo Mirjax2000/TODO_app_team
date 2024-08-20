@@ -2,7 +2,7 @@ import customtkinter as ctk
 from main import TaskManager, Task
 from pywinstyles import set_opacity
 from config import mixins
-from config import variables as var
+from config import settings as var
 
 
 class App(ctk.CTk):

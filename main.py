@@ -3,7 +3,7 @@ import csv
 import os
 from app_construction import *
 from config import mixins
-from config import variables as var
+from config import settings as set
 
 
 class TaskManager:

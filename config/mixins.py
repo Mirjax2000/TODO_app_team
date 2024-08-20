@@ -9,6 +9,9 @@ def basic_app_settings():
     ctk.set_appearance_mode("Dark")
     ctk.set_window_scaling(1.0)
     ctk.set_widget_scaling(1.0)
+
+
+def load_settings() -> dict:
     file: str = "./config/settings.json"
     with open(file, "r") as f:
         settings: json = json.load(f)
