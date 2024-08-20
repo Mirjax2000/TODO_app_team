@@ -9,9 +9,17 @@ def load_settings(entry: str) -> dict:
 
 
 settings: dict = load_settings("./config/settings.json")
-
-app_width: int = settings.get("width")
-app_height: int = settings.get("height")
+for key, value in settings.items():
+    app_width: int = value.get("width", 1000)
+    app_height: int = value.get("height", 600)
+    inner_color: str = value.get("inner_color", "red")
+    outer_color: str = value.get("outer_color", "red")
+    label_color: str = value.get("label_color", "red")
+    bad_color: str = value.get("bad_color", "red")
+    good_color: str = value.get("good_color", "red")
+    btn_color_dark: str = value.get("btn_color_dark", "red")
+    btn_color_light: str = value.get("btn_color_light", "red")
+    border_color: str = value.get("border_color", "red")
 
 # variables
 font_big: tuple[str, int, str] = ("Arial", 30, "normal")
@@ -23,14 +31,7 @@ img_error = ctk.CTkImage(
     light_image=Image.open("./assets/exclamation2.png"), size=(25, 25)
 )
 # colors
-inner_color: str = "#292929"
-outer_color: str = "#1c1c1c"
-label_color: str = "#393939"
-bad_color: str = "#ff7f00"
-good_color: str = "#08ff00"
-btn_color_dark: str = "#14375e"
-btn_color_light: str = "#144870"
-border_color: str = "#696969"
+
 started_color: str = "#00519e"
 not_started_color: str = "#c86300"
 complete_color: str = "#059400"
