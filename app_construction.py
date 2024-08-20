@@ -1,5 +1,5 @@
+from main import TaskManager, Task
 import customtkinter as ctk
-from main import TaskManager
 from pywinstyles import set_opacity
 from config import mixins
 from config import settings
@@ -296,6 +296,7 @@ class TaskFrame(ctk.CTkFrame):
         self, parent, text: str, status: str = "Not Started", user: str = "Not assigned"
     ):
         self.parent = parent
+        self.text = text
         self.status = status
         self.user = user
         super().__init__(
@@ -308,7 +309,7 @@ class TaskFrame(ctk.CTkFrame):
         self.pack(fill="x", padx=10, pady=3, ipady=5)
         set_opacity(self, value=0.8, color="black")
 
-        self.task_label = ctk.CTkLabel(self, font=settings.font_normal, text=text)
+        self.task_label = ctk.CTkLabel(self, font=settings.font_normal, text=self.text)
         self.options_users: list[str] = [
             "Not assigned",
         ]

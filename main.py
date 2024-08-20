@@ -1,8 +1,8 @@
-import csv
-import os
-
 import app_construction
 from app_construction import *
+from dataclasses import dataclass, field
+import csv
+import os
 from config import settings
 
 
@@ -13,19 +13,18 @@ class TaskManager:
 
     def __init__(self, parent):
         self.parent = parent
-        self.tasks: list[any] = []
-        self.remove: list[any] = []
+        self.tasks: list = []
         self.id: int = 0
 
     # methods
     def add_task(self, event=None):
         """add task function"""
-        if self.parent.input_task.get():
+        entry: str = self.parent.input_task.get()
+        if entry:
             self.id += 1
-            self.tasks.append({self.id: {"task_name": self.parent.input_task.get()}})
-            app_construction.TaskFrame(
-                self.parent.display_frame, self.parent.input_task.get()
-            )
+            new_tasks = Task(task_name=entry)
+            self.parent.tasks.append([self.id, new_tasks])
+
         else:
             print("error")
             # TODO tady pouzit error funkci
@@ -104,6 +103,21 @@ class TaskManager:
     def exit(self):
         """Exit self.parent"""
         self.parent.destroy()
+
+
+@dataclass
+class Task:
+    """Trida pro uchování jednoho úkolu"""
+
+    task_name: str
+    status: str = field(default="Not Started")
+    user: str = field(default="Not Assigned")
+    description: str = field(default="")
+
+    def __post_init__(self):
+        self.frame = app_construction.TaskFrame(
+            App.display_frame, text=self.task_name, status=self.status
+        )
 
 
 if __name__ == "__main__":
