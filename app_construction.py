@@ -96,12 +96,12 @@ class App(ctk.CTk):
         self.display_buttons_btm = ctk.CTkFrame(**self.button_frame)
         # activace widgetu pro btn framy
         self.display_buttons_top.grid(row=0, column=0, sticky="ns")
-        self.display_buttons_mid.grid(row=1, column=0, sticky="ns", pady=20)
+        self.display_buttons_mid.grid(row=1, column=0, sticky="ns", pady=30)
         self.display_buttons_btm.grid(row=2, column=0, sticky="ns")
         #
         # grid pro tlacitkovy framy
         self.display_buttons.rowconfigure(0, weight=0, uniform="a")
-        self.display_buttons.rowconfigure(1, weight=1, uniform="b")
+        self.display_buttons.rowconfigure(1, weight=0, uniform="b")
         self.display_buttons.rowconfigure(2, weight=1, uniform="c")
         self.display_buttons.columnconfigure(0, weight=0, uniform="a")
         #
@@ -114,6 +114,7 @@ class App(ctk.CTk):
             "Save list",
             "Clear list",
             "Users/Groups",
+            "Settings",
             "Exit",
         ]
         path = self.task_manager
@@ -160,7 +161,8 @@ class App(ctk.CTk):
                 path.user_group,
                 "btn_7",
             ),  # users/groups
-            (self.display_buttons_btm, btn_text[7], path.exit, "btn_8"),  # exit
+            (self.display_buttons_btm, btn_text[7], path.settings, "btn_9"),  # settings
+            (self.display_buttons_btm, btn_text[7], path.exit, "btn_9"),  # exit
         ]
 
         # label task operations
@@ -220,6 +222,16 @@ class App(ctk.CTk):
         self.display_buttons_btm.rowconfigure(0, weight=0, uniform="b")
         self.display_buttons_btm.rowconfigure(1, weight=0, uniform="b")
         self.display_buttons_btm.rowconfigure(2, weight=1, uniform="b")
+        # odeslano do funkce set_default_opacity pro všechny tlačítka v self.btns_names
+        self.btns_names: list = [
+            self.btn_1,
+            self.btn_2,
+            self.btn_3,
+            self.btn_4,
+            self.btn_5,
+            self.btn_6,
+        ]
+        mixins.set_default_opacity(*self.btns_names)
         # endregion
         #
         #  region FOOTER

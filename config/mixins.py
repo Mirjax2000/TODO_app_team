@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from pywinstyles import set_opacity
 
 
 # zakladni nastaveni appky / theme a scaling
@@ -30,6 +31,12 @@ def padding_in_scrollable(display_frame: ctk.CTkScrollableFrame):
     if scrollbar := getattr(display_frame, "_scrollbar", None):
         padding = display_frame.cget("border_width") * 1
         ctk.CTkScrollbar.grid_configure(scrollbar, padx=padding)
+
+
+def set_default_opacity(*widgets):
+    opacity = 0.4
+    for widget in widgets:
+        set_opacity(widget=widget, value=0.4, color="black")
 
 
 if __name__ == "__main__":

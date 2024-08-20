@@ -87,10 +87,18 @@ class TaskManager:
         # TODO confirm dialog, are you sure?
         pass
 
-    def user_group(selfself):
+    def user_group(self):
         """Groups and users"""
         # Todo new window for group and users
         pass
+
+    def settings(self):
+        """nastaveni aplikace"""
+        pass
+
+    # TODO very important !!!
+    # TODO new display s nastavenim aplikace, width,height, font sizes, themes, etc.
+    # TODO a pak ulozit do souboru settings, bud jako class nebo csc, json
 
     @staticmethod
     def exit():
