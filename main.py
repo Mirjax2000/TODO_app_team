@@ -124,7 +124,7 @@ class Task:
 
 
 if __name__ == "__main__":
-    print(f"App version: {var.version}")
+    print(f"App version: {set.version}")
     app: App = App(TaskManager())
 
     app.mainloop()
