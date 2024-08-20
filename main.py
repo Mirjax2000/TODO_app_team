@@ -13,7 +13,7 @@ class TaskManager:
 
     def __init__(self, parent):
         self.parent = parent
-        self.tasks: list = []
+        self.tasks: list[dict] = []
         self.id: int = 0
 
     # methods
@@ -23,7 +23,7 @@ class TaskManager:
         if entry:
             self.id += 1
             new_tasks = Task(task_name=entry)
-            self.parent.tasks.append([self.id, new_tasks])
+            self.tasks.append({self.id: {"task": new_tasks}})
 
         else:
             print("error")
@@ -113,11 +113,6 @@ class Task:
     status: str = field(default="Not Started")
     user: str = field(default="Not Assigned")
     description: str = field(default="")
-
-    def __post_init__(self):
-        self.frame = app_construction.TaskFrame(
-            App.display_frame, text=self.task_name, status=self.status
-        )
 
 
 if __name__ == "__main__":

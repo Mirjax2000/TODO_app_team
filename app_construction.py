@@ -293,7 +293,11 @@ class TaskFrame(ctk.CTkFrame):
     """Single task frame"""
 
     def __init__(
-        self, parent, text: str, status: str = "Not Started", user: str = "Not assigned"
+        self,
+        parent,
+        text: str,
+        status: str = "Not Started",
+        user: str = "Not assigned",
     ):
         self.parent = parent
         self.text = text
