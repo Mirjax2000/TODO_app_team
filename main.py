@@ -6,6 +6,8 @@ from config import mixins
 from config import settings as set
 
 
+# TODO udelat slovnik ci funkci s chybovyma hlasenima ???
+# TODO jako argument predat jen stringem chybu
 class TaskManager:
     """Trida pro správu úkolů"""
 
@@ -26,8 +28,6 @@ class TaskManager:
         else:
             app.error_label.grid(row=0, column=2, sticky="", ipadx=10)
             app.error_label.configure(text="Task name cannot be empty!")
-            # TODO udelat slovnik ci funkci s chybovyma hlasenima ???
-            # TODO jako argument predat jen stringem chybu
 
     def edit_task(self):
         """Funkce pro editaci task labelu"""
@@ -105,9 +105,6 @@ class TaskManager:
         """Exit app"""
         app.destroy()
 
-    def create_task_frame(self):
-        pass
-
     @staticmethod
     def clear_error(event):
         """Clears input entry"""
@@ -121,6 +118,7 @@ class Task:
 
     task_name: str = field(default="")
     status: str = field(default="Not started")
+    frame: TaskFrame = TaskFrame(parent=app.display_frame, text=task_name)
 
 
 if __name__ == "__main__":
