@@ -20,6 +20,13 @@ for key, value in settings.items():
     btn_color_dark: str = value.get("btn_color_dark", "red")
     btn_color_light: str = value.get("btn_color_light", "red")
     border_color: str = value.get("border_color", "red")
+    started_color: str = value.get("strted_color", "red")
+    not_started_color: str = value.get("not_started_color", "red")
+    complete_color: str = value.get("complete_color", "red")
+    fg_started_color: str = value.get("fg_started_color", "red")
+    on_hold_color: str = value.get("on_hold_color", "red")
+    fg_on_hold_color: str = value.get("fg_on_hold_color", "red")
+
 
 # variables
 font_big: tuple[str, int, str] = ("Arial", 30, "normal")
@@ -30,14 +37,6 @@ version: float = 0.6
 img_error = ctk.CTkImage(
     light_image=Image.open("./assets/exclamation2.png"), size=(25, 25)
 )
-# colors
-
-started_color: str = "#00519e"
-not_started_color: str = "#c86300"
-complete_color: str = "#059400"
-fg_started_color: str = "#001021"
-on_hold_color: str = "#ffee4c"
-fg_on_hold_color: str = "#241f0f"
 
 
 if __name__ == "__main__":

@@ -3,15 +3,20 @@
       "width":1000,
       "height":600
    },
-   "colors": {
+   "colors":{
       "inner_color":"#292929",
       "outer_color":"#1c1c1c",
       "label_color":"#393939",
       "bad_color":"#ff7f00",
       "good_color":"#08ff00",
-      "btn_color_dark": "#14375e",
-      "btn_color_light": "#144870",
-      "border_color": "#696969"
-
+      "btn_color_dark":"#14375e",
+      "btn_color_light":"#144870",
+      "border_color":"#696969",
+      "started_color":"#00519e",
+      "not_started_color":"#c86300",
+      "complete_color":"#059400",
+      "fg_started_color":"#001021",
+      "on_hold_color":"#ffee4c",
+      "fg_on_hold_color":"#241f0f"
    }
 }
