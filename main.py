@@ -1,9 +1,9 @@
-from dataclasses import dataclass, field
 import csv
 import os
+
+import app_construction
 from app_construction import *
-from config import mixins
-from config import settings as set
+from config import settings
 
 
 # TODO udelat slovnik ci funkci s chybovyma hlasenima ???
@@ -11,23 +11,24 @@ from config import settings as set
 class TaskManager:
     """Trida pro správu úkolů"""
 
-    def __init__(self):
-        self.tasks: dict = {}
+    def __init__(self, parent):
+        self.parent = parent
+        self.tasks: list[any] = []
+        self.remove: list[any] = []
         self.id: int = 0
 
     # methods
     def add_task(self, event=None):
-
-        if app.input_task.get():
-            new_task = Task()
-            new_frame = TaskFrame(app.display_frame, app.input_task.get())
+        """add task function"""
+        if self.parent.input_task.get():
             self.id += 1
-            self.tasks[self.id] = new_frame
-            app.input_task.delete(0, "end")
-
+            self.tasks.append({self.id: {"task_name": self.parent.input_task.get()}})
+            app_construction.TaskFrame(
+                self.parent.display_frame, self.parent.input_task.get()
+            )
         else:
-            app.error_label.grid(row=0, column=2, sticky="", ipadx=10)
-            app.error_label.configure(text="Task name cannot be empty!")
+            print("error")
+            # TODO tady pouzit error funkci
 
     def edit_task(self):
         """Funkce pro editaci task labelu"""
@@ -55,10 +56,10 @@ class TaskManager:
 
     def save_list(self):
         """Uloží všechny úkoly do CSV souboru"""
-        if app.footer_entry.get() == "":
+        if self.parent.footer_entry.get() == "":
             list_name: str = "list"
         else:
-            list_name = app.footer_entry.get().replace(" ", "_")
+            list_name = self.parent.footer_entry.get().replace(" ", "_")
         file_path = os.path.join(
             os.path.dirname(__file__), "load_list", f"{list_name}.csv"
         )
@@ -94,35 +95,18 @@ class TaskManager:
 
     def settings(self):
         """nastaveni aplikace"""
-        pass
+        print(self.tasks)
 
     # TODO very important !!!
     # TODO new display s nastavenim aplikace, width,height, font sizes, themes, etc.
     # TODO a pak ulozit do souboru settings, bud jako class nebo csc, json
 
-    @staticmethod
-    def exit():
-        """Exit app"""
-        app.destroy()
-
-    @staticmethod
-    def clear_error(event):
-        """Clears input entry"""
-        app.error_label.grid_remove()
-        # app.input_task.configure(placeholder_text="")
-
-
-@dataclass
-class Task:
-    """Trida pro uchování jednoho úkolu"""
-
-    task_name: str = field(default="")
-    status: str = field(default="Not started")
-    frame: TaskFrame = TaskFrame(parent=app.display_frame, text=task_name)
+    def exit(self):
+        """Exit self.parent"""
+        self.parent.destroy()
 
 
 if __name__ == "__main__":
-    print(f"App version: {set.version}")
-    app: App = App(TaskManager())
-
+    print(f"App version: {settings.version}")
+    app = App()
     app.mainloop()
