@@ -24,7 +24,6 @@ class TaskManager:
             self.id += 1
             new_tasks = Task(task_name=entry)
             self.tasks.append({self.id: {"task": new_tasks}})
-
         else:
             print("error")
             # TODO tady pouzit error funkci
