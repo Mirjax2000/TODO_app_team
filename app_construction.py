@@ -8,6 +8,7 @@ from config import variables as var
 class App(ctk.CTk):
     """Main App"""
 
+    # nahrani settings do appky
     mixins.basic_app_settings()
 
     def __init__(self, task_manager):
@@ -161,8 +162,8 @@ class App(ctk.CTk):
                 path.user_group,
                 "btn_7",
             ),  # users/groups
-            (self.display_buttons_btm, btn_text[7], path.settings, "btn_9"),  # settings
-            (self.display_buttons_btm, btn_text[7], path.exit, "btn_9"),  # exit
+            (self.display_buttons_btm, btn_text[7], path.settings, "btn_8"),  # settings
+            (self.display_buttons_btm, btn_text[8], path.exit, "btn_9"),  # exit
         ]
 
         # label task operations
@@ -171,7 +172,7 @@ class App(ctk.CTk):
             font=var.font_small,
             text="Task operations",
             fg_color=var.inner_color,
-            corner_radius=10,
+            corner_radius=8,
         )
 
         # label list operations
@@ -180,7 +181,7 @@ class App(ctk.CTk):
             font=var.font_small,
             text="List operations",
             fg_color=var.inner_color,
-            corner_radius=10,
+            corner_radius=8,
         )
 
         self.label_settings = ctk.CTkLabel(
@@ -188,7 +189,7 @@ class App(ctk.CTk):
             font=var.font_small,
             text="Settings",
             fg_color=var.inner_color,
-            corner_radius=10,
+            corner_radius=8,
         )
         # activation
         # create buttons and grid placement
@@ -214,14 +215,16 @@ class App(ctk.CTk):
         # settings operations: btm frame
         self.label_settings.grid(row=0, column=0, sticky="ew")  # Settings operations
         self.btn_7.grid(row=1, column=0, sticky="ewn")  # Users/Groups
-        self.btn_8.grid(row=2, column=0, sticky="ews")  # Exit
+        self.btn_8.grid(row=2, column=0, sticky="ewn")  # settings
+        self.btn_9.grid(row=3, column=0, sticky="ews")  # Exit
 
         # config
         self.display_buttons_top.rowconfigure(0, weight=0, uniform="b")
         self.display_buttons_mid.rowconfigure(0, weight=0, uniform="b")
         self.display_buttons_btm.rowconfigure(0, weight=0, uniform="b")
         self.display_buttons_btm.rowconfigure(1, weight=0, uniform="b")
-        self.display_buttons_btm.rowconfigure(2, weight=1, uniform="b")
+        self.display_buttons_btm.rowconfigure(2, weight=0, uniform="b")
+        self.display_buttons_btm.rowconfigure(3, weight=1, uniform="b")
         # odeslano do funkce set_default_opacity pro všechny tlačítka v self.btns_names
         self.btns_names: list = [
             self.btn_1,

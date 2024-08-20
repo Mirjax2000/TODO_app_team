@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from pywinstyles import set_opacity
+import json
 
 
 # zakladni nastaveni appky / theme a scaling
@@ -8,14 +9,20 @@ def basic_app_settings():
     ctk.set_appearance_mode("Dark")
     ctk.set_window_scaling(1.0)
     ctk.set_widget_scaling(1.0)
+    file: str = "./config/settings.json"
+    with open(file, "r") as f:
+        settings: json = json.load(f)
+        return settings
 
 
 # centrovani appky uprostred obrazovky a rozmer
-def center_window(self):  # center screen in the middle
+def center_window(
+    self, app_width: int = 1000, app_height: int = 600
+):  # center screen in the middle
     """Centers the window on the screen."""
     self.update_idletasks()
-    width: int = 1000
-    height: int = 600
+    width: int = app_width
+    height: int = app_height
     screen_width: int = self.winfo_screenwidth()
     screen_height: int = self.winfo_screenheight()
     x: int = screen_width // 2 - width // 2
@@ -36,7 +43,8 @@ def padding_in_scrollable(display_frame: ctk.CTkScrollableFrame):
 def set_default_opacity(*widgets):
     opacity = 0.4
     for widget in widgets:
-        set_opacity(widget=widget, value=0.4, color="black")
+        widget.configure(state="disabled")
+        set_opacity(widget=widget, value=opacity, color="black")
 
 
 if __name__ == "__main__":

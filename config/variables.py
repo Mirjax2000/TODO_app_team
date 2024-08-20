@@ -14,6 +14,7 @@ img_error = ctk.CTkImage(
 # colors
 inner_color: str = "#292929"
 outer_color: str = "#1c1c1c"
+label_color: str = "#393939"
 bad_color: str = "#ff7f00"
 good_color: str = "#08ff00"
 btn_color_dark: str = "#14375e"
