@@ -20,11 +20,11 @@ for key, value in settings.items():
     btn_color_dark: str = value.get("btn_color_dark", "red")
     btn_color_light: str = value.get("btn_color_light", "red")
     border_color: str = value.get("border_color", "red")
-    started_color: str = value.get("strted_color", "red")
+    started_color: str = value.get("started_color", "red")
     not_started_color: str = value.get("not_started_color", "red")
     complete_color: str = value.get("complete_color", "red")
-    fg_started_color: str = value.get("fg_started_color", "red")
     on_hold_color: str = value.get("on_hold_color", "red")
+    fg_started_color: str = value.get("fg_started_color", "red")
     fg_on_hold_color: str = value.get("fg_on_hold_color", "red")
 
 
