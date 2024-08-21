@@ -261,6 +261,7 @@ class App(ctk.CTk):
             corner_radius=10,
             image=settings.img_error,
             compound="left",
+            anchor="center",
         )
 
         self.exit_btn = ctk.CTkButton(
@@ -269,20 +270,31 @@ class App(ctk.CTk):
             command=self.task_manager.exit,
             corner_radius=settings.corner_radius,
             font=settings.font_normal,
+            width=140,
+        )
+        self.version = ctk.CTkLabel(
+            self.footer,
+            text=f"Version: {settings.version}",
+            font=("Helvetica", 12, "normal"),
+            text_color="white",
         )
 
         # activation
         self.footer_label.grid(row=0, column=0, sticky="w")
         self.footer_entry.grid(row=0, column=1, sticky="ew")
-        self.error_label.grid(row=0, column=2, sticky="e", ipadx=10)
-        self.exit_btn.grid(row=0, column=3, sticky="e")
-        self.error_label.grid_remove()  # skryt error label, defaultně skryte
+        self.error_label.grid(row=0, column=2, sticky="ew", padx=20)
+        self.version.grid(row=0, column=3, sticky="ew", padx=(0, 20))
+        self.exit_btn.grid(row=0, column=4, sticky="ew")
+        # self.error_label.grid_remove()  # skryt error label, defaultně skryte
         # grid config
         self.footer.columnconfigure(0, weight=0, uniform="a")  # list_name label
         self.footer.columnconfigure(1, weight=0, uniform="b")  # Entry field
         self.footer.columnconfigure(2, weight=1, uniform="c")  # error label
-        self.footer.columnconfigure(3, weight=1, uniform="c")  # exit button
+        self.footer.columnconfigure(3, weight=0, uniform="d")  # exit button
+        self.footer.columnconfigure(4, weight=0, uniform="e")  # exit button
         self.footer.rowconfigure(0, weight=0, uniform="a")
+        # version
+
         #  endregion
 
     @staticmethod

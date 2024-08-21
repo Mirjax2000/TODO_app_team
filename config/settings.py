@@ -44,7 +44,7 @@ opacity: float = details.get("opacity", 0.3)
 font_big: tuple[str, int, str] = ("Arial", 30, "normal")
 font_normal: tuple[str, int, str] = ("Arial", 20, "normal")
 font_small: tuple[str, int, str] = ("Arial", 16, "normal")
-version: float = 0.6
+version: float = 0.7
 # images
 img_error = ctk.CTkImage(
     light_image=Image.open("./assets/exclamation2.png"), size=(25, 25)
