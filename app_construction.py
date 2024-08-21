@@ -232,7 +232,14 @@ class App(ctk.CTk):
             self.btn_5,
             self.btn_6,
         ]
-        mixins.set_default_opacity(*self.btns_names)
+        self.set_default_opacity(*self.btns_names)
+
+    def set_default_opacity(self, *widgets):
+        opacity = 0.3
+        for widget in widgets:
+            widget.configure(state="disabled", text_color_disabled="white")
+            set_opacity(widget=widget, value=opacity, color="black")
+
         # endregion
         #
         #  region FOOTER

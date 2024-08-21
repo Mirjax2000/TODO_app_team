@@ -1,6 +1,6 @@
 import app_construction
 from app_construction import *
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, InitVar
 import csv
 import os
 from config import settings
@@ -24,6 +24,7 @@ class TaskManager:
             self.id += 1
             new_tasks = Task(self.parent.display_frame, entry)
             self.tasks.append({self.id: new_tasks})
+            self.parent.input_task.delete(0, "end")
         else:
             print("error")
             # TODO tady pouzit error funkci
@@ -115,7 +116,9 @@ class Task:
     description: str = field(default="")
 
     def __post_init__(self):
-        frame = TaskFrame(self.parent, self.task_name, self.status, self.user)
+        frame = app_construction.TaskFrame(
+            self.parent, self.task_name, self.status, self.user
+        )
 
 
 if __name__ == "__main__":

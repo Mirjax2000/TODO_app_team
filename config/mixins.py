@@ -41,12 +41,5 @@ def padding_in_scrollable(display_frame: ctk.CTkScrollableFrame):
         ctk.CTkScrollbar.grid_configure(scrollbar, padx=padding)
 
 
-def set_default_opacity(*widgets):
-    opacity = 0.3
-    for widget in widgets:
-        widget.configure(state="disabled", text_color_disabled="white")
-        set_opacity(widget=widget, value=opacity, color="black")
-
-
 if __name__ == "__main__":
     pass
