@@ -24,7 +24,7 @@ class TaskManager:
             new_tasks = Task(entry)
             self.tasks.append(new_tasks)
             self.parent.input_task.delete(0, "end")
-            self.parent.btn_activate(self.parent.btn_5)
+            self.parent.btn_activate(self.parent.btn_5, self.parent.btn_4)
         else:
             print("error")
             # TODO tady pouzit error funkci
