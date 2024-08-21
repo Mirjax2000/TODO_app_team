@@ -22,8 +22,8 @@ class TaskManager:
         entry: str = self.parent.input_task.get()
         if entry:
             self.id += 1
-            new_tasks = Task(task_name=entry)
-            self.tasks.append({self.id: {"task": new_tasks}})
+            new_tasks = Task(self.parent.display_frame, entry)
+            self.tasks.append({self.id: new_tasks})
         else:
             print("error")
             # TODO tady pouzit error funkci
@@ -108,10 +108,14 @@ class TaskManager:
 class Task:
     """Trida pro uchování jednoho úkolu"""
 
+    parent: any
     task_name: str
     status: str = field(default="Not Started")
     user: str = field(default="Not Assigned")
     description: str = field(default="")
+
+    def __post_init__(self):
+        frame = TaskFrame(self.parent, self.task_name, self.status, self.user)
 
 
 if __name__ == "__main__":

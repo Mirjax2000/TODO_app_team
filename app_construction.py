@@ -57,6 +57,7 @@ class App(ctk.CTk):
         self.display.pack(side="top", fill="both", padx=20, expand=True)
         #
         # left btn frame
+        # TaskFrame parent !!!!!!!!!!!!!!!!!!!!!!!!!
         self.display_frame = ctk.CTkScrollableFrame(
             self.display,
             fg_color=settings.inner_color,
