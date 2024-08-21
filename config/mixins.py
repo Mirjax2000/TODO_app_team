@@ -11,6 +11,15 @@ def basic_app_settings():
     ctk.set_widget_scaling(settings.widget_scale)
 
 
+def app_init(self):
+    self.title("TODO-List")
+    self.iconbitmap("./assets/ico.ico")
+    center_window(self, settings.app_width, settings.app_height)
+    self.minsize(width=800, height=543)
+    self.resizable(False, True)
+    self.configure(fg_color=settings.outer_color)
+
+
 # centrovani appky uprostred obrazovky a rozmer
 def center_window(self, app_width: int, app_height: int):
     """Centers the window on the screen."""

@@ -8,18 +8,13 @@ from config import settings
 class App(ctk.CTk):
     """Main App"""
 
-    # nahrani settings do appky
+    # nahrani theme, scale do apky
     mixins.basic_app_settings()
 
     def __init__(self):
         self.task_manager = TaskManager(self)
         super().__init__()
-        self.title("TODO-List")
-        self.iconbitmap("./assets/ico.ico")
-        mixins.center_window(self, settings.app_width, settings.app_height)
-        self.minsize(width=800, height=543)
-        self.resizable(False, True)
-        self.configure(fg_color=settings.outer_color)
+        mixins.app_init(self)
 
         # region HEADER
         # Header Frame
@@ -108,6 +103,7 @@ class App(ctk.CTk):
         self.display_buttons.columnconfigure(0, weight=0, uniform="a")
         #
         # Create buttons dynamically
+
         btn_text = [
             "Remove task",
             "Edit task",
