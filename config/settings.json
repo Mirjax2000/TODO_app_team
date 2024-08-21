@@ -24,6 +24,7 @@
       "fg_on_hold_color":"#241f0f"
    },
    "details":{
-      "corner_radius":8
+      "corner_radius":8,
+      "opacity":0.3
    }
 }

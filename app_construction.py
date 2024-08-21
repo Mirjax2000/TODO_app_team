@@ -214,6 +214,7 @@ class App(ctk.CTk):
         self.btn_8.grid(row=2, column=0, sticky="ewn")  # settings
 
         # odeslano do funkce set_default_opacity pro všechny tlačítka v self.btns_names
+
         self.btns_names: list = [
             self.btn_1,
             self.btn_2,
@@ -287,10 +288,23 @@ class App(ctk.CTk):
 
     @staticmethod
     def set_default_opacity(widgets: list):
-        opacity = 0.3
+        opacity = settings.opacity
         for widget in widgets:
             widget.configure(state="disabled", text_color_disabled="white")
             set_opacity(widget=widget, value=opacity, color="black")
+
+    # TODO zde bude rizeno logika disabled buttonů podle stavu tasku
+    @staticmethod
+    def btn_activate(button):
+        """Enable or disable save button"""
+        button.configure(state="normal")
+        set_opacity(widget=button, value=1, color="black")
+
+    @staticmethod
+    def btn_deactivate(button):
+        """Enable or disable save button"""
+        button.configure(state="normal")
+        set_opacity(widget=button, value=settings.opacity, color="black")
 
 
 #

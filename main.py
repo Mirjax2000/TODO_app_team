@@ -3,7 +3,7 @@ from app_construction import *
 from dataclasses import dataclass, field, InitVar
 import os
 from config import settings
-from pickle import dump, load
+import pickle
 
 
 # TODO udelat slovnik ci funkci s chybovyma hlasenima ???
@@ -13,18 +13,18 @@ class TaskManager:
 
     def __init__(self, parent):
         self.parent = parent
-        self.tasks: list[dict] = []
-        self.id: int = 0
+        self.tasks: list[Task] = []
 
     # methods
     def add_task(self, event=None):
         """add task function"""
+
         entry: str = self.parent.input_task.get()
         if entry:
-            self.id += 1
-            new_tasks = Task(self.parent.display_frame, entry)
-            self.tasks.append({self.id: {"task": new_tasks}})
+            new_tasks = Task(entry)
+            self.tasks.append(new_tasks)
             self.parent.input_task.delete(0, "end")
+            self.parent.btn_activate(self.parent.btn_5)
         else:
             print("error")
             # TODO tady pouzit error funkci
@@ -56,17 +56,14 @@ class TaskManager:
     def save_list(self):
         """Uloží všechny úkoly do CSV souboru"""
         if self.parent.footer_entry.get() == "":
-            list_name: str = "list"
+            list_name: str = "default_list"
         else:
             list_name = self.parent.footer_entry.get().replace(" ", "_")
         file_path = os.path.join(
-            os.path.dirname(__file__), "load_list", f"{list_name}.csv"
+            os.path.dirname(__file__), "load_list", f"{list_name}.pkl"
         )
-        with open(file_path, "w", newline="", encoding="utf-8") as file:
-            writer = csv.writer(file, delimiter=";")
-            writer.writerow(["task_name", "status", "description"])
-            for task in self.tasks:
-                writer.writerow([task.task_name, task.status, task.description])
+        with open(file_path, "wb") as file:
+            pickle.dump(self.tasks, file)
 
     def extend_list(self):
         """Funkce pro zvetseni pocet polozek v listu"""
@@ -104,21 +101,21 @@ class TaskManager:
         """Exit self.parent"""
         self.parent.destroy()
 
+    def make_frame(self, text: str, status: str, user: str):
+        frame = self.parent.TaskFrame(self.parent.display_frame, text, status, user)
+
 
 @dataclass
-class Task:
+class Task(TaskManager):
     """Trida pro uchování jednoho úkolu"""
 
-    parent: any
     task_name: str
     status: str = field(default="Not Started")
     user: str = field(default="Not Assigned")
     description: str = field(default="")
 
-    def __post_init__(self):
-        frame = app_construction.TaskFrame(
-            self.parent, self.task_name, self.status, self.user
-        )
+    # def __post_init__(self):
+    #     self.make_frame(text=self.task_name, status=self.status, user=self.user)
 
 
 if __name__ == "__main__":

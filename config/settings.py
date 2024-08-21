@@ -37,6 +37,7 @@ fg_on_hold_color: str = colors.get("fg_on_hold_color", error_color)
 
 details: dict = settings["details"]
 corner_radius: int = details.get("corner_radius", 8)
+opacity: float = details.get("opacity", 0.3)
 
 
 # variables
