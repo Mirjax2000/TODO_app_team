@@ -1,19 +1,18 @@
 import customtkinter as ctk
 from pywinstyles import set_opacity
+from config import settings
 
 
 # zakladni nastaveni appky / theme a scaling
 def basic_app_settings():
-    ctk.set_default_color_theme("blue")
-    ctk.set_appearance_mode("Dark")
-    ctk.set_window_scaling(1.0)
-    ctk.set_widget_scaling(1.0)
+    ctk.set_default_color_theme(settings.theme_color)
+    ctk.set_appearance_mode(settings.appearance)
+    ctk.set_window_scaling(settings.window_scale)
+    ctk.set_widget_scaling(settings.widget_scale)
 
 
 # centrovani appky uprostred obrazovky a rozmer
-def center_window(
-    self, app_width: int = 1000, app_height: int = 600
-):  # center screen in the middle
+def center_window(self, app_width: int, app_height: int):
     """Centers the window on the screen."""
     self.update_idletasks()
     width: int = app_width
@@ -23,8 +22,6 @@ def center_window(
     x: int = screen_width // 2 - width // 2
     y: int = screen_height // 2 - height // 2
     self.geometry(f"{width}x{height}+{x}+{y}")
-
-    # ujub na spatne umisteny scrollbar
 
 
 # oprava chyby CTK scrollbaru

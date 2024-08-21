@@ -1,9 +1,14 @@
 {
    "app_size":{
       "width":1000,
-      "height":600
+      "height":600,
+      "window_scale": 1.0,
+      "widget_scale": 1.0
+
    },
    "colors":{
+      "theme_color": "blue",
+      "appearance": "Dark",
       "inner_color":"#292929",
       "outer_color":"#1c1c1c",
       "label_color":"#393939",
