@@ -25,9 +25,6 @@ class TaskManager:
             self.tasks.append(new_tasks)
             self.parent.input_task.delete(0, "end")
             self.parent.btn_activate(self.parent.btn_5)
-            app_construction.TaskFrame(
-                self.parent.display_frame, entry, status="na rpd", user="kedlubna"
-            )
         else:
             print("error")
             # TODO tady pouzit error funkci

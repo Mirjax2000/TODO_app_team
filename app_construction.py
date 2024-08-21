@@ -295,13 +295,13 @@ class App(ctk.CTk):
 
     # TODO zde bude rizeno logika disabled buttonů podle stavu tasku
     @staticmethod
-    def btn_activate(button):
+    def btn_activate(*button):
         """Enable or disable save button"""
         button.configure(state="normal")
         set_opacity(widget=button, value=1, color="black")
 
     @staticmethod
-    def btn_deactivate(button):
+    def btn_deactivate(*button):
         """Enable or disable save button"""
         button.configure(state="normal")
         set_opacity(widget=button, value=settings.opacity, color="black")
