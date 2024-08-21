@@ -63,7 +63,7 @@ class App(ctk.CTk):
             fg_color=settings.inner_color,
             border_width=1,
             border_color=settings.border_color,
-            corner_radius=8,
+            corner_radius=settings.corner_radius,
         )
         # ujub na spatne umisteny scrollbar
         mixins.padding_in_scrollable(self.display_frame)
@@ -114,7 +114,6 @@ class App(ctk.CTk):
             "Clear list",
             "Users/Groups",
             "Settings",
-            "Exit",
         ]
         path = self.task_manager
         self.button_configs = [
@@ -161,7 +160,6 @@ class App(ctk.CTk):
                 "btn_7",
             ),  # users/groups
             (self.display_buttons_btm, btn_text[7], path.settings, "btn_8"),  # settings
-            (self.display_buttons_btm, btn_text[8], path.exit, "btn_9"),  # exit
         ]
 
         # label task operations
@@ -170,7 +168,7 @@ class App(ctk.CTk):
             font=settings.font_small,
             text="Task operations",
             fg_color=settings.inner_color,
-            corner_radius=8,
+            corner_radius=settings.corner_radius,
         )
 
         # label list operations
@@ -179,7 +177,7 @@ class App(ctk.CTk):
             font=settings.font_small,
             text="List operations",
             fg_color=settings.inner_color,
-            corner_radius=8,
+            corner_radius=settings.corner_radius,
         )
 
         self.label_settings = ctk.CTkLabel(
@@ -187,7 +185,7 @@ class App(ctk.CTk):
             font=settings.font_small,
             text="Settings",
             fg_color=settings.inner_color,
-            corner_radius=8,
+            corner_radius=settings.corner_radius,
         )
         # activation
         # create buttons and grid placement
@@ -197,7 +195,7 @@ class App(ctk.CTk):
                 text=text,
                 font=settings.font_normal,
                 command=command,
-                corner_radius=8,
+                corner_radius=settings.corner_radius,
             )
             setattr(self, attr_name, button)
         # task operations: top frame
@@ -214,15 +212,7 @@ class App(ctk.CTk):
         self.label_settings.grid(row=0, column=0, sticky="ew")  # Settings operations
         self.btn_7.grid(row=1, column=0, sticky="ewn")  # Users/Groups
         self.btn_8.grid(row=2, column=0, sticky="ewn")  # settings
-        self.btn_9.grid(row=3, column=0, sticky="ews")  # Exit
 
-        # config
-        self.display_buttons_top.rowconfigure(0, weight=0, uniform="b")
-        self.display_buttons_mid.rowconfigure(0, weight=0, uniform="b")
-        self.display_buttons_btm.rowconfigure(0, weight=0, uniform="b")
-        self.display_buttons_btm.rowconfigure(1, weight=0, uniform="b")
-        self.display_buttons_btm.rowconfigure(2, weight=0, uniform="b")
-        self.display_buttons_btm.rowconfigure(3, weight=1, uniform="b")
         # odeslano do funkce set_default_opacity pro všechny tlačítka v self.btns_names
         self.btns_names: list = [
             self.btn_1,
@@ -233,12 +223,6 @@ class App(ctk.CTk):
             self.btn_6,
         ]
         self.set_default_opacity(*self.btns_names)
-
-    def set_default_opacity(self, *widgets):
-        opacity = 0.3
-        for widget in widgets:
-            widget.configure(state="disabled", text_color_disabled="white")
-            set_opacity(widget=widget, value=opacity, color="black")
 
         # endregion
         #
@@ -272,24 +256,41 @@ class App(ctk.CTk):
             font=settings.font_small,
             text_color=settings.bad_color,
             fg_color=settings.inner_color,
-            text="",
+            text="error message",
             justify="center",
             corner_radius=10,
             image=settings.img_error,
             compound="left",
         )
 
+        self.exit_btn = ctk.CTkButton(
+            self.footer,
+            text="Exit",
+            command=self.task_manager.exit,
+            corner_radius=settings.corner_radius,
+            font=settings.font_normal,
+        )
+
         # activation
         self.footer_label.grid(row=0, column=0, sticky="w")
         self.footer_entry.grid(row=0, column=1, sticky="ew")
-        self.error_label.grid(row=0, column=2, sticky="", ipadx=10)
+        self.error_label.grid(row=0, column=2, sticky="e", ipadx=10)
+        self.exit_btn.grid(row=0, column=3, sticky="e")
         self.error_label.grid_remove()  # skryt error label, defaultně skryte
         # grid config
-        self.footer.columnconfigure(0, weight=0, uniform="a")
-        self.footer.columnconfigure(1, weight=0, uniform="b")
-        self.footer.columnconfigure(2, weight=1, uniform="c")
+        self.footer.columnconfigure(0, weight=0, uniform="a")  # list_name label
+        self.footer.columnconfigure(1, weight=0, uniform="b")  # Entry field
+        self.footer.columnconfigure(2, weight=1, uniform="c")  # error label
+        self.footer.columnconfigure(3, weight=1, uniform="c")  # exit button
         self.footer.rowconfigure(0, weight=0, uniform="a")
         #  endregion
+
+    @staticmethod
+    def set_default_opacity(self, *widgets):
+        opacity = 0.3
+        for widget in widgets:
+            widget.configure(state="disabled", text_color_disabled="white")
+            set_opacity(widget=widget, value=opacity, color="black")
 
 
 #
@@ -332,7 +333,7 @@ class TaskFrame(ctk.CTkFrame):
             dynamic_resizing=False,
             dropdown_fg_color=settings.outer_color,
             dropdown_hover_color=settings.btn_color_light,
-            corner_radius=8,
+            corner_radius=settings.corner_radius,
         )
 
         self.user_label.set(self.user)
@@ -353,7 +354,7 @@ class TaskFrame(ctk.CTkFrame):
             dynamic_resizing=False,
             dropdown_fg_color=settings.outer_color,
             dropdown_hover_color=settings.btn_color_light,
-            corner_radius=8,
+            corner_radius=settings.corner_radius,
             command=self.update_color,
         )
 

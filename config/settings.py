@@ -35,6 +35,9 @@ on_hold_color: str = colors.get("on_hold_color", error_color)
 fg_started_color: str = colors.get("fg_started_color", error_color)
 fg_on_hold_color: str = colors.get("fg_on_hold_color", error_color)
 
+details: dict = settings["details"]
+corner_radius: int = details.get("corner_radius", 8)
+
 
 # variables
 font_big: tuple[str, int, str] = ("Arial", 30, "normal")

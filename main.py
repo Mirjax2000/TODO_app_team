@@ -23,7 +23,7 @@ class TaskManager:
         if entry:
             self.id += 1
             new_tasks = Task(self.parent.display_frame, entry)
-            self.tasks.append({self.id: new_tasks})
+            self.tasks.append({self.id: {"task": new_tasks}})
             self.parent.input_task.delete(0, "end")
         else:
             print("error")

@@ -2,13 +2,12 @@
    "app_size":{
       "width":1000,
       "height":600,
-      "window_scale": 1.0,
-      "widget_scale": 1.0
-
+      "window_scale":1.0,
+      "widget_scale":1.0
    },
    "colors":{
-      "theme_color": "blue",
-      "appearance": "Dark",
+      "theme_color":"blue",
+      "appearance":"Dark",
       "inner_color":"#292929",
       "outer_color":"#1c1c1c",
       "label_color":"#393939",
@@ -23,5 +22,8 @@
       "fg_started_color":"#001021",
       "on_hold_color":"#ffee4c",
       "fg_on_hold_color":"#241f0f"
+   },
+   "details":{
+      "corner_radius":8
    }
 }
