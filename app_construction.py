@@ -17,7 +17,8 @@ class App(ctk.CTk):
         self.title("TODO-List")
         self.iconbitmap("./assets/ico.ico")
         mixins.center_window(self, settings.app_width, settings.app_height)
-        self.resizable(False, False)
+        self.minsize(width=800, height=543)
+        self.resizable(False, True)
         self.configure(fg_color=settings.outer_color)
 
         # region HEADER

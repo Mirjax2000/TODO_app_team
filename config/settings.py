@@ -9,23 +9,26 @@ def load_settings(entry: str) -> dict:
 
 
 settings: dict = load_settings("./config/settings.json")
-for key, value in settings.items():
-    app_width: int = value.get("width", 1000)
-    app_height: int = value.get("height", 600)
-    inner_color: str = value.get("inner_color", "red")
-    outer_color: str = value.get("outer_color", "red")
-    label_color: str = value.get("label_color", "red")
-    bad_color: str = value.get("bad_color", "red")
-    good_color: str = value.get("good_color", "red")
-    btn_color_dark: str = value.get("btn_color_dark", "red")
-    btn_color_light: str = value.get("btn_color_light", "red")
-    border_color: str = value.get("border_color", "red")
-    started_color: str = value.get("started_color", "red")
-    not_started_color: str = value.get("not_started_color", "red")
-    complete_color: str = value.get("complete_color", "red")
-    on_hold_color: str = value.get("on_hold_color", "red")
-    fg_started_color: str = value.get("fg_started_color", "red")
-    fg_on_hold_color: str = value.get("fg_on_hold_color", "red")
+
+app_size: dict = settings["app_size"]
+app_width: int = app_size.get("width", 1000)
+app_height: int = app_size.get("height", 600)
+
+colors: dict = settings["colors"]
+inner_color: str = colors.get("inner_color", "red")
+outer_color: str = colors.get("outer_color", "red")
+label_color: str = colors.get("label_color", "red")
+bad_color: str = colors.get("bad_color", "red")
+good_color: str = colors.get("good_color", "red")
+btn_color_dark: str = colors.get("btn_color_dark", "red")
+btn_color_light: str = colors.get("btn_color_light", "red")
+border_color: str = colors.get("border_color", "red")
+started_color: str = colors.get("started_color", "red")
+not_started_color: str = colors.get("not_started_color", "red")
+complete_color: str = colors.get("complete_color", "red")
+on_hold_color: str = colors.get("on_hold_color", "red")
+fg_started_color: str = colors.get("fg_started_color", "red")
+fg_on_hold_color: str = colors.get("fg_on_hold_color", "red")
 
 
 # variables
