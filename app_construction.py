@@ -222,7 +222,7 @@ class App(ctk.CTk):
             self.btn_5,
             self.btn_6,
         ]
-        self.set_default_opacity(*self.btns_names)
+        self.set_default_opacity(self.btns_names)
 
         # endregion
         #
@@ -286,7 +286,7 @@ class App(ctk.CTk):
         #  endregion
 
     @staticmethod
-    def set_default_opacity(*widgets: list):
+    def set_default_opacity(widgets: list):
         opacity = 0.3
         for widget in widgets:
             widget.configure(state="disabled", text_color_disabled="white")

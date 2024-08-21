@@ -1,9 +1,9 @@
 import app_construction
 from app_construction import *
 from dataclasses import dataclass, field, InitVar
-import csv
 import os
 from config import settings
+from pickle import dump, load
 
 
 # TODO udelat slovnik ci funkci s chybovyma hlasenima ???
