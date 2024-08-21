@@ -218,7 +218,6 @@ class App(ctk.CTk):
         self.btns_names: list = [
             self.btn_1,
             self.btn_2,
-            self.btn_3,
             self.btn_4,
             self.btn_5,
             self.btn_6,
