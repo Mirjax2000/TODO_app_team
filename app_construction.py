@@ -293,20 +293,15 @@ class App(ctk.CTk):
             widget.configure(state="disabled", text_color_disabled="white")
             set_opacity(widget=widget, value=opacity, color="black")
 
-    # TODO zde bude rizeno logika disabled buttonů podle stavu tasku
     @staticmethod
-    def btn_activate(*buttons):
+    def btn_state(*buttons, status: str):
         """Enable or disable save button"""
         for item in buttons:
-            item.configure(state="normal")
-            set_opacity(widget=item, value=1, color="black")
-
-    @staticmethod
-    def btn_deactivate(*buttons):
-        """Enable or disable save button"""
-        for item in buttons:
-            item.configure(state="normal")
-            set_opacity(widget=item, value=settings.opacity, color="black")
+            item.configure(state=status)
+            if status == "normal":
+                set_opacity(widget=item, value=1, color="black")
+            else:
+                set_opacity(widget=item, value=settings.opacity, color="black")
 
 
 #
