@@ -25,6 +25,9 @@ class TaskManager:
             self.tasks.append(new_tasks)
             self.parent.input_task.delete(0, "end")
             self.parent.btn_activate(self.parent.btn_5)
+            app_construction.TaskFrame(
+                self.parent.display_frame, entry, status="na rpd", user="kedlubna"
+            )
         else:
             print("error")
             # TODO tady pouzit error funkci
@@ -101,21 +104,15 @@ class TaskManager:
         """Exit self.parent"""
         self.parent.destroy()
 
-    def make_frame(self, text: str, status: str, user: str):
-        frame = self.parent.TaskFrame(self.parent.display_frame, text, status, user)
-
 
 @dataclass
-class Task(TaskManager):
+class Task:
     """Trida pro uchování jednoho úkolu"""
 
     task_name: str
     status: str = field(default="Not Started")
     user: str = field(default="Not Assigned")
     description: str = field(default="")
-
-    # def __post_init__(self):
-    #     self.make_frame(text=self.task_name, status=self.status, user=self.user)
 
 
 if __name__ == "__main__":

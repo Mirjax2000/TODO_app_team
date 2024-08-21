@@ -324,14 +324,14 @@ class TaskFrame(ctk.CTkFrame):
         self.status = status
         self.user = user
         super().__init__(
-            self.parent,
+            parent,
             fg_color=settings.outer_color,
             corner_radius=5,
             border_width=1,
             border_color=settings.not_started_color,
         )
         self.pack(fill="x", padx=10, pady=3, ipady=5)
-        set_opacity(self, value=0.8, color="black")
+        set_opacity(widget=self, value=0.8, color="black")
 
         self.task_label = ctk.CTkLabel(self, font=settings.font_normal, text=self.text)
         self.options_users: list[str] = [
@@ -414,7 +414,7 @@ class TaskFrame(ctk.CTkFrame):
 
         config = config_map.get(status, config_map["Complete"])
         self.configure(border_color=config["border_color"], fg_color=config["fg_color"])
-        set_opacity(self, value=config["opacity"], color="black")
+        set_opacity(widget=self, value=config["opacity"], color="black")
 
 
 # endregion
