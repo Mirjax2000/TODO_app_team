@@ -81,7 +81,7 @@ class TaskManager:
             # TODO pohrat si s chybovyma hlasenima pres TRY/EXCEPT
             # _pickle.UnpicklingError: invalid load key, '\xef'.
             # EOFError: Ran out of input
-            for task in self.tasks:
+            for task in extend_list:
                 self.create_frame(task.task_name, task.status, task.user)
                 # stav widgetu on/off
                 self.parent.btn_state(self.parent, **settings.active_state)

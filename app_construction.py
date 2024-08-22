@@ -287,6 +287,7 @@ class App(ctk.CTk):
         #  endregion
         #
         # volani metod
+        # nastaveni zakladniho stavu
         self.btn_state(self, **settings.default_state)
 
         #
@@ -344,7 +345,7 @@ class TaskFrame(ctk.CTkFrame):
             border_width=1,
             border_color=settings.not_started_color,
         )
-        self.pack(fill="x", padx=10, pady=3, ipady=5)
+        self.pack(fill="x", side="top", padx=10, pady=3, ipady=5)
         set_opacity(widget=self, value=0.8, color="black")
 
         self.task_label = ctk.CTkLabel(self, font=settings.font_normal, text=self.text)
