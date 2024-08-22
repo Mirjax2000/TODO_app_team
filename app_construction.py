@@ -1,4 +1,4 @@
-from main import TaskManager, Task
+from main import TaskManager
 import customtkinter as ctk
 from pywinstyles import set_opacity
 from config import mixins
