@@ -1,5 +1,7 @@
 from main import TaskManager
 import customtkinter as ctk
+import tkinter as tk
+from tkinter import filedialog
 from pywinstyles import set_opacity
 from config import mixins
 from config import settings
@@ -309,6 +311,14 @@ class App(ctk.CTk):
         self.input_task.bind("<KeyPress>", self.task_manager.clear_error)
 
     # endregion
+    @staticmethod
+    def load_dialog():
+        file_name = filedialog.askopenfilename(
+            initialdir="./lists",
+            title="Select a file",
+            filetypes=[("list files", "*.pkl")],
+        )
+        return file_name
 
 
 #

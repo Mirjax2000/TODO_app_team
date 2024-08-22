@@ -41,12 +41,10 @@ class TaskManager:
         pass
 
     def load_list(self):
-        """Načte úkoly z CSV souboru"""
+        """Načte úkoly z pickle souboru"""
         self.tasks.clear()
-        # Todo: pridat load dialog s vyberem souboru
-        file_path: str = os.path.join(
-            os.path.dirname(__file__), "load_list", "default_list.pkl"
-        )
+
+        file_path: str = self.parent.load_dialog()
         with open(file_path, "rb") as file:
             self.tasks = pickle.load(file)
             for task in self.tasks:
@@ -60,18 +58,14 @@ class TaskManager:
             list_name: str = "default_list"
         else:
             list_name = self.parent.footer_entry.get().replace(" ", "_")
-        file_path = os.path.join(
-            os.path.dirname(__file__), "load_list", f"{list_name}.pkl"
-        )
+        file_path = os.path.join(os.path.dirname(__file__), "lists", f"{list_name}.pkl")
         with open(file_path, "wb") as file:
             pickle.dump(self.tasks, file)
 
     def extend_list(self):
         """Funkce pro zvetseni pocet polozek v listu"""
         # TODO pridat load dialog s vyberem souboru
-        file_path: str = os.path.join(
-            os.path.dirname(__file__), "load_list", "list.csv"
-        )
+        file_path: str = os.path.join(os.path.dirname(__file__), "lists", "list.csv")
         with open(file_path, "r", encoding="utf-8") as file:
             reader = csv.reader(file, delimiter=";")
             next(reader)
