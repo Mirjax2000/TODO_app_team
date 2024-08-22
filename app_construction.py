@@ -32,7 +32,6 @@ class App(ctk.CTk):
         self.input_task.focus()
         self.input_task.get()
         self.input_task.bind("<Return>", self.task_manager.add_task)
-        # self.input_task.bind("<KeyPress>", task_manager.clear_error)
         self.input_task.grid(row=0, column=0, padx=(0, 20), sticky="ew")
 
         # Tlačítko pro přidání úkolu
@@ -292,7 +291,7 @@ class App(ctk.CTk):
 
     # -----------------------------------------------
     # region METHODS
-
+    # state method
     @staticmethod
     def btn_state(parent, **buttons):
         """Enable or disable save button"""
@@ -303,6 +302,11 @@ class App(ctk.CTk):
                 set_opacity(widget=btn, value=1, color="black")
             else:
                 set_opacity(widget=btn, value=settings.opacity, color="black")
+
+    def error_msg(self, msg):
+        self.error_label.configure(text=msg)
+        self.error_label.grid(row=0, column=2, sticky="ew", padx=20)
+        self.input_task.bind("<KeyPress>", self.task_manager.clear_error)
 
     # endregion
 

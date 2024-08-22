@@ -32,8 +32,7 @@ class TaskManager:
             self.parent.btn_state(self.parent, **settings.active_state)
 
         else:
-            print("error")
-            # TODO tady pouzit error funkci
+            self.parent.error_msg("Error: Task name cannot be empty.")
 
     def edit_task(self):
         """Funkce pro editaci task labelu"""
@@ -107,10 +106,12 @@ class TaskManager:
         """Exit self.parent"""
         self.parent.destroy()
 
+    def clear_error(self, event):
+        self.parent.error_label.grid_remove()
+
     def create_frame(self, *data):
         parent = self.parent.display_frame
         frame = app_construction.TaskFrame(parent, *data)
-        return frame
 
 
 class Task:
