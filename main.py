@@ -5,6 +5,7 @@ import os
 from config import settings
 import pickle
 
+
 class TaskManager:
     """Trida pro správu úkolů"""
 
