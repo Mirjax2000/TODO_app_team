@@ -14,6 +14,7 @@ class TaskManager:
 
     # remove error
     def remove_error(self):
+        """Vypne chybový label"""
         self.parent.error_label.grid_remove()
 
     # methods
@@ -73,18 +74,21 @@ class TaskManager:
 
     def extend_list(self):
         """Funkce pro zvetseni pocet polozek v listu"""
-        # TODO pridat load dialog s vyberem souboru
-        file_path: str = os.path.join(os.path.dirname(__file__), "lists", "list.csv")
-        with open(file_path, "r", encoding="utf-8") as file:
-            reader = csv.reader(file, delimiter=";")
-            next(reader)
-            for row in reader:
-                if len(row) >= 2:
-                    task_name, description, status = row
-                    self.tasks.append(Task(task_name, status, description))
+        file_path: str = self.parent.load_dialog()
+        with open(file_path, "rb") as file:
+            extend_list: list[Task] = pickle.load(file)
+            self.tasks.extend(extend_list)
+            # TODO pohrat si s chybovyma hlasenima pres TRY/EXCEPT
+            # _pickle.UnpicklingError: invalid load key, '\xef'.
+            # EOFError: Ran out of input
+            for task in self.tasks:
+                self.create_frame(task.task_name, task.status, task.user)
+                # stav widgetu on/off
+                self.parent.btn_state(self.parent, **settings.active_state)
+        self.remove_error()
 
     def clear_list(self):
-        """Funkce na vymazani hlavniho listu a smazani textu v display"""
+        """vymazani hlavniho listu a smazani frames v display"""
         # TODO confirm dialog, are you sure?
         pass
 
@@ -107,9 +111,11 @@ class TaskManager:
         self.parent.destroy()
 
     def clear_error(self, event):
+        """Remove error label"""
         self.parent.error_label.grid_remove()
 
     def create_frame(self, *data):
+        """Create new frame for task"""
         parent = self.parent.display_frame
         frame = app_construction.TaskFrame(parent, *data)
 
