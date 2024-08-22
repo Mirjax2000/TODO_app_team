@@ -1,6 +1,5 @@
 from main import TaskManager
 import customtkinter as ctk
-import tkinter as tk
 from tkinter import filedialog
 from pywinstyles import set_opacity
 from config import mixins

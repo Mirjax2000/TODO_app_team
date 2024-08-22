@@ -2,7 +2,7 @@ import app_construction
 from app_construction import *
 import os
 from config import settings
-import pickle
+from pickle import dump, load
 
 
 class TaskManager:
@@ -51,7 +51,7 @@ class TaskManager:
 
         file_path: str = self.parent.load_dialog()
         with open(file_path, "rb") as file:
-            self.tasks: list[Task] = pickle.load(file)
+            self.tasks.append(load(file))
             # TODO pohrat si s chybovyma hlasenima pres TRY/EXCEPT
             # _pickle.UnpicklingError: invalid load key, '\xef'.
             # EOFError: Ran out of input
@@ -70,13 +70,13 @@ class TaskManager:
             list_name = self.parent.footer_entry.get().replace(" ", "_")
         file_path = os.path.join(os.path.dirname(__file__), "lists", f"{list_name}.pkl")
         with open(file_path, "wb") as file:
-            pickle.dump(self.tasks, file)
+            dump(self.tasks, file)
 
     def extend_list(self):
         """Funkce pro zvetseni pocet polozek v listu"""
         file_path: str = self.parent.load_dialog()
         with open(file_path, "rb") as file:
-            extend_list: list[Task] = pickle.load(file)
+            extend_list: list[Task] = load(file)
             self.tasks.extend(extend_list)
             # TODO pohrat si s chybovyma hlasenima pres TRY/EXCEPT
             # _pickle.UnpicklingError: invalid load key, '\xef'.
