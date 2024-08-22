@@ -23,20 +23,13 @@ class TaskManager:
         if entry:
             new_tasks = Task(entry)
             self.tasks.append(new_tasks)
+            # taskframe z posledniho itemu z listu self.tasks
             path = self.tasks[-1]
             self.create_frame(path.task_name, path.status, path.user)
-
             self.parent.input_task.delete(0, "end")
+
             # stav widgetu on/off
-            self.parent.btn_state(
-                self.parent,
-                btn_3="disabled",
-                btn_4="normal",
-                btn_5="normal",
-                btn_6="normal",
-                footer_label="normal",
-                footer_entry="normal",
-            )
+            self.parent.btn_state(self.parent, **self.parent.load_state)
 
         else:
             print("error")
@@ -60,6 +53,10 @@ class TaskManager:
         )
         with open(file_path, "rb") as file:
             self.tasks = pickle.load(file)
+            for task in self.tasks:
+                self.create_frame(task.task_name, task.status, task.user)
+                # stav widgetu on/off
+                self.parent.btn_state(self.parent, **self.parent.load_state)
 
     def save_list(self):
         """Uloží všechny úkoly do CSV souboru"""
