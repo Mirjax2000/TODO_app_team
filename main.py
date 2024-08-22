@@ -24,12 +24,15 @@ class TaskManager:
             new_tasks = Task(entry)
             self.tasks.append(new_tasks)
             self.parent.input_task.delete(0, "end")
+            # stav widgetu on/off
             self.parent.btn_state(
                 self.parent,
                 btn_3="disabled",
                 btn_4="normal",
                 btn_5="normal",
                 btn_6="normal",
+                footer_label="normal",
+                footer_entry="normal",
             )
 
         else:

@@ -196,6 +196,7 @@ class App(ctk.CTk):
                 font=settings.font_normal,
                 command=command,
                 corner_radius=settings.corner_radius,
+                text_color_disabled="white",
             )
             setattr(self, attr_name, button)
         # task operations: top frame
@@ -213,23 +214,12 @@ class App(ctk.CTk):
         self.btn_7.grid(row=1, column=0, sticky="ewn")  # Users/Groups
         self.btn_8.grid(row=2, column=0, sticky="ewn")  # settings
 
-        # odeslano do funkce set_default_opacity pro všechny tlačítka v self.btns_names
-
-        self.btns_names: list = [
-            self.btn_1,
-            self.btn_2,
-            self.btn_4,
-            self.btn_5,
-            self.btn_6,
-        ]
-        self.set_default_opacity(self.btns_names)
-
         # endregion
         #
         #  region FOOTER
         #  Footer frame
         self.footer = ctk.CTkFrame(self, fg_color=settings.outer_color)
-        self.footer.pack(side="bottom", fill="x", pady=20, padx=20)
+        self.footer.pack(side="bottom", fill="x", pady=(20, 0), padx=20)
 
         # Vstupní pole pro zadání jména seznamu
         self.footer_label = ctk.CTkLabel(
@@ -243,7 +233,7 @@ class App(ctk.CTk):
             self.footer,
             width=300,
             font=settings.font_normal,
-            placeholder_text="List name: ",
+            placeholder_text="Enter list name",
             fg_color=settings.inner_color,
             border_color=settings.border_color,
             border_width=1,
@@ -256,7 +246,7 @@ class App(ctk.CTk):
             font=settings.font_small,
             text_color=settings.bad_color,
             fg_color=settings.inner_color,
-            text="error message",
+            text="",
             justify="center",
             corner_radius=10,
             image=settings.img_error,
@@ -274,34 +264,45 @@ class App(ctk.CTk):
         )
         self.version = ctk.CTkLabel(
             self.footer,
-            text=f"Version: {settings.version}",
+            text=f"v: {settings.version}",
             font=("Helvetica", 12, "normal"),
-            text_color="white",
+            text_color="gray",
         )
 
         # activation
         self.footer_label.grid(row=0, column=0, sticky="w")
         self.footer_entry.grid(row=0, column=1, sticky="ew")
         self.error_label.grid(row=0, column=2, sticky="ew", padx=20)
-        self.version.grid(row=0, column=3, sticky="ew", padx=(0, 20))
-        self.exit_btn.grid(row=0, column=4, sticky="ew")
-        # self.error_label.grid_remove()  # skryt error label, defaultně skryte
+        self.version.grid(row=1, column=3, sticky="e")
+        self.exit_btn.grid(row=0, column=3, sticky="ew")
+        self.error_label.grid_remove()  # skryt error label, defaultně skryte
         # grid config
         self.footer.columnconfigure(0, weight=0, uniform="a")  # list_name label
         self.footer.columnconfigure(1, weight=0, uniform="b")  # Entry field
         self.footer.columnconfigure(2, weight=1, uniform="c")  # error label
         self.footer.columnconfigure(3, weight=0, uniform="d")  # exit button
-        self.footer.columnconfigure(4, weight=0, uniform="e")  # exit button
-        self.footer.rowconfigure(0, weight=0, uniform="a")
-        # version
+        self.footer.rowconfigure(1, weight=0, uniform="a")  # version
 
         #  endregion
+        #
+        # odeslano do funkce set_default_opacity
+        self.btns_names: list = [
+            self.btn_1,
+            self.btn_2,
+            self.btn_4,
+            self.btn_5,
+            self.btn_6,
+            self.footer_label,
+            self.footer_entry,
+        ]
+        self.set_default_opacity(self.btns_names)
 
     @staticmethod
     def set_default_opacity(widgets: list):
         opacity = settings.opacity
         for widget in widgets:
-            widget.configure(state="disabled", text_color_disabled="white")
+            print(widget)
+            widget.configure(state="disabled")
             set_opacity(widget=widget, value=opacity, color="black")
 
     @staticmethod
