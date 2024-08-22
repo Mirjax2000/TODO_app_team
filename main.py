@@ -23,6 +23,9 @@ class TaskManager:
         if entry:
             new_tasks = Task(entry)
             self.tasks.append(new_tasks)
+            path = self.tasks[-1]
+            self.create_frame(path.task_name, path.status, path.user)
+
             self.parent.input_task.delete(0, "end")
             # stav widgetu on/off
             self.parent.btn_state(
@@ -45,7 +48,7 @@ class TaskManager:
         pass
 
     def remove_task(self):
-        """Smaze vybrane tasky z seznamu a odstrani je z disple"""
+        """Smaze vybrane tasky z seznamu a odstrani je z displeje"""
         pass
 
     def load_list(self):
@@ -106,6 +109,11 @@ class TaskManager:
     def exit(self):
         """Exit self.parent"""
         self.parent.destroy()
+
+    def create_frame(self, *data):
+        parent = self.parent.display_frame
+        frame = app_construction.TaskFrame(parent, *data)
+        return frame
 
 
 class Task:
