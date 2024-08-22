@@ -51,14 +51,12 @@ class TaskManager:
         file_path: str = self.parent.load_dialog()
         with open(file_path, "rb") as file:
             self.tasks = pickle.load(file)
+            # TODO pohrat si s chybovyma hlasenima pres TRY/EXCEPT
             for task in self.tasks:
                 self.create_frame(task.task_name, task.status, task.user)
                 # stav widgetu on/off
                 self.parent.btn_state(self.parent, **settings.active_state)
-        if not self.tasks:
-            self.parent.error_msg("Error: No tasks found.")
-        else:
-            self.remove_error()
+        self.remove_error()
 
     def save_list(self):
         """Uloží všechny úkoly do CSV souboru"""
