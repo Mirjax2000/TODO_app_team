@@ -12,6 +12,10 @@ class TaskManager:
         self.parent = parent
         self.tasks: list[Task] = []
 
+    # remove error
+    def remove_error(self):
+        self.parent.error_label.grid_remove()
+
     # methods
     def add_task(self, event=None):
         """add task function"""
@@ -51,6 +55,10 @@ class TaskManager:
                 self.create_frame(task.task_name, task.status, task.user)
                 # stav widgetu on/off
                 self.parent.btn_state(self.parent, **settings.active_state)
+        if not self.tasks:
+            self.parent.error_msg("Error: No tasks found.")
+        else:
+            self.remove_error()
 
     def save_list(self):
         """Uloží všechny úkoly do CSV souboru"""
