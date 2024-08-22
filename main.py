@@ -55,7 +55,7 @@ class TaskManager:
                 self.parent.btn_state(self.parent, **settings.active_state)
 
     def save_list(self):
-        """Uloží všechny úkoly do CSV souboru"""
+        """Uloží všechny úkoly do pkl souboru"""
         if self.parent.footer_entry.get() == "":
             list_name: str = "default_list"
         else:
