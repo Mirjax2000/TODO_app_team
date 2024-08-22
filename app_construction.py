@@ -285,28 +285,13 @@ class App(ctk.CTk):
 
         #  endregion
         #
-        # odeslano do funkce set_default_opacity
-        # nastaveni default opacity pri startu appky
-        self.btns_names: list = [
-            self.btn_1,
-            self.btn_2,
-            self.btn_4,
-            self.btn_5,
-            self.btn_6,
-            self.footer_label,
-            self.footer_entry,
-        ]
-        self.set_default_opacity(self.btns_names)
+        # volani metod
+        self.btn_state(self, **settings.default_state)
+
         #
 
     # -----------------------------------------------
     # region METHODS
-    @staticmethod
-    def set_default_opacity(widgets: list):
-        opacity = settings.opacity
-        for widget in widgets:
-            widget.configure(state="disabled")
-            set_opacity(widget=widget, value=opacity, color="black")
 
     @staticmethod
     def btn_state(parent, **buttons):

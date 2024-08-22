@@ -50,8 +50,11 @@ img_error = ctk.CTkImage(
     light_image=Image.open("./assets/exclamation2.png"), size=(25, 25)
 )
 
+
 default_state = {
-    "btn_3": "disabled",
+    "btn_1": "disabled",
+    "btn_2": "disabled",
+    "btn_3": "normal",
     "btn_4": "disabled",
     "btn_5": "disabled",
     "btn_6": "disabled",
