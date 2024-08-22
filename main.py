@@ -25,7 +25,11 @@ class TaskManager:
             self.tasks.append(new_tasks)
             self.parent.input_task.delete(0, "end")
             self.parent.btn_state(
-                btn_3="disabled", btn_4="normal", btn_5="normal", btn_6="normal"
+                self.parent,
+                btn_3="disabled",
+                btn_4="normal",
+                btn_5="normal",
+                btn_6="normal",
             )
 
         else:

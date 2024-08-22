@@ -304,10 +304,16 @@ class App(ctk.CTk):
             widget.configure(state="disabled", text_color_disabled="white")
             set_opacity(widget=widget, value=opacity, color="black")
 
-    def btn_state(self, **kwargs):
+    @staticmethod
+    def btn_state(parent, **buttons):
         """Enable or disable save button"""
-        for btn, state in kwargs.items():
-            setattr(self, btn, state)
+        for btn, status in buttons.items():
+            btn = getattr(parent, btn)
+            btn.configure(state=status)
+            if status == "normal":
+                set_opacity(widget=btn, value=1, color="black")
+            else:
+                set_opacity(widget=btn, value=settings.opacity, color="black")
 
 
 #
