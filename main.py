@@ -25,7 +25,7 @@ class TaskManager:
             self.tasks.append(new_tasks)
             self.parent.input_task.delete(0, "end")
             self.parent.btn_state(
-                *(self.parent.btn_5, self.parent.btn_6), status="normal"
+                btn_3="disabled", btn_4="normal", btn_5="normal", btn_6="normal"
             )
 
         else:
@@ -94,7 +94,8 @@ class TaskManager:
 
     def settings(self):
         """nastaveni aplikace"""
-        print(self.tasks)
+        for item in self.tasks:
+            print(item.id)
 
     # TODO very important !!!
     # TODO new display s nastavenim aplikace, width,height, font sizes, themes, etc.
@@ -105,17 +106,26 @@ class TaskManager:
         self.parent.destroy()
 
 
-@dataclass
 class Task:
     """Trida pro uchování jednoho úkolu"""
 
-    task_name: str
-    status: str = field(default="Not Started")
-    user: str = field(default="Not Assigned")
-    description: str = field(default="")
+    _id_counter: int = 1
+
+    def __init__(
+        self,
+        task_name: str,
+        status: str = "Not Started",
+        user: str = "Not Assigned",
+        description: str = "",
+    ):
+        self.id = Task._id_counter
+        Task._id_counter += 1
+        self.task_name = task_name
+        self.status = status
+        self.user = user
+        self.description = description
 
 
 if __name__ == "__main__":
-    print(f"App version: {settings.version}")
     app = App()
     app.mainloop()
