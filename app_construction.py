@@ -315,7 +315,7 @@ class App(ctk.CTk):
         """Enable or disable save button"""
         for btn, status in buttons.items():
             btn = getattr(parent, btn)
-            btn.configure(state=status)
+            btn.configure(state=status)  # type: ignore
             if status == "normal":
                 set_opacity(widget=btn, value=1, color="black")
             else:

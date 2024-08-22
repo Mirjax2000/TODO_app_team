@@ -15,8 +15,8 @@ def app_init(self):
     self.title("TODO-List")
     self.iconbitmap("./assets/ico.ico")
     center_window(self, settings.app_width, settings.app_height)
-    self.minsize(width=800, height=543)
-    self.resizable(False, True)
+    self.minsize(width=800, height=520)
+    self.resizable(True, True)
     self.configure(fg_color=settings.outer_color)
 
 
