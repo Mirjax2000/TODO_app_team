@@ -53,15 +53,10 @@ class TaskManager:
         self.tasks.clear()
         # Todo: pridat load dialog s vyberem souboru
         file_path: str = os.path.join(
-            os.path.dirname(__file__), "load_list", "list.csv"
+            os.path.dirname(__file__), "load_list", "default_list.pkl"
         )
-        with open(file_path, "r", encoding="utf-8") as file:
-            reader = csv.reader(file, delimiter=";")
-            next(reader)
-            for row in reader:
-                if len(row) >= 2:
-                    task_name, description, status = row
-                    self.tasks.append(Task(task_name, status, description))
+        with open(file_path, "rb") as file:
+            self.tasks = pickle.load(file)
 
     def save_list(self):
         """Uloží všechny úkoly do CSV souboru"""

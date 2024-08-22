@@ -301,7 +301,6 @@ class App(ctk.CTk):
     def set_default_opacity(widgets: list):
         opacity = settings.opacity
         for widget in widgets:
-            print(widget)
             widget.configure(state="disabled")
             set_opacity(widget=widget, value=opacity, color="black")
 
