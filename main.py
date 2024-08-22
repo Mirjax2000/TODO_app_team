@@ -5,9 +5,6 @@ import os
 from config import settings
 import pickle
 
-
-# TODO udelat slovnik ci funkci s chybovyma hlasenima ???
-# TODO jako argument predat jen stringem chybu
 class TaskManager:
     """Trida pro správu úkolů"""
 
