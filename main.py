@@ -52,6 +52,8 @@ class TaskManager:
         with open(file_path, "rb") as file:
             self.tasks = pickle.load(file)
             # TODO pohrat si s chybovyma hlasenima pres TRY/EXCEPT
+            # _pickle.UnpicklingError: invalid load key, '\xef'.
+            # EOFError: Ran out of input
             for task in self.tasks:
                 self.create_frame(task.task_name, task.status, task.user)
                 # stav widgetu on/off
@@ -59,7 +61,7 @@ class TaskManager:
         self.remove_error()
 
     def save_list(self):
-        """Uloží všechny úkoly do CSV souboru"""
+        """Uloží všechny úkoly do pickle souboru"""
         if self.parent.footer_entry.get() == "":
             list_name: str = "default_list"
         else:
