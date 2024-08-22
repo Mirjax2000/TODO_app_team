@@ -301,7 +301,7 @@ class App(ctk.CTk):
         # stavy aktivace widgetu
         self.load_state = settings.load_state
 
-    # ---------------------------------------------------------------------
+    # -----------------------------------------------
     # region METHODS
     @staticmethod
     def set_default_opacity(widgets: list):
