@@ -2,6 +2,7 @@ import customtkinter as ctk
 from PIL import Image
 from json import load
 
+
 def load_settings(entry: str) -> dict:
     with open(entry, "r") as file:
         return load(file)
