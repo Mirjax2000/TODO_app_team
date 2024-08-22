@@ -50,7 +50,7 @@ class TaskManager:
 
         file_path: str = self.parent.load_dialog()
         with open(file_path, "rb") as file:
-            self.tasks = pickle.load(file)
+            self.tasks: list[Task] = pickle.load(file)
             # TODO pohrat si s chybovyma hlasenima pres TRY/EXCEPT
             # _pickle.UnpicklingError: invalid load key, '\xef'.
             # EOFError: Ran out of input
@@ -62,8 +62,9 @@ class TaskManager:
 
     def save_list(self):
         """Uloží všechny úkoly do pickle souboru"""
-        if self.parent.footer_entry.get() == "":
-            list_name: str = "default_list"
+        if not self.parent.footer_entry.get():
+            pass
+            # TODO spustit dialog s vyberem jmena souboru
         else:
             list_name = self.parent.footer_entry.get().replace(" ", "_")
         file_path = os.path.join(os.path.dirname(__file__), "lists", f"{list_name}.pkl")
