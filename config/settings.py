@@ -59,6 +59,5 @@ load_state = {
     "footer_entry": "normal",
 }
 
-
 if __name__ == "__main__":
     pass

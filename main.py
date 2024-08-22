@@ -29,7 +29,7 @@ class TaskManager:
             self.parent.input_task.delete(0, "end")
 
             # stav widgetu on/off
-            self.parent.btn_state(self.parent, **self.parent.load_state)
+            self.parent.btn_state(self.parent, **settings.load_state)
 
         else:
             print("error")
@@ -56,7 +56,7 @@ class TaskManager:
             for task in self.tasks:
                 self.create_frame(task.task_name, task.status, task.user)
                 # stav widgetu on/off
-                self.parent.btn_state(self.parent, **self.parent.load_state)
+                self.parent.btn_state(self.parent, **settings.load_state)
 
     def save_list(self):
         """Uloží všechny úkoly do CSV souboru"""

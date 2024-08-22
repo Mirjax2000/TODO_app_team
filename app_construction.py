@@ -298,8 +298,6 @@ class App(ctk.CTk):
         ]
         self.set_default_opacity(self.btns_names)
         #
-        # stavy aktivace widgetu
-        self.load_state = settings.load_state
 
     # -----------------------------------------------
     # region METHODS
