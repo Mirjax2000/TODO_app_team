@@ -41,7 +41,7 @@ class TaskManager:
         pass
 
     def load_list(self):
-        """Načte úkoly z CSV souboru"""
+        """Načte úkoly z pkl souboru"""
         self.tasks.clear()
         # Todo: pridat load dialog s vyberem souboru
         file_path: str = os.path.join(
