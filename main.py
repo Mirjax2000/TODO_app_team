@@ -1,464 +1,143 @@
-import tkinter as tk
-import customtkinter as ctk
-import json
+import app_construction
+from app_construction import *
 import os
-import csv
-from icecream import ic
-
-ctk.set_default_color_theme("blue")
-ctk.set_appearance_mode("Dark")
-
-
-class App(ctk.CTk):  # Main app
-    # constants
-    font_big = ("Arial", 30, "normal")
-    font_normal = ("Arial", 20, "normal")
-    font_small = ("Arial", 16, "normal")
-
-    # constructor
-    def __init__(self):
-        super().__init__()
-        self.title("TODO-List")
-        self.iconbitmap("./assets/ico.ico")
-        self.center_window()
-        self.resizable(False, False)
-        self.configure(fg_color="#2b2b2b")
-
-        # Frames
-        self.task = TaskManager(self)
-        self.header = Header(self)
-        self.display = Display(self)
-        self.footer = Footer(self)
-
-    def center_window(self):
-        self.update_idletasks()
-        width = 1000
-        height = 600
-        screen_width = self.winfo_screenwidth()
-        screen_height = self.winfo_screenheight()
-        x = screen_width // 2 - width // 2
-        y = screen_height // 2 - height // 2
-        self.geometry(f"{width}x{height}+{x}+{y}")
-
-
-class Header(ctk.CTkFrame):
-    def __init__(self, parent):
-        self.parent = parent
-        super().__init__(parent)
-        self.pack(side="top", fill="x", padx=20, pady=20)
-
-        # Vstupní pole pro zadání úkolu
-        self.input_task = ctk.CTkEntry(
-            self, placeholder_text="Enter a task", font=parent.font_normal
-        )
-        self.input_task.get()
-        self.input_task.focus()
-        self.input_task.bind(
-            "<FocusIn>", self.clear_placeholder
-        )  # Kliknutím na pole se aktivuje
-        self.input_task.bind("<Return>", self.parent.task.add_task)
-        self.input_task.grid(row=0, column=0, padx=(0, 20), sticky="ew")
-
-        # Tlačítko pro přidání úkolu
-        self.input_btn = ctk.CTkButton(
-            self,
-            text="Add Task",
-            font=parent.font_normal,
-            command=self.parent.task.add_task,
-        )
-        self.input_btn.grid(row=0, column=1, sticky="e")
-
-        # Grid konfigurace
-        self.columnconfigure(0, weight=1, uniform="a")
-        self.columnconfigure(1, weight=0, uniform="b")
-
-    def clear_placeholder(self, event):
-        """Vymaže textové pole a obnoví výchozí barvu textu a placeholderu při kliknutí."""
-        if self.input_task.get() == "Please enter a task":
-            self.input_task.delete(0, ctk.END)  # Vymaže textové pole
-            self.input_task.configure(
-                placeholder_text="Enter a task",
-                placeholder_text_color="#888888",  # Standardní šedá barva pro placeholder
-                text_color="#000000",  # Standardní barva textu černá
-            )
-
-
-class Display(ctk.CTkFrame):
-
-    def __init__(self, parent):
-        self.parent = parent
-        self.btns_text = [
-            "Remove task",
-            "Edit task",
-            "Load list",
-            "Extend list",
-            "Save list",
-            "Clear list",
-            "Exit",
-        ]
-
-        super().__init__(parent)
-        self.pack(side="top", fill="both", padx=20, expand=True)
-
-        self.display_frame = ctk.CTkScrollableFrame(self)
-        self.display_frame.grid(row=0, column=0, sticky="nsew")
-
-        self.display_btns = ctk.CTkFrame(self, fg_color="#2b2b2b", width=140)
-        self.display_btns.grid(row=0, column=1, sticky="nsew", padx=(20, 0))
-        # grid pro framy pro vsechny tlacitka
-        self.columnconfigure(0, weight=1, uniform="a")
-        self.columnconfigure(1, weight=0, uniform="b")
-        self.rowconfigure(0, weight=1, uniform="c")
-
-        # framy top, mid, bottom
-        self.frame_config = {
-            "master": self.display_btns,
-            "width": 140,
-        }
-        self.display_btns_top = ctk.CTkFrame(**self.frame_config)
-        self.display_btns_mid = ctk.CTkFrame(**self.frame_config)
-        self.display_btns_btm = ctk.CTkFrame(**self.frame_config)
-        #
-        self.display_btns_top.grid(row=0, column=0, sticky="ns")
-        self.display_btns_mid.grid(row=1, column=0, sticky="ns", pady=20)
-        self.display_btns_btm.grid(row=2, column=0, sticky="s")
-        #
-        self.display_btns.rowconfigure(0, weight=1, uniform="a")
-        self.display_btns.rowconfigure(1, weight=1, uniform="b")
-        self.display_btns.rowconfigure(2, weight=1, uniform="c")
-        #
-        # Create buttons dynamically
-        self.button_configs = [
-            (self.display_btns_top, self.btns_text[0], self.remove_task, "btn_1"),
-            (self.display_btns_top, self.btns_text[1], self.edit_task, "btn_2"),
-            (self.display_btns_mid, self.btns_text[2], self.load_list, "btn_3"),
-            (self.display_btns_mid, self.btns_text[3], self.save_list, "btn_4"),
-            (self.display_btns_mid, self.btns_text[4], self.extend_list, "btn_5"),
-            (self.display_btns_mid, self.btns_text[5], self.clear_list, "btn_6"),
-            (self.display_btns_btm, self.btns_text[6], self.exit, "btn_7"),
-        ]
-        #
-        for parent, text, command, attr_name in self.button_configs:
-            button = ctk.CTkButton(
-                parent, text=text, font=self.parent.font_normal, command=command
-            )
-            setattr(self, attr_name, button)
-        #
-        for i in range(len(self.button_configs)):
-            button = getattr(self, f"btn_{i + 1}")
-            button.grid(row=i, column=0, sticky="n", pady=1)
-
-        self.display_btns_mid.rowconfigure(4, weight=1, uniform="a")
-        #
-        # methods
-
-    def remove_task(self):
-        self.parent.task.remove_task()
-
-    def edit_task(self):
-        self.parent.task.edit_task()
-
-    def save_list(self):
-        self.parent.task.save_tasks_to_csv()
-
-    def load_list(self):
-        self.parent.task.load_tasks_from_csv()
-
-    def extend_list(self):
-        pass
-
-    def clear_list(self):
-        # Vytvoření okna pro potvrzení
-        confirm_window = ctk.CTkToplevel(self.parent)
-        confirm_window.title("Confirm Clear")
-        confirm_window.geometry("400x200")
-        confirm_window.grab_set()
-
-        # Popis v okně
-        label = ctk.CTkLabel(
-            confirm_window,
-            text="Are you sure you want to clear the entire list?",
-            font=self.parent.font_normal,
-            wraplength=300,  # Zalomí text, pokud je příliš dlouhý
-        )
-        label.pack(pady=20, padx=20)
-
-        # Tlačítka pro potvrzení nebo zrušení
-        button_frame = ctk.CTkFrame(confirm_window)
-        button_frame.pack(pady=20)
-
-        yes_button = ctk.CTkButton(
-            button_frame, text="Yes", command=lambda: self.confirm_clear(confirm_window)
-        )
-        yes_button.grid(row=0, column=0, padx=10)
-
-        no_button = ctk.CTkButton(
-            button_frame, text="No", command=confirm_window.destroy
-        )
-        no_button.grid(row=0, column=1, padx=10)
-
-    def confirm_clear(self, confirm_window):
-        # Skutečně vymaže seznam úkolů a zavře potvrzovací okno
-        self.parent.task.tasks.clear()
-        for child in self.parent.display.display_frame.winfo_children():
-            child.destroy()
-        self.parent.footer.message_label.configure(text="List cleared.")
-        confirm_window.destroy()
-
-    @staticmethod
-    def exit():
-        app.destroy()
-
-
-class Footer(ctk.CTkFrame):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.parent = parent
-        self.pack(side="bottom", fill="x", pady=20, padx=20)
-
-        self.footer_label = ctk.CTkLabel(
-            self,
-            font=parent.font_normal,
-            text="List name: ",
-        )
-        self.footer_label.grid(row=0, column=0, sticky="w")
-        self.footer_entry = ctk.CTkEntry(
-            self,
-            font=parent.font_normal,
-            placeholder_text="List name: ",
-        )
-        self.footer_entry.get()
-        self.footer_entry.grid(row=0, column=1, sticky="w")
-        self.message_label = ctk.CTkLabel(
-            self,
-            font=parent.font_small,
-            text_color="#ff7f00",
-            text="",
-        )
-        self.message_label.grid(row=0, column=2, sticky="w")
-        self.columnconfigure(0, weight=0, uniform="a")
-        self.columnconfigure(1, weight=0, uniform="b")
-        self.columnconfigure(2, weight=1, uniform="c")
+from config import settings
+from pickle import dump, load
 
 
 class TaskManager:
+    """Trida pro správu úkolů"""
+
     def __init__(self, parent):
         self.parent = parent
-        self.tasks = []
-        self.remove = []  # Inicializujeme self.remove
+        self.tasks: list[Task] = []
 
-    def save_tasks_to_csv(self):
-        try:
-            list_name = self.parent.footer.footer_entry.get().strip() or "list"
-            file_path = os.path.join(
-                os.path.dirname(__file__),
-                "load_list",
-                f"{list_name.replace(' ', '_')}.csv",
-            )
-            os.makedirs(os.path.dirname(file_path), exist_ok=True)
-            with open(file_path, "w", newline="", encoding="utf-8") as file:
-                writer = csv.writer(file, delimiter=";")
-                writer.writerow(["description", "status"])
-                for task in self.tasks:
-                    writer.writerow([task.description, task.status])
-            self.parent.footer.message_label.configure(text="List saved successfully.")
-        except Exception as e:
-            self.parent.footer.message_label.configure(
-                text=f"Error saving list: {str(e)}"
-            )
+    # remove error
+    def remove_error(self):
+        """Vypne chybový label"""
+        self.parent.error_label.grid_remove()
 
-    def load_tasks_from_csv(self):
-        try:
-            file_path = os.path.join(
-                os.path.dirname(__file__), "load_list", "import_tasks.csv"
-            )
-            with open(file_path, "r", encoding="utf-8") as file:
-                reader = csv.reader(file, delimiter=";")
-                next(reader)
-                for row in reader:
-                    if len(row) >= 2:
-                        description, status = row
-                        self.tasks.append(Task(description, status))
-            self.new_multi_labels(self.tasks)
-            self.parent.footer.message_label.configure(text="List loaded successfully.")
-        except FileNotFoundError:
-            self.parent.footer.message_label.configure(text="File not found.")
-        except Exception as e:
-            self.parent.footer.message_label.configure(
-                text=f"Error loading list: {str(e)}"
-            )
+    # methods
+    def add_task(self, event=None):
+        """add task function"""
+
+        entry: str = self.parent.input_task.get()
+        if entry:
+            new_tasks = Task(entry)
+            self.tasks.append(new_tasks)
+            # taskframe z posledniho itemu z listu self.tasks
+            path = self.tasks[-1]
+            self.create_frame(path.task_name, path.status, path.user)
+            self.parent.input_task.delete(0, "end")
+
+            # stav widgetu on/off
+            self.parent.btn_state(self.parent, **settings.active_state)
+
+        else:
+            self.parent.error_msg("Error: Task name cannot be empty.")
 
     def edit_task(self):
-        if not self.remove:
-            self.parent.footer.message_label.configure(
-                text="Please select a task to edit."
-            )
-            return
-
-        task_frame = self.remove[0]
-        task_description = task_frame.label_description.cget("text")
-        task_to_edit = next(
-            (task for task in self.tasks if task.description == task_description),
-            None,
-        )
-
-        if task_to_edit:
-            self.edit_window = ctk.CTkToplevel(self.parent)
-            self.edit_window.title("Edit Task")
-            self.edit_window.geometry("600x200")
-            self.edit_window.grab_set()
-            edit_entry = ctk.CTkEntry(
-                self.edit_window, font=self.parent.font_normal, width=400
-            )
-            edit_entry.insert(0, task_to_edit.description)
-            edit_entry.pack(pady=20)
-            save_button = ctk.CTkButton(
-                self.edit_window,
-                text="Save Changes",
-                command=lambda: self.save_edited_task(task_to_edit, edit_entry.get()),
-            )
-            save_button.pack(pady=20)
-        else:
-            self.parent.footer.message_label.configure(text="Task not found.")
-
-    def save_edited_task(self, task, new_description):
-        if new_description.strip() == "":
-            self.parent.footer.message_label.configure(
-                text="Description cannot be empty."
-            )
-        else:
-            task.description = new_description.strip()
-            self.edit_window.destroy()
-            for child in self.parent.display.display_frame.winfo_children():
-                child.destroy()
-            self.new_multi_labels(self.tasks)
-            self.remove.clear()
-
-    def create_task_frame(self, item, index):
-        description = getattr(item, "description", "Error")
-        status = getattr(item, "status", "Error")
-
-        DISPLAY_PATH = self.parent.display.display_frame  # cesta k display framu
-
-        DISPLAY_PATH.label_frame = ctk.CTkFrame(DISPLAY_PATH)
-        DISPLAY_FRAME = DISPLAY_PATH.label_frame
-        DISPLAY_FRAME.pack(side="top", fill="x", pady=(0, 7), ipady=5)
-
-        # Label description
-        DISPLAY_FRAME.label_description = ctk.CTkLabel(
-            DISPLAY_FRAME,
-            text=description,
-            font=self.parent.font_normal,
-        )
-        DISPLAY_FRAME.label_description.grid(row=0, column=0, sticky="w", padx=5)
-
-        # label status
-        DISPLAY_FRAME.label_status = ctk.CTkLabel(
-            DISPLAY_FRAME,
-            text=status,
-            font=self.parent.font_normal,
-            width=140,
-            anchor="w",
-        )
-        DISPLAY_FRAME.label_status.grid(
-            row=0,
-            column=1,
-            sticky="w",
-        )
-
-        # checkbox
-        DISPLAY_FRAME.var = ctk.StringVar(value="off")
-        DISPLAY_FRAME.checkbox_status = ctk.CTkCheckBox(
-            DISPLAY_FRAME,
-            variable=DISPLAY_FRAME.var,
-            onvalue="on",
-            offvalue="off",
-            font=self.parent.font_normal,
-            text="",
-            width=0,
-            # command=self.check_status,
-        )
-        DISPLAY_FRAME.checkbox_status.grid(row=0, column=2, sticky="e", padx=10)
-        DISPLAY_FRAME.columnconfigure(0, weight=1, uniform="a")
-        DISPLAY_FRAME.columnconfigure(1, weight=0, uniform="b")
-        DISPLAY_FRAME.columnconfigure(2, weight=0, uniform="c")
-        DISPLAY_FRAME.rowconfigure(0, weight=1, uniform="a")
-
-        if status == "Completed":
-            DISPLAY_FRAME.label_status.configure(text_color="#00ff00")
-            DISPLAY_FRAME.var.set("on")
-
-        else:
-            DISPLAY_FRAME.label_status.configure(text_color="#ff7f00")
-            DISPLAY_FRAME.var.set("off")
-
-        bind_1 = ("<Button-1>", lambda event: self.on_label_click(event, index))
-        DISPLAY_FRAME.bind(*bind_1)
-        DISPLAY_FRAME.label_description.bind(*bind_1)
-        DISPLAY_FRAME.label_status.bind(*bind_1)
-
-    def add_task(self, event=None, status="Not Completed"):
-        user_input = self.parent.header.input_task.get().strip()
-        self.parent.header.input_task.delete(0, ctk.END)
-        if not user_input:
-            self.parent.footer.message_label.configure(text="Please enter a task.")
-        else:
-            new_task = Task(user_input, status)
-            self.tasks.append(new_task)
-            item = self.tasks[-1] if self.tasks else None
-            self.create_task_frame(item, len(self.tasks) - 1)
-            self.parent.footer.message_label.configure(text="")
-
-    def warning_input_task(self):
-        """Resetuje vstupní pole do stavu varování."""
-        self.parent.header.input_task.configure(
-            placeholder_text="Please enter a task",
-            placeholder_text_color="#ff7f00",
-            text_color="#ff7f00",
-        )
-
-    def new_multi_labels(self, seznam):
-        for index, item in enumerate(seznam):
-            self.create_task_frame(item, index)
-
-    def on_label_click(self, event, index):
-        parent = event.widget.master
-        while not isinstance(parent, ctk.CTkFrame):
-            parent = parent.master
-            children = parent.winfo_children()
-        background = parent.cget("fg_color")
-
-        if background == "#277bc6":
-            parent.configure(fg_color="#2b2b2b")
-            self.remove.remove(parent)
-        else:
-            parent.configure(fg_color="#277bc6")
-            self.remove.append(parent)
-        print(f"Index: {index}, Description: {self.tasks[index].description}")
+        """Funkce pro editaci task labelu"""
+        # TODO: new window dialog
+        pass
 
     def remove_task(self):
-        for task_frame in self.remove:
-            task_description = task_frame.label_description.cget("text")
-            task_to_remove = next(
-                (task for task in self.tasks if task.description == task_description),
-                None,
-            )
+        """Smaze vybrane tasky z seznamu a odstrani je z displeje"""
+        pass
 
-            if task_to_remove:
-                self.tasks.remove(task_to_remove)
+    def load_list(self):
+        """Načte úkoly z pickle souboru"""
+        self.tasks.clear()
 
-            task_frame.destroy()
+        file_path: str = self.parent.load_dialog()
+        with open(file_path, "rb") as file:
+            self.tasks.append(load(file))
+            # TODO pohrat si s chybovyma hlasenima pres TRY/EXCEPT
+            # _pickle.UnpicklingError: invalid load key, '\xef'.
+            # EOFError: Ran out of input
+            for task in self.tasks:
+                self.create_frame(task.task_name, task.status, task.user)
+                # stav widgetu on/off
+                self.parent.btn_state(self.parent, **settings.active_state)
+        self.remove_error()
 
-        self.remove.clear()
-        for child in self.parent.display.display_frame.winfo_children():
-            child.destroy()
-        self.new_multi_labels(self.tasks)
+    def save_list(self):
+        """Uloží všechny úkoly do pickle souboru"""
+        if not self.parent.footer_entry.get():
+            pass
+            # TODO spustit dialog s vyberem jmena souboru
+        else:
+            list_name = self.parent.footer_entry.get().replace(" ", "_")
+        file_path = os.path.join(os.path.dirname(__file__), "lists", f"{list_name}.pkl")
+        with open(file_path, "wb") as file:
+            dump(self.tasks, file)
+
+    def extend_list(self):
+        """Funkce pro zvetseni pocet polozek v listu"""
+        file_path: str = self.parent.load_dialog()
+        with open(file_path, "rb") as file:
+            extend_list: list[Task] = load(file)
+            self.tasks.extend(extend_list)
+            # TODO pohrat si s chybovyma hlasenima pres TRY/EXCEPT
+            # _pickle.UnpicklingError: invalid load key, '\xef'.
+            # EOFError: Ran out of input
+            for task in extend_list:
+                self.create_frame(task.task_name, task.status, task.user)
+                # stav widgetu on/off
+                self.parent.btn_state(self.parent, **settings.active_state)
+        self.remove_error()
+
+    def clear_list(self):
+        """vymazani hlavniho listu a smazani frames v display"""
+        # TODO confirm dialog, are you sure?
+        pass
+
+    def user_group(self):
+        """Groups and users"""
+        # Todo new window for group and users
+        pass
+
+    def settings(self):
+        """nastaveni aplikace"""
+        for item in self.tasks:
+            print(item.id)
+
+    # TODO very important !!!
+    # TODO new display s nastavenim aplikace, width,height, font sizes, themes, etc.
+    # TODO a pak ulozit do souboru settings, bud jako class nebo csc, json
+
+    def exit(self):
+        """Exit self.parent"""
+        self.parent.destroy()
+
+    def clear_error(self, event):
+        """Remove error label"""
+        self.parent.error_label.grid_remove()
+
+    def create_frame(self, *data):
+        """Create new frame for task"""
+        parent = self.parent.display_frame
+        frame = app_construction.TaskFrame(parent, *data)
 
 
 class Task:
-    def __init__(self, description, status):
-        self.description = description
+    """Trida pro uchování jednoho úkolu"""
+
+    _id_counter: int = 1
+
+    def __init__(
+        self,
+        task_name: str,
+        status: str = "Not Started",
+        user: str = "Not Assigned",
+        description: str = "",
+    ):
+        self.id = Task._id_counter
+        Task._id_counter += 1
+        self.task_name = task_name
         self.status = status
+        self.user = user
+        self.description = description
 
 
 if __name__ == "__main__":
