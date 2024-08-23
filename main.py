@@ -2,6 +2,7 @@ import app_construction
 from app_construction import *
 import os
 from config import settings
+from tkinter import filedialog
 from pickle import dump, load
 
 
@@ -47,11 +48,12 @@ class TaskManager:
 
     def load_list(self):
         """Načte úkoly z pickle souboru"""
-        self.tasks.clear()
+        self.tasks.clear()  # Vynuluje seznam tasků
+        self.remove_error()
 
-        file_path: str = self.parent.load_dialog()
+        file_path: str = self.load_dialog()
         with open(file_path, "rb") as file:
-            self.tasks.append(load(file))
+            self.tasks = load(file)
             # TODO pohrat si s chybovyma hlasenima pres TRY/EXCEPT
             # _pickle.UnpicklingError: invalid load key, '\xef'.
             # EOFError: Ran out of input
@@ -59,22 +61,14 @@ class TaskManager:
                 self.create_frame(task.task_name, task.status, task.user)
                 # stav widgetu on/off
                 self.parent.btn_state(self.parent, **settings.active_state)
-        self.remove_error()
 
     def save_list(self):
         """Uloží všechny úkoly do pickle souboru"""
-        if not self.parent.footer_entry.get():
-            pass
-            # TODO spustit dialog s vyberem jmena souboru
-        else:
-            list_name = self.parent.footer_entry.get().replace(" ", "_")
-        file_path = os.path.join(os.path.dirname(__file__), "lists", f"{list_name}.pkl")
-        with open(file_path, "wb") as file:
-            dump(self.tasks, file)
+        self.save_dialog(self.tasks)
 
     def extend_list(self):
         """Funkce pro zvetseni pocet polozek v listu"""
-        file_path: str = self.parent.load_dialog()
+        file_path: str = self.load_dialog()
         with open(file_path, "rb") as file:
             extend_list: list[Task] = load(file)
             self.tasks.extend(extend_list)
@@ -115,9 +109,28 @@ class TaskManager:
         self.parent.error_label.grid_remove()
 
     def create_frame(self, *data):
-        """Create new frame for task"""
+        """Create a new frame for task"""
         parent = self.parent.display_frame
         frame = app_construction.TaskFrame(parent, *data)
+
+    @staticmethod
+    def load_dialog():
+        file_name = filedialog.askopenfilename(
+            initialdir="./lists",
+            title="Select a file",
+            filetypes=[("list files", "*.pkl")],
+        )
+        return file_name
+
+    @staticmethod
+    def save_dialog(data):
+        file_name = filedialog.asksaveasfilename(
+            defaultextension=".pkl",
+            filetypes=[("pkl files", "*.pkl")],
+        )
+        if file_name:
+            with open(file_name, "wb") as file:
+                dump(data, file)
 
 
 class Task:

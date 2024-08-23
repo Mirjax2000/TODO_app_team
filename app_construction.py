@@ -1,6 +1,5 @@
 from main import TaskManager
 import customtkinter as ctk
-from tkinter import filedialog
 from pywinstyles import set_opacity
 from config import mixins
 from config import settings
@@ -265,7 +264,7 @@ class App(ctk.CTk):
         self.version = ctk.CTkLabel(
             self.footer,
             text=f"v: {settings.version}",
-            font=("Helvetica", 12, "normal"),
+            font=("Helvetica", 12, "bold"),
             text_color="gray",
         )
 
@@ -307,18 +306,10 @@ class App(ctk.CTk):
 
     def error_msg(self, msg):
         self.error_label.configure(text=msg)
-        self.error_label.grid(row=0, column=2, sticky="ew", padx=20)
+        self.error_label.grid()
         self.input_task.bind("<KeyPress>", self.task_manager.clear_error)
 
     # endregion
-    @staticmethod
-    def load_dialog():
-        file_name = filedialog.askopenfilename(
-            initialdir="./lists",
-            title="Select a file",
-            filetypes=[("list files", "*.pkl")],
-        )
-        return file_name
 
 
 #
