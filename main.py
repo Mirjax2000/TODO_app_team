@@ -52,6 +52,9 @@ class TaskManager:
         self.remove_error()
 
         file_path: str = self.load_dialog()
+        self.parent.footer_list_name.configure(
+            text=f" {self.cleansing_file_path(file_path):.18}"
+        )
         with open(file_path, "rb") as file:
             self.tasks = load(file)
             # TODO pohrat si s chybovyma hlasenima pres TRY/EXCEPT
@@ -131,6 +134,10 @@ class TaskManager:
         if file_name:
             with open(file_name, "wb") as file:
                 dump(data, file)
+
+    @staticmethod
+    def cleansing_file_path(path: str) -> str:
+        return path.split("/")[-1]
 
 
 class Task:

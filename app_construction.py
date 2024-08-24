@@ -228,17 +228,15 @@ class App(ctk.CTk):
         )
 
         # Vstupní pole pro zadání jména seznamu
-        self.footer_entry = ctk.CTkEntry(
+        self.footer_list_name = ctk.CTkLabel(
             self.footer,
-            width=300,
+            width=200,
             font=settings.font_normal,
-            placeholder_text="Enter list name",
             fg_color=settings.inner_color,
-            border_color=settings.border_color,
-            border_width=1,
+            anchor="w",
+            text=""[:5],
+            corner_radius=settings.corner_radius,
         )
-        self.footer_entry.get()
-
         # error label + img
         self.error_label = ctk.CTkLabel(
             self.footer,
@@ -247,7 +245,7 @@ class App(ctk.CTk):
             fg_color=settings.inner_color,
             text="",
             justify="center",
-            corner_radius=10,
+            corner_radius=settings.corner_radius,
             image=settings.img_error,
             compound="left",
             anchor="center",
@@ -270,7 +268,7 @@ class App(ctk.CTk):
 
         # activation
         self.footer_label.grid(row=0, column=0, sticky="w")
-        self.footer_entry.grid(row=0, column=1, sticky="ew")
+        self.footer_list_name.grid(row=0, column=1, sticky="ew")
         self.error_label.grid(row=0, column=2, sticky="ew", padx=20)
         self.version.grid(row=1, column=3, sticky="e")
         self.exit_btn.grid(row=0, column=3, sticky="ew")

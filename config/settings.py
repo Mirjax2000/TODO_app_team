@@ -59,7 +59,7 @@ default_state = {
     "btn_5": "disabled",
     "btn_6": "disabled",
     "footer_label": "disabled",
-    "footer_entry": "disabled",
+    "footer_list_name": "disabled",
 }
 
 active_state = {
@@ -68,7 +68,7 @@ active_state = {
     "btn_5": "normal",
     "btn_6": "normal",
     "footer_label": "normal",
-    "footer_entry": "normal",
+    "footer_list_name": "normal",
 }
 
 if __name__ == "__main__":
