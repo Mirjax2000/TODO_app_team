@@ -67,7 +67,9 @@ class TaskManager:
 
     def save_list(self):
         """Uloží všechny úkoly do pickle souboru"""
-        self.save_dialog(self.tasks)
+        self.parent.footer_list_name.configure(
+            text=f" {self.cleansing_file_path(self.save_dialog(self.tasks))}"
+        )
 
     def extend_list(self):
         """Funkce pro zvetseni pocet polozek v listu"""
@@ -134,6 +136,7 @@ class TaskManager:
         if file_name:
             with open(file_name, "wb") as file:
                 dump(data, file)
+        return file_name
 
     @staticmethod
     def cleansing_file_path(path: str) -> str:
