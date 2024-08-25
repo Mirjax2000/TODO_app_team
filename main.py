@@ -21,9 +21,9 @@ class TaskManager:
         if entry:
             new_tasks = Task(self.parent.display_frame, entry)
             self.tasks.append(new_tasks)
-            # taskframe z posledniho itemu z listu self.tasks
+            #  vymaz input field
             self.parent.input_task.delete(0, "end")
-            # stav widgetu on/off
+            # widgety na active state
             self.parent.btn_state(self.parent, **settings.active_state)
 
         else:
