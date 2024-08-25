@@ -25,7 +25,6 @@ class TaskManager:
             self.parent.input_task.delete(0, "end")
             # widgety na active state
             self.parent.btn_state(self.parent, **settings.active_state)
-
         else:
             self.parent.error_msg("Error: Task name cannot be empty.")
 
@@ -43,18 +42,27 @@ class TaskManager:
         self.tasks.clear()  # Vynuluje seznam tasků
         self.remove_error()
 
-        file_path: str = self.load_dialog()
+        file_path: str = self.load_dialog()  # Vybere soubor
         self.parent.footer_list_name.configure(
-            text=f" {self.cleansing_file_path(file_path):.18}"
+            text=f" {self.cleansing_file_path(file_path):.18}"  # vypise jmeno
         )
         with open(file_path, "rb") as file:
-            self.tasks = load(file)
+            temp_tasks = load(file)
             # TODO pohrat si s chybovyma hlasenima pres TRY/EXCEPT
             # _pickle.UnpicklingError: invalid load key, '\xef'.
             # EOFError: Ran out of input
-            for task in self.tasks:
-                self.create_frame(task.task_name, task.status, task.user)
-                # stav widgetu on/off
+            for task in temp_tasks:
+                task_name: str = task.task_name
+                status: str = task.status
+                user: str = task.user
+                description: str = task.description
+
+                new_tasks = Task(
+                    self.parent.display_frame, task_name, status, user, description
+                )
+                self.tasks.append(new_tasks)
+
+                # widgety na active state
                 self.parent.btn_state(self.parent, **settings.active_state)
 
     def save_list(self):
@@ -80,6 +88,8 @@ class TaskManager:
 
     def clear_list(self):
         """vymazani hlavniho listu a smazani frames v display"""
+        # widgety na default state
+        # self.parent.btn_state(self.parent, **settings.default_state)
         # TODO confirm dialog, are you sure?
         pass
 

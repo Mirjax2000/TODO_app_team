@@ -318,12 +318,12 @@ class TaskFrame(ctk.CTkFrame):
     def __init__(
         self,
         parent,
-        text: str,
+        task_name: str,
         status: str = "Not Started",
         user: str = "Not assigned",
     ):
         self.parent = parent
-        self.text = text
+        self.task_name = task_name
         self.status = status
         self.user = user
         super().__init__(
@@ -336,7 +336,9 @@ class TaskFrame(ctk.CTkFrame):
         self.pack(fill="x", side="top", padx=10, pady=3, ipady=5)
         set_opacity(widget=self, value=0.8, color="black")
 
-        self.task_label = ctk.CTkLabel(self, font=settings.font_normal, text=self.text)
+        self.task_label = ctk.CTkLabel(
+            self, font=settings.font_normal, text=self.task_name
+        )
         self.options_users: list[str] = [
             "Not assigned",
         ]
