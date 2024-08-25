@@ -12,7 +12,6 @@ class App(ctk.CTk):
     mixins.basic_app_settings()
 
     def __init__(self):
-        self.task_manager = TaskManager(self)
         super().__init__()
         mixins.app_init(self)
 
@@ -31,7 +30,6 @@ class App(ctk.CTk):
         )
         self.input_task.focus()
         self.input_task.get()
-        self.input_task.bind("<Return>", self.task_manager.add_task)
         self.input_task.grid(row=0, column=0, padx=(0, 20), sticky="ew")
 
         # Tlačítko pro přidání úkolu
@@ -39,7 +37,6 @@ class App(ctk.CTk):
             self.header,
             text="Add Task",
             font=settings.font_normal,
-            command=self.task_manager.add_task,
         )
         self.input_button.grid(row=0, column=1, sticky="e")
 
@@ -64,6 +61,9 @@ class App(ctk.CTk):
             border_color=settings.border_color,
             corner_radius=settings.corner_radius,
         )
+        self.task_manager = TaskManager(self)
+        self.input_task.bind("<Return>", self.task_manager.add_task)
+        self.input_button.configure(command=self.task_manager.add_task)
         # ujub na spatne umisteny scrollbar
         mixins.padding_in_scrollable(self.display_frame)
         #
