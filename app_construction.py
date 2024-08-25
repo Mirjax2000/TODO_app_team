@@ -318,13 +318,14 @@ class TaskFrame(ctk.CTkFrame):
     def __init__(
         self,
         parent,
+        idecko,
         task_name: str,
         status: str = "Not Started",
         user: str = "Not assigned",
         description: str = "",
     ):
         self.parent = parent
-        self.task_name = task_name
+        self.task_name = f"{idecko}. {task_name}"
         self.status = status
         self.user = user
         self.description = description
