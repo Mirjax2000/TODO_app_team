@@ -31,7 +31,7 @@ class TaskManager:
             self.create_frame(path.task_name, path.status, path.user)
             self.parent.input_task.delete(0, "end")
 
-            # stav widgetu on/off
+            # state widgetu na active state
             self.parent.btn_state(self.parent, **settings.active_state)
 
         else:
@@ -62,7 +62,7 @@ class TaskManager:
             # EOFError: Ran out of input
             for task in self.tasks:
                 self.create_frame(task.task_name, task.status, task.user)
-                # stav widgetu on/off
+                # state widgetu na active state
                 self.parent.btn_state(self.parent, **settings.active_state)
 
     def save_list(self):
@@ -82,7 +82,7 @@ class TaskManager:
             # EOFError: Ran out of input
             for task in extend_list:
                 self.create_frame(task.task_name, task.status, task.user)
-                # stav widgetu on/off
+                # state widgetu na active state
                 self.parent.btn_state(self.parent, **settings.active_state)
         self.remove_error()
 
