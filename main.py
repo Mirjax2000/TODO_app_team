@@ -16,8 +16,6 @@ class TaskManager:
         self.parent = parent
         self.tasks: list[Task] = []
 
-
-
     # methods
     def add_task(self, event=None):
         """add task function"""
@@ -120,7 +118,7 @@ class TaskManager:
     def settings(self):
         """nastaveni aplikace"""
         for item in self.tasks:
-            print(item.id)
+            print(item)
 
     # TODO very important !!!
     # TODO new display s nastavenim aplikace, width,height, font sizes, themes, etc.
