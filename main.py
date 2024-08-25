@@ -14,9 +14,6 @@ class TaskManager:
         self.tasks: list[Task] = []
 
     # remove error
-    def remove_error(self):
-        """Vypne chybový label"""
-        self.parent.error_label.grid_remove()
 
     # methods
     def add_task(self, event=None):
@@ -57,8 +54,7 @@ class TaskManager:
             # _pickle.UnpicklingError: invalid load key, '\xef'.
             # EOFError: Ran out of input
             for task in self.tasks:
-                self.create_frame(task.task_name, task.status, task.user)
-                # stav widgetu on/off
+
                 self.parent.btn_state(self.parent, **settings.active_state)
 
     def save_list(self):
@@ -95,7 +91,7 @@ class TaskManager:
     def settings(self):
         """nastaveni aplikace"""
         for item in self.tasks:
-            print(item.id)
+            print(item.new_frame.text)
 
     # TODO very important !!!
     # TODO new display s nastavenim aplikace, width,height, font sizes, themes, etc.
@@ -105,14 +101,9 @@ class TaskManager:
         """Exit self.parent"""
         self.parent.destroy()
 
-    def clear_error(self, event):
-        """Remove error label"""
+    def remove_error(self, event=None):
+        """Vypne chybový label"""
         self.parent.error_label.grid_remove()
-
-    def create_frame(self, *data):
-        """Create a new frame for task"""
-        parent = self.parent.display_frame
-        frame = app_construction.TaskFrame(parent, *data)
 
     @staticmethod
     def load_dialog():

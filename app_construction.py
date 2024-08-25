@@ -13,6 +13,7 @@ class App(ctk.CTk):
 
     def __init__(self):
         super().__init__()
+        self.task_manager = TaskManager(self)
         mixins.app_init(self)
 
         # region HEADER
@@ -28,6 +29,7 @@ class App(ctk.CTk):
             border_width=1,
             border_color=settings.border_color,
         )
+        self.input_task.bind("<Return>", self.task_manager.add_task)
         self.input_task.focus()
         self.input_task.get()
         self.input_task.grid(row=0, column=0, padx=(0, 20), sticky="ew")
@@ -37,6 +39,7 @@ class App(ctk.CTk):
             self.header,
             text="Add Task",
             font=settings.font_normal,
+            command=self.task_manager.add_task,
         )
         self.input_button.grid(row=0, column=1, sticky="e")
 
@@ -61,9 +64,7 @@ class App(ctk.CTk):
             border_color=settings.border_color,
             corner_radius=settings.corner_radius,
         )
-        self.task_manager = TaskManager(self)
-        self.input_task.bind("<Return>", self.task_manager.add_task)
-        self.input_button.configure(command=self.task_manager.add_task)
+
         # ujub na spatne umisteny scrollbar
         mixins.padding_in_scrollable(self.display_frame)
         #
@@ -305,7 +306,7 @@ class App(ctk.CTk):
     def error_msg(self, msg):
         self.error_label.configure(text=msg)
         self.error_label.grid()
-        self.input_task.bind("<KeyPress>", self.task_manager.clear_error)
+        self.input_task.bind("<KeyPress>", self.task_manager.remove_error())
 
     # endregion
 
