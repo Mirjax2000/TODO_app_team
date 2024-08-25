@@ -13,24 +13,16 @@ class TaskManager:
         self.parent = parent
         self.tasks: list[Task] = []
 
-    # remove error
-    def remove_error(self):
-        """Vypne chybový label"""
-        self.parent.error_label.grid_remove()
-
     # methods
     def add_task(self, event=None):
         """add task function"""
 
         entry: str = self.parent.input_task.get()
         if entry:
-            new_tasks = Task(entry)
+            new_tasks = Task(self.parent.display_frame, entry)
             self.tasks.append(new_tasks)
             # taskframe z posledniho itemu z listu self.tasks
-            path = self.tasks[-1]
-            self.create_frame(path.task_name, path.status, path.user)
             self.parent.input_task.delete(0, "end")
-
             # stav widgetu on/off
             self.parent.btn_state(self.parent, **settings.active_state)
 
@@ -109,15 +101,6 @@ class TaskManager:
         """Exit self.parent"""
         self.parent.destroy()
 
-    def clear_error(self, event):
-        """Remove error label"""
-        self.parent.error_label.grid_remove()
-
-    def create_frame(self, *data):
-        """Create a new frame for task"""
-        parent = self.parent.display_frame
-        frame = app_construction.TaskFrame(parent, *data)
-
     @staticmethod
     def load_dialog():
         file_name = filedialog.askopenfilename(
@@ -142,14 +125,20 @@ class TaskManager:
     def cleansing_file_path(path: str) -> str:
         return path.split("/")[-1]
 
+    # remove error
+    def remove_error(self, event=None):
+        """Vypne chybový label"""
+        self.parent.error_label.grid_remove()
 
-class Task:
+
+class Task(TaskManager):
     """Trida pro uchování jednoho úkolu"""
 
     _id_counter: int = 1
 
     def __init__(
         self,
+        parent,
         task_name: str,
         status: str = "Not Started",
         user: str = "Not Assigned",
@@ -161,6 +150,10 @@ class Task:
         self.status = status
         self.user = user
         self.description = description
+        self.parent = parent
+        self.new_frame = app_construction.TaskFrame(
+            parent, self.task_name, self.status, self.user
+        )
 
 
 if __name__ == "__main__":

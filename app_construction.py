@@ -305,7 +305,7 @@ class App(ctk.CTk):
     def error_msg(self, msg):
         self.error_label.configure(text=msg)
         self.error_label.grid()
-        self.input_task.bind("<KeyPress>", self.task_manager.clear_error)
+        self.input_task.bind("<KeyPress>", self.task_manager.remove_error)
 
     # endregion
 
