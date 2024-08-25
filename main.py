@@ -56,12 +56,18 @@ class TaskManager:
             text=f" {self.cleansing_file_path(file_path):.18}"
         )
         with open(file_path, "rb") as file:
-            self.tasks = load(file)
+            temp_task = load(file)
             # TODO pohrat si s chybovyma hlasenima pres TRY/EXCEPT
             # _pickle.UnpicklingError: invalid load key, '\xef'.
             # EOFError: Ran out of input
-            for task in self.tasks:
-                self.create_frame(task.task_name, task.status, task.user)
+            for task in temp_task:
+                task_name: str = task.task_name
+                status: str = task.status
+                user: str = task.user
+                description: str = task.description
+                rozbal: tuple = (task_name, status, user, description)
+                self.tasks.append(Task(*rozbal))
+                self.create_frame(*rozbal)
                 # state widgetu na active state
                 self.parent.btn_state(self.parent, **settings.active_state)
 
@@ -146,8 +152,6 @@ class TaskManager:
 class Task:
     """Trida pro uchování jednoho úkolu"""
 
-    _id_counter: int = 1
-
     def __init__(
         self,
         task_name: str,
@@ -155,8 +159,6 @@ class Task:
         user: str = "Not Assigned",
         description: str = "",
     ):
-        self.id = Task._id_counter
-        Task._id_counter += 1
         self.task_name = task_name
         self.status = status
         self.user = user

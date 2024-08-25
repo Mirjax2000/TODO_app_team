@@ -321,11 +321,13 @@ class TaskFrame(ctk.CTkFrame):
         task_name: str,
         status: str = "Not Started",
         user: str = "Not assigned",
+        description: str = "",
     ):
         self.parent = parent
         self.task_name = task_name
         self.status = status
         self.user = user
+        self.description = description
         super().__init__(
             parent,
             fg_color=settings.outer_color,
